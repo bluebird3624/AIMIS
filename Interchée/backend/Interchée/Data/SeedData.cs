@@ -14,7 +14,7 @@ namespace Interchée.Data
 
             // Ensure Identity roles exist
             var roleMgr = sp.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-            foreach (var r in new[] { Roles.Admin, Roles.HR, Roles.Supervisor, Roles.Instructor, Roles.Intern })
+            foreach (var r in new[] { Roles.Admin, Roles.HR, Roles.Supervisor, Roles.Attache, Roles.Intern })
             {
                 if (!await roleMgr.RoleExistsAsync(r))
                     await roleMgr.CreateAsync(new IdentityRole<Guid>(r));
