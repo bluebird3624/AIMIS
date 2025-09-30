@@ -1,7 +1,9 @@
+# Visual Studio / .NET
 .vs/
 bin/
 obj/
 *.user
+**/project.assets.json
 **/*.cache
 **/project.assets.json
 **/*.dgspec.json
