@@ -1,0 +1,230 @@
+2025-09-30 12:17:12.693 +03:00 [INF] Executed DbCommand (844ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+CREATE DATABASE [InternAttacheDb];
+2025-09-30 12:17:13.072 +03:00 [INF] Executed DbCommand (324ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+IF SERVERPROPERTY('EngineEdition') <> 5
+BEGIN
+    ALTER DATABASE [InternAttacheDb] SET READ_COMMITTED_SNAPSHOT ON;
+END;
+2025-09-30 12:17:13.121 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-09-30 12:17:13.128 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-09-30 12:17:13.180 +03:00 [INF] Executed DbCommand (46ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-09-30 12:17:13.302 +03:00 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-09-30 12:17:13.316 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-09-30 12:17:13.318 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-09-30 12:17:13.382 +03:00 [INF] Executed DbCommand (59ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-09-30 12:17:13.402 +03:00 [INF] Applying migration '20250930091451_AbsenceManagement'.
+2025-09-30 12:17:13.531 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetRoles] (
+    [Id] uniqueidentifier NOT NULL,
+    [Name] nvarchar(256) NULL,
+    [NormalizedName] nvarchar(256) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetRoles] PRIMARY KEY ([Id])
+);
+2025-09-30 12:17:13.543 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUsers] (
+    [Id] uniqueidentifier NOT NULL,
+    [FirstName] nvarchar(64) NOT NULL,
+    [LastName] nvarchar(64) NOT NULL,
+    [MiddleName] nvarchar(64) NULL,
+    [CreatedAt] datetime2 NOT NULL DEFAULT (GETUTCDATE()),
+    [IsActive] bit NOT NULL DEFAULT CAST(1 AS bit),
+    [UserName] nvarchar(256) NULL,
+    [NormalizedUserName] nvarchar(256) NULL,
+    [Email] nvarchar(256) NULL,
+    [NormalizedEmail] nvarchar(256) NULL,
+    [EmailConfirmed] bit NOT NULL,
+    [PasswordHash] nvarchar(max) NULL,
+    [SecurityStamp] nvarchar(max) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [PhoneNumberConfirmed] bit NOT NULL,
+    [TwoFactorEnabled] bit NOT NULL,
+    [LockoutEnd] datetimeoffset NULL,
+    [LockoutEnabled] bit NOT NULL,
+    [AccessFailedCount] int NOT NULL,
+    CONSTRAINT [PK_AspNetUsers] PRIMARY KEY ([Id])
+);
+2025-09-30 12:17:13.547 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Departments] (
+    [Id] int NOT NULL IDENTITY,
+    [Name] nvarchar(128) NOT NULL,
+    [Code] nvarchar(32) NULL,
+    [IsActive] bit NOT NULL,
+    CONSTRAINT [PK_Departments] PRIMARY KEY ([Id])
+);
+2025-09-30 12:17:13.573 +03:00 [INF] Executed DbCommand (25ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetRoleClaims] (
+    [Id] int NOT NULL IDENTITY,
+    [RoleId] uniqueidentifier NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [AspNetRoles] ([Id]) ON DELETE CASCADE
+);
+2025-09-30 12:17:13.582 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUserClaims] (
+    [Id] int NOT NULL IDENTITY,
+    [UserId] uniqueidentifier NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetUserClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-09-30 12:17:13.699 +03:00 [INF] Executed DbCommand (116ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUserLogins] (
+    [LoginProvider] nvarchar(450) NOT NULL,
+    [ProviderKey] nvarchar(450) NOT NULL,
+    [ProviderDisplayName] nvarchar(max) NULL,
+    [UserId] uniqueidentifier NOT NULL,
+    CONSTRAINT [PK_AspNetUserLogins] PRIMARY KEY ([LoginProvider], [ProviderKey]),
+    CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-09-30 12:17:13.707 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUserRoles] (
+    [UserId] uniqueidentifier NOT NULL,
+    [RoleId] uniqueidentifier NOT NULL,
+    CONSTRAINT [PK_AspNetUserRoles] PRIMARY KEY ([UserId], [RoleId]),
+    CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [AspNetRoles] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-09-30 12:17:13.714 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUserTokens] (
+    [UserId] uniqueidentifier NOT NULL,
+    [LoginProvider] nvarchar(450) NOT NULL,
+    [Name] nvarchar(450) NOT NULL,
+    [Value] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY ([UserId], [LoginProvider], [Name]),
+    CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-09-30 12:17:14.323 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Interns] (
+    [Id] int NOT NULL IDENTITY,
+    [UserId] uniqueidentifier NOT NULL,
+    [SupervisorId] uniqueidentifier NULL,
+    [StartDate] datetime2 NOT NULL,
+    [EndDate] datetime2 NOT NULL,
+    [University] nvarchar(200) NULL,
+    [CourseOfStudy] nvarchar(200) NULL,
+    [Status] int NOT NULL DEFAULT 0,
+    CONSTRAINT [PK_Interns] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Interns_AspNetUsers_SupervisorId] FOREIGN KEY ([SupervisorId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_Interns_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-09-30 12:17:14.330 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [RefreshTokens] (
+    [Id] bigint NOT NULL IDENTITY,
+    [UserId] uniqueidentifier NOT NULL,
+    [Token] nvarchar(512) NOT NULL,
+    [ExpiresAt] datetime2 NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [RevokedAt] datetime2 NULL,
+    [CreatedByIp] nvarchar(max) NULL,
+    CONSTRAINT [PK_RefreshTokens] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_RefreshTokens_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-09-30 12:17:14.336 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [DepartmentRoleAssignments] (
+    [Id] bigint NOT NULL IDENTITY,
+    [UserId] uniqueidentifier NOT NULL,
+    [DepartmentId] int NOT NULL,
+    [RoleName] nvarchar(64) NOT NULL,
+    [AssignedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_DepartmentRoleAssignments] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_DepartmentRoleAssignments_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_DepartmentRoleAssignments_Departments_DepartmentId] FOREIGN KEY ([DepartmentId]) REFERENCES [Departments] ([Id]) ON DELETE CASCADE
+);
+2025-09-30 12:17:14.343 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AbsenceRequests] (
+    [Id] int NOT NULL IDENTITY,
+    [InternId] int NOT NULL,
+    [Reason] nvarchar(500) NOT NULL,
+    [StartDate] datetime2 NOT NULL,
+    [EndDate] datetime2 NOT NULL,
+    [Status] int NOT NULL DEFAULT 0,
+    [RejectionReason] nvarchar(500) NULL,
+    [ApprovedById] uniqueidentifier NULL,
+    [RequestedAt] datetime2 NOT NULL DEFAULT (GETUTCDATE()),
+    [ReviewedAt] datetime2 NULL,
+    CONSTRAINT [PK_AbsenceRequests] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AbsenceRequests_AspNetUsers_ApprovedById] FOREIGN KEY ([ApprovedById]) REFERENCES [AspNetUsers] ([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_AbsenceRequests_Interns_InternId] FOREIGN KEY ([InternId]) REFERENCES [Interns] ([Id]) ON DELETE NO ACTION
+);
+2025-09-30 12:17:14.358 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AbsenceRequests_ApprovedById] ON [AbsenceRequests] ([ApprovedById]);
+2025-09-30 12:17:14.361 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AbsenceRequests_EndDate] ON [AbsenceRequests] ([EndDate]);
+2025-09-30 12:17:14.363 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AbsenceRequests_InternId] ON [AbsenceRequests] ([InternId]);
+2025-09-30 12:17:14.364 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AbsenceRequests_InternId_Status] ON [AbsenceRequests] ([InternId], [Status]);
+2025-09-30 12:17:14.366 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AbsenceRequests_RequestedAt] ON [AbsenceRequests] ([RequestedAt]);
+2025-09-30 12:17:14.369 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AbsenceRequests_StartDate] ON [AbsenceRequests] ([StartDate]);
+2025-09-30 12:17:14.371 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AbsenceRequests_StartDate_EndDate] ON [AbsenceRequests] ([StartDate], [EndDate]);
+2025-09-30 12:17:17.079 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AbsenceRequests_Status] ON [AbsenceRequests] ([Status]);
+2025-09-30 12:17:17.082 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AbsenceRequests_Status_RequestedAt] ON [AbsenceRequests] ([Status], [RequestedAt]);
+2025-09-30 12:17:17.085 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetRoleClaims_RoleId] ON [AspNetRoleClaims] ([RoleId]);
+2025-09-30 12:17:17.096 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [RoleNameIndex] ON [AspNetRoles] ([NormalizedName]) WHERE [NormalizedName] IS NOT NULL;
+2025-09-30 12:17:17.098 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetUserClaims_UserId] ON [AspNetUserClaims] ([UserId]);
+2025-09-30 12:17:17.099 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetUserLogins_UserId] ON [AspNetUserLogins] ([UserId]);
+2025-09-30 12:17:17.101 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetUserRoles_RoleId] ON [AspNetUserRoles] ([RoleId]);
+2025-09-30 12:17:17.102 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [EmailIndex] ON [AspNetUsers] ([NormalizedEmail]);
+2025-09-30 12:17:17.105 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [UserNameIndex] ON [AspNetUsers] ([NormalizedUserName]) WHERE [NormalizedUserName] IS NOT NULL;
+2025-09-30 12:17:17.108 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_DepartmentRoleAssignments_DepartmentId] ON [DepartmentRoleAssignments] ([DepartmentId]);
+2025-09-30 12:17:17.110 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_DepartmentRoleAssignments_UserId_DepartmentId_RoleName] ON [DepartmentRoleAssignments] ([UserId], [DepartmentId], [RoleName]);
+2025-09-30 12:17:17.114 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_Departments_Name] ON [Departments] ([Name]);
+2025-09-30 12:17:17.116 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Interns_EndDate] ON [Interns] ([EndDate]);
+2025-09-30 12:17:17.118 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Interns_StartDate] ON [Interns] ([StartDate]);
+2025-09-30 12:17:17.122 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Interns_StartDate_EndDate] ON [Interns] ([StartDate], [EndDate]);
+2025-09-30 12:17:17.125 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Interns_Status] ON [Interns] ([Status]);
+2025-09-30 12:17:17.127 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Interns_SupervisorId] ON [Interns] ([SupervisorId]);
+2025-09-30 12:17:17.131 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_Interns_UserId] ON [Interns] ([UserId]);
+2025-09-30 12:17:17.134 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_RefreshTokens_Token] ON [RefreshTokens] ([Token]);
+2025-09-30 12:17:17.136 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_RefreshTokens_UserId] ON [RefreshTokens] ([UserId]);
+2025-09-30 12:17:17.171 +03:00 [INF] Executed DbCommand (34ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250930091451_AbsenceManagement', N'9.0.9');
+2025-09-30 12:17:17.185 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
