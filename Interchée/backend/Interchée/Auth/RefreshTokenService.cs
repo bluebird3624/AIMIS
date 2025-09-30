@@ -19,7 +19,7 @@ namespace Interchée.Auth
         public async Task<RefreshToken?> GetValidAsync(string token)
         {
             var now = DateTime.UtcNow;
-            return await _db.RefreshTokens.AsNoTracking()
+            return await _db.RefreshTokens
                 .FirstOrDefaultAsync(t => t.Token == token && t.ExpiresAt > now && t.RevokedAt == null);
         }
 
@@ -36,5 +36,17 @@ namespace Interchée.Auth
                 await _db.SaveChangesAsync();
             }
         }
+
+        public async Task<int> RevokeAllActiveForUserAsync(Guid userId, CancellationToken ct = default)
+        {
+            var now = DateTime.UtcNow; // one capture, consistent
+            var affected = await _db.RefreshTokens
+                .Where(t => t.UserId == userId && t.RevokedAt == null && t.ExpiresAt > now)
+                .ExecuteUpdateAsync(s => s.SetProperty(t => t.RevokedAt, now), ct);
+
+            return affected; // handy for logs/tests
+        }
+
+
     }
 }
