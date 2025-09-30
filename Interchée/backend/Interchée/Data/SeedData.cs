@@ -42,7 +42,9 @@ namespace Interchée.Data
                     Id = Guid.NewGuid(),
                     UserName = "admin",
                     Email = adminEmail,
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    FirstName = "System",
+                    LastName = "Admin"
                 };
                 // dev password — change in real deployments
                 await userMgr.CreateAsync(admin, "P@ssw0rd!");

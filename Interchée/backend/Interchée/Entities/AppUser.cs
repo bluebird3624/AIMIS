@@ -6,5 +6,9 @@ namespace Interchée.Entities
     {
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public string FirstName { get; set; } = string.Empty;   // <= 64
+        public string LastName { get; set; } = string.Empty;   // <= 64
+        public string? MiddleName { get; set; }
     }
 }

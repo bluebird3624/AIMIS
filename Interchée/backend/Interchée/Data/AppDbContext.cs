@@ -19,6 +19,14 @@ namespace Interchée.Data
         {
             base.OnModelCreating(b);
 
+            // AppUser name fields
+            b.Entity<AppUser>(e =>
+            {
+                e.Property(x => x.FirstName).HasMaxLength(64).IsRequired();
+                e.Property(x => x.LastName).HasMaxLength(64).IsRequired();
+                e.Property(x => x.MiddleName).HasMaxLength(64);
+            });
+
             // Department
             b.Entity<Department>(e =>
             {
