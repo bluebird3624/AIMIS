@@ -1,5 +1,9 @@
 using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Repositories.Implementations;
+using Interchée.Repositories.Interfaces;
+using Interchée.Services.Implementations;  // ADD THIS
+using Interchée.Services.Interfaces;      // ADD THIS
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,12 +29,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
 {
     options.User.RequireUniqueEmail = true;
-    // you can tighten password rules later if needed
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
-// --- JWT Authentication (reads from appsettings: Jwt:Issuer/Audience/Key)
+// --- JWT Authentication
 var jwtSection = builder.Configuration.GetSection("Jwt");
 var jwtIssuer = jwtSection.GetValue<string>("Issuer")!;
 var jwtAudience = jwtSection.GetValue<string>("Audience")!;
@@ -48,16 +51,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidAudience = jwtAudience,
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromSeconds(30) // small skew
+            ClockSkew = TimeSpan.FromSeconds(30)
         };
     });
 
 builder.Services.AddAuthorization();
 
-// --- MVC + API docs (Swagger) + Scalar explorer
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
+builder.Services.AddScoped<IGradeRepository, GradeRepository>();
 
+// --- Service Registrations (ADD THESE)
+builder.Services.AddScoped<IAssignmentService, AssignmentService>();
+builder.Services.AddScoped<IGitIntegrationService, GitIntegrationService>();
+builder.Services.AddHttpClient<IGitIntegrationService, GitIntegrationService>();
 
 var app = builder.Build();
 
@@ -66,16 +75,14 @@ app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
 {
-    
-    app.MapScalarApiReference("/scalar"); // Scalar UI at /scalar
+    app.MapScalarApiReference("/scalar");
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
+
 // Seed on startup
 using (var scope = app.Services.CreateScope())
 {
