@@ -48,6 +48,17 @@ namespace Interchée.Data
                 e.Property(x => x.IsActive)
                     .IsRequired()
                     .HasDefaultValue(true);
+
+                // Navigation properties configuration
+                e.HasMany(u => u.SupervisedInterns)
+                    .WithOne(i => i.Supervisor)
+                    .HasForeignKey(i => i.SupervisorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasMany(u => u.ApprovedAbsenceRequests)
+                    .WithOne(ar => ar.ApprovedBy)
+                    .HasForeignKey(ar => ar.ApprovedById)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
 
@@ -58,6 +69,7 @@ namespace Interchée.Data
                 e.Property(x => x.Name).HasMaxLength(128).IsRequired();
                 e.HasIndex(x => x.Name).IsUnique();
                 e.Property(x => x.Code).HasMaxLength(32);
+               
             });
         }
 
@@ -124,9 +136,11 @@ namespace Interchée.Data
                     .HasForeignKey<Intern>(i => i.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                e.HasOne(i => i.Supervisor)
-                    .WithMany(u => u.SupervisedInterns)
-                    .HasForeignKey(i => i.SupervisorId)
+                // Supervisor relationship is now configured in AppUser
+                // Intern -> AbsenceRequests relationship
+                e.HasMany(i => i.AbsenceRequests)
+                    .WithOne(ar => ar.Intern)
+                    .HasForeignKey(ar => ar.InternId)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 // Indexes
@@ -170,19 +184,12 @@ namespace Interchée.Data
                     .IsRequired()
                     .HasDefaultValueSql("GETUTCDATE()");
 
-                // Relationships - REMOVED STATIC KEYWORD
-                e.HasOne(ar => ar.Intern)
-                    .WithMany(i => i.ApprovedAbsenceRequests) 
-                    .HasForeignKey(ar => ar.InternId)
-                    .OnDelete(DeleteBehavior.Restrict);
-
-                e.HasOne(ar => ar.ApprovedBy)
-                    .WithMany(u => u.ApprovedAbsenceRequests) // Add this navigation
-                    .HasForeignKey(ar => ar.ApprovedById)
-                    .OnDelete(DeleteBehavior.Restrict);
+                // Relationships are now configured in AppUser and Intern
+                // Only configure foreign keys and indexes here
 
                 // Indexes for performance
                 e.HasIndex(ar => ar.InternId);
+                e.HasIndex(ar => ar.ApprovedById);
                 e.HasIndex(ar => ar.Status);
                 e.HasIndex(ar => ar.StartDate);
                 e.HasIndex(ar => ar.EndDate);
