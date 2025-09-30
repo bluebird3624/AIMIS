@@ -1,6 +1,9 @@
 ﻿namespace Interchée.Entities
 {
-    public class AbsenceStatus
+    public enum AbsenceStatus
     {
+    Pending,
+    Approved,
+    Rejected
     }
 }
