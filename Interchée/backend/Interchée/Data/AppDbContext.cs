@@ -11,31 +11,58 @@ namespace Interchée.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+        // Existing DbSets
         public DbSet<Department> Departments => Set<Department>();
         public DbSet<DepartmentRoleAssignment> DepartmentRoleAssignments => Set<DepartmentRoleAssignment>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
+        // Absence Management Module DbSets
+        public DbSet<Intern> Interns => Set<Intern>();
+        public DbSet<AbsenceRequest> AbsenceRequests => Set<AbsenceRequest>();
 
         protected override void OnModelCreating(ModelBuilder b)
         {
             base.OnModelCreating(b);
 
-            // AppUser name fields
+            ConfigureAppUser(b);
+            ConfigureDepartment(b);
+            ConfigureDepartmentRoleAssignment(b);
+            ConfigureRefreshToken(b);
+            ConfigureIntern(b);
+            ConfigureAbsenceRequest(b);
+        }
+
+        private void ConfigureAppUser(ModelBuilder b)
+        {
             b.Entity<AppUser>(e =>
             {
                 e.Property(x => x.FirstName).HasMaxLength(64).IsRequired();
                 e.Property(x => x.LastName).HasMaxLength(64).IsRequired();
                 e.Property(x => x.MiddleName).HasMaxLength(64);
-            });
 
-            // Department
+                // Additional properties for absence management
+                e.Property(x => x.CreatedAt)
+                    .IsRequired()
+                    .HasDefaultValueSql("GETUTCDATE()");
+
+                e.Property(x => x.IsActive)
+                    .IsRequired()
+                    .HasDefaultValue(true);
+            });
+        }
+
+        private void ConfigureDepartment(ModelBuilder b)
+        {
             b.Entity<Department>(e =>
             {
                 e.Property(x => x.Name).HasMaxLength(128).IsRequired();
                 e.HasIndex(x => x.Name).IsUnique();
                 e.Property(x => x.Code).HasMaxLength(32);
             });
+        }
 
-            // DepartmentRoleAssignment (User ↔ RoleName ↔ Department)
+        private void ConfigureDepartmentRoleAssignment(ModelBuilder b)
+        {
             b.Entity<DepartmentRoleAssignment>(e =>
             {
                 e.Property(x => x.RoleName).HasMaxLength(64).IsRequired();
@@ -51,8 +78,10 @@ namespace Interchée.Data
                     .HasForeignKey(x => x.DepartmentId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+        }
 
-            // RefreshToken (optional but mapped)
+        private void ConfigureRefreshToken(ModelBuilder b)
+        {
             b.Entity<RefreshToken>(e =>
             {
                 e.HasIndex(x => x.Token).IsUnique();
@@ -62,6 +91,105 @@ namespace Interchée.Data
                     .WithMany()
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+        }
+
+        private void ConfigureIntern(ModelBuilder b)
+        {
+            b.Entity<Intern>(e =>
+            {
+                e.HasKey(i => i.Id);
+
+                // Properties
+                e.Property(i => i.StartDate)
+                    .IsRequired();
+
+                e.Property(i => i.EndDate)
+                    .IsRequired();
+
+                e.Property(i => i.University)
+                    .HasMaxLength(200);
+
+                e.Property(i => i.CourseOfStudy)
+                    .HasMaxLength(200);
+
+                e.Property(i => i.Status)
+                    .IsRequired()
+                    .HasConversion<int>()
+                    .HasDefaultValue(InternStatus.Active);
+
+                // Relationships
+                e.HasOne(i => i.User)
+                    .WithOne()
+                    .HasForeignKey<Intern>(i => i.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasOne(i => i.Supervisor)
+                    .WithMany(u => u.SupervisedInterns)
+                    .HasForeignKey(i => i.SupervisorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Indexes
+                e.HasIndex(i => i.UserId)
+                    .IsUnique();
+
+                e.HasIndex(i => i.SupervisorId);
+                e.HasIndex(i => i.Status);
+                e.HasIndex(i => i.StartDate);
+                e.HasIndex(i => i.EndDate);
+                e.HasIndex(i => new { i.StartDate, i.EndDate });
+            });
+        }
+
+        private void ConfigureAbsenceRequest(ModelBuilder b)
+        {
+            b.Entity<AbsenceRequest>(e =>
+            {
+                e.HasKey(ar => ar.Id);
+
+                // Properties
+                e.Property(ar => ar.Reason)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                e.Property(ar => ar.StartDate)
+                    .IsRequired();
+
+                e.Property(ar => ar.EndDate)
+                    .IsRequired();
+
+                e.Property(ar => ar.Status)
+                    .IsRequired()
+                    .HasConversion<int>()
+                    .HasDefaultValue(AbsenceStatus.Pending);
+
+                e.Property(ar => ar.RejectionReason)
+                    .HasMaxLength(500);
+
+                e.Property(ar => ar.RequestedAt)
+                    .IsRequired()
+                    .HasDefaultValueSql("GETUTCDATE()");
+
+                // Relationships - REMOVED STATIC KEYWORD
+                e.HasOne(ar => ar.Intern)
+                    .WithMany(i => i.ApprovedAbsenceRequests) 
+                    .HasForeignKey(ar => ar.InternId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(ar => ar.ApprovedBy)
+                    .WithMany(u => u.ApprovedAbsenceRequests) // Add this navigation
+                    .HasForeignKey(ar => ar.ApprovedById)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Indexes for performance
+                e.HasIndex(ar => ar.InternId);
+                e.HasIndex(ar => ar.Status);
+                e.HasIndex(ar => ar.StartDate);
+                e.HasIndex(ar => ar.EndDate);
+                e.HasIndex(ar => ar.RequestedAt);
+                e.HasIndex(ar => new { ar.InternId, ar.Status });
+                e.HasIndex(ar => new { ar.StartDate, ar.EndDate });
+                e.HasIndex(ar => new { ar.Status, ar.RequestedAt });
             });
         }
     }
