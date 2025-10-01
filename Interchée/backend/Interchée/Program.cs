@@ -1,6 +1,7 @@
 using Interchée.Auth;
 using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -77,6 +78,8 @@ builder.Services.AddSingleton(jwtOptions);
 // Token services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<RefreshTokenService>();
+
+builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 
