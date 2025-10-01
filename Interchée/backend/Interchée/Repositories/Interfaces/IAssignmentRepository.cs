@@ -5,6 +5,7 @@ namespace Interchée.Repositories.Interfaces
     public interface IAssignmentRepository
     {
         Task<Assignment?> GetByIdAsync(int id);
+        Task<IEnumerable<Assignment>> GetAllAsync();
         Task<IEnumerable<Assignment>> GetByDepartmentAsync(int departmentId);
         Task<IEnumerable<Assignment>> GetBySupervisorAsync(Guid supervisorId);
         Task<IEnumerable<Assignment>> GetAssignmentsForInternAsync(Guid internId);

@@ -2,8 +2,8 @@ using Interchée.Data;
 using Interchée.Entities;
 using Interchée.Repositories.Implementations;
 using Interchée.Repositories.Interfaces;
-using Interchée.Services.Implementations;  // ADD THIS
-using Interchée.Services.Interfaces;      // ADD THIS
+using Interchée.Services.Implementations;  
+using Interchée.Services.Interfaces;     
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,18 +14,16 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- Serilog (console + file, configured via appsettings.json)
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
     .CreateLogger();
 builder.Host.UseSerilog();
 
-// --- EF Core (SQL Server)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-// --- Identity (Users + Roles, using GUID keys)
+
 builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
 {
     options.User.RequireUniqueEmail = true;
@@ -63,14 +61,12 @@ builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 builder.Services.AddScoped<IGradeRepository, GradeRepository>();
 
-// --- Service Registrations (ADD THESE)
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IGitIntegrationService, GitIntegrationService>();
 builder.Services.AddHttpClient<IGitIntegrationService, GitIntegrationService>();
 
 var app = builder.Build();
 
-// --- pipeline
 app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
@@ -83,7 +79,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// Seed on startup
 using (var scope = app.Services.CreateScope())
 {
     var sp = scope.ServiceProvider;

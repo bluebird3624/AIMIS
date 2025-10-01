@@ -5,14 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interchée.Repositories.Implementations
 {
-    public class AssignmentRepository : IAssignmentRepository
+    public class AssignmentRepository(AppDbContext context) : IAssignmentRepository
     {
-        private readonly AppDbContext _context;
-
-        public AssignmentRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public async Task<Assignment?> GetByIdAsync(int id)
         {
@@ -21,6 +16,16 @@ namespace Interchée.Repositories.Implementations
                 .Include(a => a.Department)
                 .Include(a => a.Attachments)
                 .FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<IEnumerable<Assignment>> GetAllAsync()
+        {
+            return await _context.Assignments
+                .Include(a => a.CreatedBy)
+                .Include(a => a.Department)
+                .Include(a => a.Submissions)
+                .OrderByDescending(a => a.CreatedAt)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Assignment>> GetByDepartmentAsync(int departmentId)
@@ -45,13 +50,12 @@ namespace Interchée.Repositories.Implementations
 
         public async Task<IEnumerable<Assignment>> GetAssignmentsForInternAsync(Guid internId)
         {
-            // Get intern's department from role assignments
             var internDepartment = await _context.DepartmentRoleAssignments
                 .Where(dra => dra.UserId == internId && (dra.RoleName == "Intern" || dra.RoleName == "Attache"))
                 .Select(dra => dra.DepartmentId)
                 .FirstOrDefaultAsync();
 
-            if (internDepartment == 0) return Enumerable.Empty<Assignment>();
+            if (internDepartment == 0) return [];
 
             return await _context.Assignments
                 .Include(a => a.CreatedBy)

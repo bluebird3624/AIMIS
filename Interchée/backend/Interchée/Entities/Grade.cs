@@ -13,7 +13,7 @@ namespace Interchée.Entities
         public string? Comments { get; set; }
 
         [MaxLength(4000)]
-        public string? RubricEvaluationJson { get; set; } // Store rubric criteria as JSON
+        public string? RubricEvaluationJson { get; set; }
 
         public DateTime GradedAt { get; set; } = DateTime.UtcNow;
 

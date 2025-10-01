@@ -16,15 +16,16 @@ namespace Interchée.Entities
         public DateTime DueDate { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // Foreign keys
+        public AssignmentStatus Status { get; set; } = AssignmentStatus.Assigned;
+
         public Guid CreatedById { get; set; } // Supervisor who created
         public int DepartmentId { get; set; }
 
-        // Navigation properties
         public AppUser CreatedBy { get; set; } = default!;
         public Department Department { get; set; } = default!;
-        public ICollection<AssignmentSubmission> Submissions { get; set; } = new List<AssignmentSubmission>();
-        public ICollection<AssignmentAttachment> Attachments { get; set; } = new List<AssignmentAttachment>();
+
+        public ICollection<AssignmentSubmission> Submissions { get; set; } = [];
+        public ICollection<AssignmentAttachment> Attachments { get; set; } = [];
     }
 
     public enum AssignmentStatus

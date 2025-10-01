@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Interchée.DTOs.Assignments
+namespace Interchée.DTOs
 {
     public class CreateAssignmentDto
     {

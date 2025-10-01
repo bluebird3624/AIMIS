@@ -1,6 +1,7 @@
-﻿using Interchée.DTOs.Assignments;
-using Interchée.DTOs.Submissions;
+﻿using Interchée.Data;
+using Interchée.DTOs;
 using Interchée.DTOs.Grades;
+using Interchée.DTOs.Submissions;
 using Interchée.Entities;
 using Interchée.Repositories.Interfaces;
 using Interchée.Services.Interfaces;
@@ -8,24 +9,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interchée.Services.Implementations
 {
-    public class AssignmentService : IAssignmentService
+    public class AssignmentService(
+        IAssignmentRepository assignmentRepo,
+        ISubmissionRepository submissionRepo,
+        IGradeRepository gradeRepo,
+        IGitIntegrationService gitService,
+        AppDbContext context) : IAssignmentService
     {
-        private readonly IAssignmentRepository _assignmentRepo;
-        private readonly ISubmissionRepository _submissionRepo;
-        private readonly IGradeRepository _gradeRepo;
-        private readonly IGitIntegrationService _gitService;
+        private readonly IAssignmentRepository _assignmentRepo = assignmentRepo;
+        private readonly ISubmissionRepository _submissionRepo = submissionRepo;
+        private readonly IGradeRepository _gradeRepo = gradeRepo;
+        private readonly IGitIntegrationService _gitService = gitService;
+        private readonly AppDbContext _context = context;
 
-        public AssignmentService(
-            IAssignmentRepository assignmentRepo,
-            ISubmissionRepository submissionRepo,
-            IGradeRepository gradeRepo,
-            IGitIntegrationService gitService)
-        {
-            _assignmentRepo = assignmentRepo;
-            _submissionRepo = submissionRepo;
-            _gradeRepo = gradeRepo;
-            _gitService = gitService;
-        }
+        // ========== ASSIGNMENT CRUD OPERATIONS ==========
 
         public async Task<AssignmentResponseDto> CreateAssignmentAsync(CreateAssignmentDto dto, Guid supervisorId)
         {
@@ -36,7 +33,8 @@ namespace Interchée.Services.Implementations
                 DueDate = dto.DueDate,
                 DepartmentId = dto.DepartmentId,
                 CreatedById = supervisorId,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Status = AssignmentStatus.Assigned
             };
 
             var created = await _assignmentRepo.CreateAsync(assignment);
@@ -48,8 +46,10 @@ namespace Interchée.Services.Implementations
                 Description = created.Description,
                 DueDate = created.DueDate,
                 CreatedAt = created.CreatedAt,
-                CreatedBy = $"{created.CreatedBy.FirstName} {created.CreatedBy.LastName}",
-                Department = created.Department.Name,
+                CreatedBy = created.CreatedBy != null
+                    ? $"{created.CreatedBy.FirstName} {created.CreatedBy.LastName}"
+                    : "Unknown",
+                Department = created.Department?.Name ?? "Unknown Department",
                 SubmissionCount = 0
             };
         }
@@ -68,10 +68,31 @@ namespace Interchée.Services.Implementations
                 Description = assignment.Description,
                 DueDate = assignment.DueDate,
                 CreatedAt = assignment.CreatedAt,
-                CreatedBy = $"{assignment.CreatedBy.FirstName} {assignment.CreatedBy.LastName}",
-                Department = assignment.Department.Name,
+                CreatedBy = assignment.CreatedBy != null
+                    ? $"{assignment.CreatedBy.FirstName} {assignment.CreatedBy.LastName}"
+                    : "Unknown",
+                Department = assignment.Department?.Name ?? "Unknown Department",
                 SubmissionCount = submissions.Count()
             };
+        }
+
+        public async Task<IEnumerable<AssignmentResponseDto>> GetAllAssignmentsAsync()
+        {
+            var assignments = await _assignmentRepo.GetAllAsync();
+
+            return assignments.Select(a => new AssignmentResponseDto
+            {
+                Id = a.Id,
+                Title = a.Title,
+                Description = a.Description,
+                DueDate = a.DueDate,
+                CreatedAt = a.CreatedAt,
+                CreatedBy = a.CreatedBy != null
+                    ? $"{a.CreatedBy.FirstName} {a.CreatedBy.LastName}"
+                    : "Unknown",
+                Department = a.Department?.Name ?? "Unknown Department",
+                SubmissionCount = a.Submissions.Count
+            });
         }
 
         public async Task<IEnumerable<AssignmentResponseDto>> GetAssignmentsByDepartmentAsync(int departmentId)
@@ -85,8 +106,10 @@ namespace Interchée.Services.Implementations
                 Description = a.Description,
                 DueDate = a.DueDate,
                 CreatedAt = a.CreatedAt,
-                CreatedBy = $"{a.CreatedBy.FirstName} {a.CreatedBy.LastName}",
-                Department = a.Department.Name,
+                CreatedBy = a.CreatedBy != null
+                    ? $"{a.CreatedBy.FirstName} {a.CreatedBy.LastName}"
+                    : "Unknown",
+                Department = a.Department?.Name ?? "Unknown Department",
                 SubmissionCount = a.Submissions.Count
             });
         }
@@ -102,28 +125,61 @@ namespace Interchée.Services.Implementations
                 Description = a.Description,
                 DueDate = a.DueDate,
                 CreatedAt = a.CreatedAt,
-                CreatedBy = $"{a.CreatedBy.FirstName} {a.CreatedBy.LastName}",
-                Department = a.Department.Name,
+                CreatedBy = a.CreatedBy != null
+                    ? $"{a.CreatedBy.FirstName} {a.CreatedBy.LastName}"
+                    : "Unknown",
+                Department = a.Department?.Name ?? "Unknown Department",
                 SubmissionCount = a.Submissions.Count
             });
         }
 
+        public async Task<AssignmentResponseDto> UpdateAssignmentAsync(int id, UpdateAssignmentDto dto)
+        {
+            var assignment = await _assignmentRepo.GetByIdAsync(id);
+            if (assignment == null)
+                throw new ArgumentException("Assignment not found");
+
+            if (!string.IsNullOrEmpty(dto.Title))
+                assignment.Title = dto.Title;
+
+            if (!string.IsNullOrEmpty(dto.Description))
+                assignment.Description = dto.Description;
+
+            if (dto.DueDate.HasValue)
+                assignment.DueDate = dto.DueDate.Value;
+
+            await _assignmentRepo.UpdateAsync(assignment);
+
+            var updatedAssignment = await GetAssignmentAsync(id);
+            if (updatedAssignment == null)
+                throw new InvalidOperationException("Updated assignment not found");
+
+            return updatedAssignment;
+        }
+
+        public async Task DeleteAssignmentAsync(int id)
+        {
+            var assignment = await _assignmentRepo.GetByIdAsync(id);
+            if (assignment == null)
+                throw new ArgumentException("Assignment not found");
+
+            await _assignmentRepo.DeleteAsync(id);
+        }
+
+        // ========== SUBMISSION OPERATIONS ==========
+
         public async Task<SubmissionResponseDto> SubmitAssignmentAsync(int assignmentId, SubmitAssignmentDto dto, Guid internId)
         {
-            // Validate assignment exists
             var assignment = await _assignmentRepo.GetByIdAsync(assignmentId);
             if (assignment == null)
                 throw new ArgumentException("Assignment not found");
 
-            // Check if already submitted
             if (await _submissionRepo.HasInternSubmittedAsync(assignmentId, internId))
                 throw new InvalidOperationException("Assignment already submitted");
 
-            // Validate Git URL
             if (!await _gitService.ValidateGitUrlAsync(dto.GitRepositoryUrl))
                 throw new ArgumentException("Invalid Git repository URL");
 
-            // Get Git metadata
             var gitMetadata = await _gitService.GetRepositoryMetadataAsync(dto.GitRepositoryUrl);
 
             var submission = new AssignmentSubmission
@@ -148,7 +204,9 @@ namespace Interchée.Services.Implementations
                 Status = created.Status.ToString(),
                 LastCommitHash = created.LastCommitHash,
                 BranchName = created.BranchName,
-                InternName = $"{created.Intern.FirstName} {created.Intern.LastName}",
+                InternName = created.Intern != null
+                    ? $"{created.Intern.FirstName} {created.Intern.LastName}"
+                    : "Unknown Intern",
                 Grade = null
             };
         }
@@ -159,7 +217,7 @@ namespace Interchée.Services.Implementations
             if (submission == null) return null;
 
             GradeResponseDto? gradeDto = null;
-            if (submission.Grade != null)
+            if (submission.Grade != null && submission.Grade.GradedBy != null)
             {
                 gradeDto = new GradeResponseDto
                 {
@@ -179,7 +237,9 @@ namespace Interchée.Services.Implementations
                 Status = submission.Status.ToString(),
                 LastCommitHash = submission.LastCommitHash,
                 BranchName = submission.BranchName,
-                InternName = $"{submission.Intern.FirstName} {submission.Intern.LastName}",
+                InternName = submission.Intern != null
+                    ? $"{submission.Intern.FirstName} {submission.Intern.LastName}"
+                    : "Unknown Intern",
                 Grade = gradeDto
             };
         }
@@ -196,8 +256,10 @@ namespace Interchée.Services.Implementations
                 Status = s.Status.ToString(),
                 LastCommitHash = s.LastCommitHash,
                 BranchName = s.BranchName,
-                InternName = $"{s.Intern.FirstName} {s.Intern.LastName}",
-                Grade = s.Grade != null ? new GradeResponseDto
+                InternName = s.Intern != null
+                    ? $"{s.Intern.FirstName} {s.Intern.LastName}"
+                    : "Unknown Intern",
+                Grade = s.Grade != null && s.Grade.GradedBy != null ? new GradeResponseDto
                 {
                     Id = s.Grade.Id,
                     Score = s.Grade.Score,
@@ -207,6 +269,8 @@ namespace Interchée.Services.Implementations
                 } : null
             });
         }
+
+        // ========== GRADING OPERATIONS ==========
 
         public async Task<GradeResponseDto> GradeSubmissionAsync(int submissionId, GradeSubmissionDto dto, Guid supervisorId)
         {
@@ -225,7 +289,6 @@ namespace Interchée.Services.Implementations
 
             var created = await _gradeRepo.CreateOrUpdateAsync(grade);
 
-            // Update submission status
             submission.Status = AssignmentStatus.Graded;
             await _submissionRepo.UpdateAsync(submission);
 
@@ -235,7 +298,9 @@ namespace Interchée.Services.Implementations
                 Score = created.Score,
                 Comments = created.Comments,
                 GradedAt = created.GradedAt,
-                GradedBy = $"{created.GradedBy.FirstName} {created.GradedBy.LastName}"
+                GradedBy = created.GradedBy != null
+                    ? $"{created.GradedBy.FirstName} {created.GradedBy.LastName}"
+                    : "Unknown Grader"
             };
         }
 
@@ -250,8 +315,12 @@ namespace Interchée.Services.Implementations
                 Score = grade.Score,
                 Comments = grade.Comments,
                 GradedAt = grade.GradedAt,
-                GradedBy = $"{grade.GradedBy.FirstName} {grade.GradedBy.LastName}"
+                GradedBy = grade.GradedBy != null
+                    ? $"{grade.GradedBy.FirstName} {grade.GradedBy.LastName}"
+                    : "Unknown Grader"
             };
         }
+
+      
     }
 }
