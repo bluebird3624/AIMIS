@@ -3483,3 +3483,107 @@ WHERE [a].[Email] = @__adminEmail_0
 2025-10-01 17:09:32.226 +03:00 [INF] CORS policy execution successful.
 2025-10-01 17:09:32.232 +03:00 [INF] HTTP OPTIONS /auth/login responded 204 in 14.8324 ms
 2025-10-01 17:09:32.256 +03:00 [INF] Request finished HTTP/1.1 OPTIONS http://lorrie-unoperative-corrine.ngrok-free.dev/auth/login - 204 null null 110.5133ms
+2025-10-01 21:44:03.384 +03:00 [INF] Executed DbCommand (42ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-01 21:44:03.600 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-01 21:44:03.663 +03:00 [INF] Executed DbCommand (56ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-01 21:44:03.754 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-01 21:44:03.774 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-01 21:44:03.777 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-01 21:44:03.848 +03:00 [INF] Executed DbCommand (66ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-01 21:44:03.872 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-01 21:44:03.889 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-01 21:44:04.197 +03:00 [INF] Executed DbCommand (35ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-01 21:44:04.290 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-01 21:44:04.295 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-01 21:44:04.298 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-01 21:44:04.303 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-01 21:44:04.326 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-01 21:44:04.360 +03:00 [INF] User profile is available. Using 'C:\Users\mamad\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-01 21:44:04.543 +03:00 [INF] Executed DbCommand (169ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-01 21:44:04.877 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-01 21:44:04.919 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-01 21:44:04.921 +03:00 [INF] Hosting environment: Development
+2025-10-01 21:44:04.923 +03:00 [INF] Content root path: C:\Users\mamad\source\repos\AIMIS\Interchée\backend\Interchée
+2025-10-01 21:44:12.953 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/ - null null
+2025-10-01 21:44:13.405 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-10-01 21:44:13.501 +03:00 [INF] HTTP GET / responded 404 in 93.6844 ms
+2025-10-01 21:44:13.526 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/ - 404 0 null 607.9308ms
+2025-10-01 21:44:13.536 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5007/, Response status code: 404
+2025-10-01 21:44:19.820 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/scalar/v1 - null null
+2025-10-01 21:44:19.846 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-01 21:44:20.097 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-01 21:44:20.127 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-01 21:44:20.140 +03:00 [INF] HTTP GET /scalar/v1 responded 200 in 308.6555 ms
+2025-10-01 21:44:20.159 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/scalar/v1 - 200 null text/html 338.6913ms
+2025-10-01 21:44:20.171 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/scalar/scalar.aspnetcore.js - null null
+2025-10-01 21:44:20.172 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-01 21:44:20.175 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/_vs/browserLink - null null
+2025-10-01 21:44:20.181 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/scalar/scalar.js - null null
+2025-10-01 21:44:20.196 +03:00 [INF] CORS policy execution failed.
+2025-10-01 21:44:20.207 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 35.6481ms
+2025-10-01 21:44:20.224 +03:00 [INF] Request origin http://localhost:5007 does not have permission to access the resource.
+2025-10-01 21:44:20.225 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-01 21:44:20.255 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-01 21:44:20.334 +03:00 [INF] Sending file with download name ''.
+2025-10-01 21:44:20.334 +03:00 [INF] Sending file with download name ''.
+2025-10-01 21:44:20.344 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-01 21:44:20.393 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/_vs/browserLink - 200 null text/javascript; charset=UTF-8 218.113ms
+2025-10-01 21:44:20.407 +03:00 [INF] HTTP GET /scalar/scalar.aspnetcore.js responded 200 in 214.2856 ms
+2025-10-01 21:44:20.424 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-01 21:44:20.430 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/scalar/scalar.aspnetcore.js - 200 1046 text/javascript 259.2128ms
+2025-10-01 21:44:20.436 +03:00 [INF] HTTP GET /scalar/scalar.js responded 200 in 214.0953 ms
+2025-10-01 21:44:20.455 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/scalar/scalar.js - 200 869947 text/javascript 273.2109ms
+2025-10-01 21:44:20.680 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/openapi/v1.json - null null
+2025-10-01 21:44:20.689 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-01 21:44:21.192 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-01 21:44:21.197 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/openapi/v1.json - null null
+2025-10-01 21:44:21.198 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 508.5691 ms
+2025-10-01 21:44:21.205 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-01 21:44:21.207 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/openapi/v1.json - 200 null application/json;charset=utf-8 526.9469ms
+2025-10-01 21:44:21.238 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-01 21:44:21.241 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 36.7170 ms
+2025-10-01 21:44:21.246 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/openapi/v1.json - 200 null application/json;charset=utf-8 49.8715ms
