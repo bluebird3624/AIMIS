@@ -27,13 +27,13 @@ namespace Interchee.Controllers
 
         [HttpGet]
         [Authorize(Roles = "HR,Admin")]
-        public async Task<ActionResult<ApiResponse<List<UserDto>>>> GetUsers()
+        public async Task<ActionResult<ApiResponse<List<AppUserDto>>>> GetUsers()
         {
             try
             {
                 var users = await _userManager.Users
                     .Include(u => u.Department)
-                    .Select(u => new UserDto
+                    .Select(u => new AppUserDto
                     {
                         Id = u.Id,
                         UserName = u.UserName,
@@ -60,7 +60,7 @@ namespace Interchee.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching users");
-                return StatusCode(500, ApiResponse.Error<List<UserDto>>("An error occurred while fetching users"));
+                return StatusCode(500, ApiResponse.Error<List<AppUserDto>>("An error occurred while fetching users"));
             }
         }
 

@@ -62,12 +62,12 @@ namespace Interchee.Controllers
                     })
                     .ToListAsync();
 
-                return Ok(ApiResponse.Success(interns));
+                return Ok(ApiResponse.SuccessResponse(interns));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching interns");
-                return StatusCode(500, ApiResponse.Error<List<InternDto>>("An error occurred while fetching interns"));
+                return StatusCode(500, ApiResponse.Errors("An error occurred while fetching interns"));
             }
         }
 
@@ -79,7 +79,7 @@ namespace Interchee.Controllers
             {
                 var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userId))
-                    return Unauthorized(ApiResponse.Error<InternDto>("Unauthorized"));
+                    return Unauthorized(ApiResponse.Errors("Unauthorized"));
 
                 var intern = await _context.Interns
                     .Include(i => i.User)
@@ -114,14 +114,14 @@ namespace Interchee.Controllers
                     .FirstOrDefaultAsync();
 
                 if (intern == null)
-                    return NotFound(ApiResponse.Error<InternDto>("Intern profile not found"));
+                    return NotFound(ApiResponse.Errors("Intern profile not found"));
 
-                return Ok(ApiResponse.Success(intern));
+                return Ok(ApiResponse.SuccessResponse(intern));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching intern profile for user {UserId}");
-                return StatusCode(500, ApiResponse.Error<InternDto>("An error occurred while fetching intern profile"));
+                _logger.LogError(ex, "Error fetching intern profile for user {UserId}", userId);
+                return StatusCode(500, ApiResponse.Errors("An error occurred while fetching intern profile"));
             }
         }
 
