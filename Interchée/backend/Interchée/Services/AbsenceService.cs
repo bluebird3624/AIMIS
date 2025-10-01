@@ -28,7 +28,7 @@ namespace Interchée.Services
 
                 // Get intern associated with user
                 var intern = await _context.Interns
-                    .Include(i => i.User)
+                    .Include(i => i.User!)
                     .FirstOrDefaultAsync(i => i.UserId == userGuid);
 
                 if (intern == null)
@@ -60,7 +60,14 @@ namespace Interchée.Services
                 _context.AbsenceRequests.Add(absenceRequest);
                 await _context.SaveChangesAsync();
 
-                var dto = await MapToAbsenceRequestDto(absenceRequest);
+                // Load related data for the created absence request
+                var createdAbsenceRequest = await _context.AbsenceRequests
+                    .Include(ar => ar.Intern!)
+                    .ThenInclude(i => i.User!)
+                    .Include(ar => ar.ApprovedBy!)
+                    .FirstOrDefaultAsync(ar => ar.Id == absenceRequest.Id);
+
+                var dto = MapToAbsenceRequestDto(createdAbsenceRequest!);
                 return ServiceResult<AbsenceRequestDto>.Ok(dto, "Absence request created successfully");
             }
             catch (Exception ex)
@@ -77,8 +84,8 @@ namespace Interchée.Services
                 _logger.LogInformation("Processing absence request {RequestId} by approver {ApproverId}", requestId, approverId);
 
                 var absenceRequest = await _context.AbsenceRequests
-                    .Include(ar => ar.Intern)
-                    .ThenInclude(i => i.User)
+                    .Include(ar => ar.Intern!)
+                    .ThenInclude(i => i.User!)
                     .FirstOrDefaultAsync(ar => ar.Id == requestId);
 
                 if (absenceRequest == null)
@@ -128,9 +135,9 @@ namespace Interchée.Services
 
                 var requests = await _context.AbsenceRequests
                     .Where(ar => ar.InternId == intern.Id)
-                    .Include(ar => ar.Intern)
-                    .ThenInclude(i => i.User)
-                    .Include(ar => ar.ApprovedBy)
+                    .Include(ar => ar.Intern!)
+                    .ThenInclude(i => i.User!)
+                    .Include(ar => ar.ApprovedBy!)
                     .OrderByDescending(ar => ar.RequestedAt)
                     .Select(ar => MapToAbsenceRequestDto(ar))
                     .ToListAsync();
@@ -159,9 +166,9 @@ namespace Interchée.Services
 
                 var requests = await _context.AbsenceRequests
                     .Where(ar => supervisedInternIds.Contains(ar.InternId) && ar.Status == AbsenceStatus.Pending)
-                    .Include(ar => ar.Intern)
-                    .ThenInclude(i => i.User)
-                    .Include(ar => ar.ApprovedBy)
+                    .Include(ar => ar.Intern!)
+                    .ThenInclude(i => i.User!)
+                    .Include(ar => ar.ApprovedBy!)
                     .OrderBy(ar => ar.StartDate)
                     .Select(ar => MapToAbsenceRequestDto(ar))
                     .ToListAsync();
@@ -180,7 +187,7 @@ namespace Interchée.Services
             try
             {
                 var intern = await _context.Interns
-                    .Include(i => i.User)
+                    .Include(i => i.User!)
                     .FirstOrDefaultAsync(i => i.Id == internId);
 
                 if (intern == null)
@@ -259,10 +266,10 @@ namespace Interchée.Services
             try
             {
                 var requests = await _context.AbsenceRequests
-                    .Include(ar => ar.Intern)
-                    .ThenInclude(i => i.User)
-                    .ThenInclude(u => u.Department)
-                    .Include(ar => ar.ApprovedBy)
+                    .Include(ar => ar.Intern!)
+                    .ThenInclude(i => i.User!)
+                    .ThenInclude(u => u.Department!)
+                    .Include(ar => ar.ApprovedBy!)
                     .Where(ar => ar.Intern != null &&
                                 ar.Intern.User != null &&
                                 ar.Intern.User.DepartmentId == departmentId)
@@ -279,27 +286,8 @@ namespace Interchée.Services
             }
         }
 
-        private async Task<AbsenceRequestDto> MapToAbsenceRequestDto(AbsenceRequest request)
+        private static AbsenceRequestDto MapToAbsenceRequestDto(AbsenceRequest request)
         {
-            // Ensure related entities are loaded
-            await _context.Entry(request)
-                .Reference(r => r.Intern)
-                .LoadAsync();
-
-            if (request.Intern != null)
-            {
-                await _context.Entry(request.Intern)
-                    .Reference(i => i.User)
-                    .LoadAsync();
-            }
-
-            if (request.ApprovedById.HasValue)
-            {
-                await _context.Entry(request)
-                    .Reference(r => r.ApprovedBy)
-                    .LoadAsync();
-            }
-
             var internUser = request.Intern?.User;
             var approvedByUser = request.ApprovedBy;
 

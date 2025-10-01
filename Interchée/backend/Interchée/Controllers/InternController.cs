@@ -35,7 +35,6 @@ namespace Interchee.Controllers
             {
                 var interns = await _context.Interns
                     .Include(i => i.User)
-                    .ThenInclude(u => u.Department)
                     .Include(i => i.Supervisor)
                     .Include(i => i.AbsenceRequests)
                     .Select(i => new InternDto
@@ -106,7 +105,6 @@ namespace Interchee.Controllers
 
                 var intern = await _context.Interns
                     .Include(i => i.User)
-                    .ThenInclude(u => u.Department)
                     .Include(i => i.Supervisor)
                     .Include(i => i.AbsenceRequests)
                     .Where(i => i.UserId == userId)
