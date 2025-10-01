@@ -54,10 +54,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// --- MVC + API docs (Swagger) + Scalar explorer
+// --- MVC + API docs
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
 
 var app = builder.Build();
 
@@ -66,8 +65,13 @@ app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
 {
-    
-    app.MapScalarApiReference("/scalar"); // Scalar UI at /scalar
+    // Scalar UI at /scalar with simple configuration
+    app.MapScalarApiReference(options =>
+    {
+        options.Title = "Interchée API Documentation";
+        options.Theme = ScalarTheme.Default;
+        // Remove the problematic HttpClient configuration
+    });
 }
 
 app.UseHttpsRedirection();
@@ -76,6 +80,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
 // Seed on startup
 using (var scope = app.Services.CreateScope())
 {
