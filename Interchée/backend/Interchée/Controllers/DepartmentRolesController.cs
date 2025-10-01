@@ -15,16 +15,10 @@ namespace Interchée.Controllers
     /// </summary>
     [ApiController]
     [Route("department-roles")]
-    public class DepartmentRolesController : ControllerBase
+    public class DepartmentRolesController(AppDbContext db, UserManager<AppUser> users) : ControllerBase
     {
-        private readonly AppDbContext _db;
-        private readonly UserManager<AppUser> _users;
-
-        public DepartmentRolesController(AppDbContext db, UserManager<AppUser> users)
-        {
-            _db = db;
-            _users = users;
-        }
+        private readonly AppDbContext _db = db;
+        private readonly UserManager<AppUser> _users = users;
 
         /// <summary>
         /// Assign a department-scoped role to a user (idempotent).
