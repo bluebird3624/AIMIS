@@ -1,6 +1,4 @@
-﻿using Interchée.Controllers;
-using Interchée.Dtos;
-using Interchée.Entities;
+﻿using Interchée.Dtos;
 
 namespace Interchée.Services
 {

@@ -57,7 +57,7 @@ namespace Interchée.Data
                 db.DepartmentRoleAssignments.Add(new DepartmentRoleAssignment
                 {
                     UserId = admin.Id,
-                    DepartmentId = itDeptId,
+                    DepartmentId = (int)itDeptId,
                     RoleName = Roles.Admin
                 });
                 await db.SaveChangesAsync();

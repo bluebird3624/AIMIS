@@ -23,5 +23,8 @@ namespace Interchée.Entities
 
         [NotMapped]
         public string DisplayName => $"{FirstName} {LastName}";
+
+        public object? Department { get; internal set; }
+        public int? DepartmentId { get; internal set; }
     }
 }

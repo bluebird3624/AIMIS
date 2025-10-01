@@ -1,6 +1,6 @@
 ﻿using Interchee.Common;
 using Interchée.Data;
-using Interchee.Entities;
+using Interchée.Dtos;
 using Interchée.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
