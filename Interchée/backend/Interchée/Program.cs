@@ -80,6 +80,9 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<RefreshTokenService>();
 
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<RoleAssignmentService>();
+builder.Services.AddScoped<OnboardingService>();
+
 
 var app = builder.Build();
 

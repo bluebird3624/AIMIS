@@ -13,11 +13,9 @@ namespace Interchée.Controllers
     /// </summary>
     [ApiController]
     [Route("departments")]
-    public class DepartmentsController : ControllerBase
+    public class DepartmentsController(AppDbContext db) : ControllerBase
     {
-        private readonly AppDbContext _db;
-
-        public DepartmentsController(AppDbContext db) => _db = db;
+        private readonly AppDbContext _db = db;
 
         /// <summary>
         /// List departments. Pass onlyActive=false to include inactive ones.

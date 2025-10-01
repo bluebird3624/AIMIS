@@ -10,16 +10,10 @@ namespace Interchée.Services
     /// User operations over ASP.NET Identity, plus department-role filtered queries.
     /// Returns enriched user summaries including structured names and a computed DisplayName.
     /// </summary>
-    public class UserService
+    public class UserService(UserManager<AppUser> users, AppDbContext db)
     {
-        private readonly UserManager<AppUser> _users;
-        private readonly AppDbContext _db;
-
-        public UserService(UserManager<AppUser> users, AppDbContext db)
-        {
-            _users = users;
-            _db = db;
-        }
+        private readonly UserManager<AppUser> _users = users;
+        private readonly AppDbContext _db = db;
 
         // --- helpers ---
         private static string ComposeDisplayName(string first, string last, string? userNameFallback)

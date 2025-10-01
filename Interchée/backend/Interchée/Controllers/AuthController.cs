@@ -15,24 +15,17 @@ namespace Interchée.Controllers
     /// </summary>
     [ApiController]
     [Route("auth")]
-    public class AuthController : ControllerBase
+    public class AuthController(
+        SignInManager<AppUser> signIn,
+        UserManager<AppUser> users,
+        IJwtTokenService jwt,
+        RefreshTokenService refreshSvc)
+        : ControllerBase
     {
-        private readonly SignInManager<AppUser> _signIn;
-        private readonly UserManager<AppUser> _users;
-        private readonly IJwtTokenService _jwt;
-        private readonly RefreshTokenService _refreshSvc;
-
-        public AuthController(
-            SignInManager<AppUser> signIn,
-            UserManager<AppUser> users,
-            IJwtTokenService jwt,
-            RefreshTokenService refreshSvc)
-        {
-            _signIn = signIn;
-            _users = users;
-            _jwt = jwt;
-            _refreshSvc = refreshSvc;
-        }
+        private readonly SignInManager<AppUser> _signIn = signIn;
+        private readonly UserManager<AppUser> _users = users;
+        private readonly IJwtTokenService _jwt = jwt;
+        private readonly RefreshTokenService _refreshSvc = refreshSvc;
 
         /// <summary>
         /// Log in with email + password.
