@@ -28,5 +28,10 @@ namespace Interchée.Services
 
         public static ServiceResult<T> Ok(T data, string message = "") => new() { Success = true, Data = data, Message = message };
         public static new ServiceResult<T> Fail(string message) => new() { Success = false, Message = message };
+
+        internal static ServiceResult<List<AbsenceRequestDto>> Ok(List<Task<AbsenceRequestDto>> requests)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
