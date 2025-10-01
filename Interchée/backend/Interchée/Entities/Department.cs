@@ -9,5 +9,6 @@
 
         public ICollection<DepartmentRoleAssignment> Assignments { get; set; } = [];
         public int? Id { get; internal set; }
+        public string Name { get; internal set; }
     }
 }
