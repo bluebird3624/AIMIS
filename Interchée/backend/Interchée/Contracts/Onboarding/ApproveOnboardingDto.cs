@@ -2,8 +2,10 @@
 
 namespace Interchée.Contracts.Onboarding
 {
+    // Body sent when approving an onboarding request
     public record ApproveOnboardingDto(
-    [property: Required, MinLength(3)] string UserName,
-    [property: Required, MinLength(8)] string TempPassword
-);
+        [Required, MinLength(3)] string UserName,
+        [Required, MinLength(8)] string TempPassword,
+        [Required] string RoleName   // use string, let service validate
+    );
 }

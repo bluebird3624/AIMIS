@@ -2,9 +2,13 @@
 
 namespace Interchée.Contracts.Roles
 {
+    /// <summary>
+    /// Assign a department-scoped role to a user.
+    /// </summary>
     public record AssignRoleDto(
-    [property: Required] Guid UserId,
-    [property: Range(1, int.MaxValue)] int DepartmentId,
-    [property: Required, MaxLength(64)] string RoleName
+    [Required] Guid UserId,
+    [Range(1, int.MaxValue, ErrorMessage = "DepartmentId must be a positive integer.")] int DepartmentId,
+    [Required, MaxLength(64, ErrorMessage = "RoleName max length is 64.")] string RoleName
 );
+
 }

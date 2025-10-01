@@ -2,9 +2,12 @@
 
 namespace Interchée.Contracts.Roles
 {
+    /// <summary>
+    /// Remove a department-scoped role from a user.
+    /// </summary>
     public record UnassignRoleDto(
-    [property: Required] Guid UserId,
-    [property: Range(1, int.MaxValue)] int DepartmentId,
-    [property: Required, MaxLength(64)] string RoleName
-);
+        [Required] Guid UserId,
+        [Range(1, int.MaxValue, ErrorMessage = "DepartmentId must be a positive integer.")] int DepartmentId,
+        [Required, MaxLength(64, ErrorMessage = "RoleName max length is 64.")] string RoleName
+    );
 }

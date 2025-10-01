@@ -2,11 +2,12 @@
 
 namespace Interchée.Contracts.Onboarding
 {
+    /// <summary>Create (anonymous or HR) onboarding request.</summary>
     public record OnboardingRequestCreateDto(
-        [property: Required, EmailAddress] string Email,
-        [property: Required, MaxLength(64)] string FirstName,
-        [property: Required, MaxLength(64)] string LastName,
-        [property: MaxLength(64)] string? MiddleName,
-        [property: Range(1, int.MaxValue)] int DepartmentId
+        [Required, EmailAddress] string Email,
+        [Required, MaxLength(64)] string FirstName,
+        [Required, MaxLength(64)] string LastName,
+        [MaxLength(64)] string? MiddleName,
+        [Range(1, int.MaxValue)] int DepartmentId
     );
 }
