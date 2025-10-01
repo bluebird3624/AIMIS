@@ -5,5 +5,5 @@
 /.vs
 /Interchée/.vs/Interchée
 
-
+/node_modules
 .fake
