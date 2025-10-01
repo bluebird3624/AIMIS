@@ -1,4 +1,4 @@
-﻿namespace Interchée.Entities
+﻿ namespace Interchée.Entities
 {
     public class DepartmentRoleAssignment
     {
