@@ -1,11 +1,12 @@
-﻿using System.Globalization;
-using System.Text;
-using System.Text.RegularExpressions;
-using Interchée.Contracts.Onboarding;
+﻿using Interchée.Contracts.Onboarding;
 using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Interchée.Services
 {
@@ -172,7 +173,11 @@ namespace Interchée.Services
         // Approve/Reject
         // -------------
 
-        public async Task<OnboardingRequestReadDto> ApproveAsync(long id, ApproveOnboardingDto dto, Guid approverUserId, string roleName)
+        public async Task<OnboardingRequestReadDto> ApproveAsync(
+    long id,
+    ApproveOnboardingDto dto,
+    Guid approverUserId,
+    string roleName)
         {
             var r = await _db.OnboardingRequests.FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new KeyNotFoundException("Onboarding request not found.");
@@ -180,14 +185,18 @@ namespace Interchée.Services
             if (r.Status != Pending)
                 throw new InvalidOperationException("Only pending requests can be approved.");
 
-            if (!AllowedDeptRoles.Contains(roleName))
+            // ✅ Canonicalize & validate role (accepts 'attache', 'attaché', any case)
+            var canonicalRole = RoleHelper.ToCanonical(roleName);
+            if (canonicalRole is null)
                 throw new InvalidOperationException("Invalid role name.");
 
+            // Department must still be active
             var activeDept = await _db.Departments
                 .AnyAsync(d => d.Id == r.DepartmentId && d.IsActive);
             if (!activeDept)
                 throw new InvalidOperationException("Department is inactive; cannot approve onboarding.");
 
+            // Friendly pre-checks before creating Identity user
             var userName = dto.UserName.Trim();
             if (await _userMgr.FindByNameAsync(userName) is not null)
                 throw new InvalidOperationException("Username is already taken.");
@@ -217,11 +226,12 @@ namespace Interchée.Services
                 throw new InvalidOperationException(msg);
             }
 
+            // ✅ Store canonical role name in the department-scoped assignment
             _db.DepartmentRoleAssignments.Add(new DepartmentRoleAssignment
             {
                 UserId = user.Id,
                 DepartmentId = r.DepartmentId,
-                RoleName = roleName,
+                RoleName = canonicalRole,
                 AssignedAt = DateTime.UtcNow
             });
 
@@ -232,10 +242,11 @@ namespace Interchée.Services
             await _db.SaveChangesAsync();
             await tx.CommitAsync();
 
-            // Return with a proposed username (still helpful for lists/history)
+            // If you have the helper; otherwise return your existing ToRead(r)
             var proposedForRead = await SuggestUniqueUserNameAsync(r.FirstName, r.LastName);
             return ToRead(r, proposedForRead);
         }
+
 
         public async Task<OnboardingRequestReadDto> RejectAsync(long id, Guid approverUserId)
         {
