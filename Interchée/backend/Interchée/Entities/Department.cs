@@ -8,6 +8,6 @@
         public bool IsActive { get; set; } = true;
 
         public ICollection<DepartmentRoleAssignment> Assignments { get; set; } = [];
-        public object? Id { get; internal set; }
+        public int? Id { get; internal set; }
     }
 }
