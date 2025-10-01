@@ -1,14 +1,13 @@
 ﻿using Interchée.Dtos;
 using System.ComponentModel.DataAnnotations;
 
-namespace Interchee.Validation
+namespace Interchée.Validation
 {
     public static class AbsenceValidation
     {
         public static ValidationResult? ValidateDates(DateTime endDate, ValidationContext context)
         {
-            var instance = context.ObjectInstance as CreateAbsenceRequestDto;
-            if (instance != null && endDate < instance.StartDate)
+            if (context.ObjectInstance is CreateAbsenceRequestDto instance && endDate < instance.StartDate)
             {
                 return new ValidationResult("End date cannot be before start date");
             }

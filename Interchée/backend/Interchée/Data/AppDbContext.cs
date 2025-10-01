@@ -7,9 +7,8 @@ using System.Reflection.Emit;
 
 namespace Interchée.Data
 {
-    public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         // Existing DbSets
         public DbSet<Department> Departments => Set<Department>();
@@ -32,7 +31,7 @@ namespace Interchée.Data
             ConfigureAbsenceRequest(b);
         }
 
-        private void ConfigureAppUser(ModelBuilder b)
+        private static void ConfigureAppUser(ModelBuilder b)
         {
             b.Entity<AppUser>(e =>
             {
@@ -62,7 +61,7 @@ namespace Interchée.Data
             });
         }
 
-        private void ConfigureDepartment(ModelBuilder b)
+        private static void ConfigureDepartment(ModelBuilder b)
         {
             b.Entity<Department>(e =>
             {
@@ -73,7 +72,7 @@ namespace Interchée.Data
             });
         }
 
-        private void ConfigureDepartmentRoleAssignment(ModelBuilder b)
+        private static void ConfigureDepartmentRoleAssignment(ModelBuilder b)
         {
             b.Entity<DepartmentRoleAssignment>(e =>
             {
@@ -92,7 +91,7 @@ namespace Interchée.Data
             });
         }
 
-        private void ConfigureRefreshToken(ModelBuilder b)
+        private static void ConfigureRefreshToken(ModelBuilder b)
         {
             b.Entity<RefreshToken>(e =>
             {
@@ -106,7 +105,7 @@ namespace Interchée.Data
             });
         }
 
-        private void ConfigureIntern(ModelBuilder b)
+        private static void ConfigureIntern(ModelBuilder b)
         {
             b.Entity<Intern>(e =>
             {
@@ -155,7 +154,7 @@ namespace Interchée.Data
             });
         }
 
-        private void ConfigureAbsenceRequest(ModelBuilder b)
+        private static void ConfigureAbsenceRequest(ModelBuilder b)
         {
             b.Entity<AbsenceRequest>(e =>
             {

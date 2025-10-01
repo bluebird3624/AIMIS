@@ -12,18 +12,11 @@ namespace Interchée.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class AppUsersController : ControllerBase
+    public class AppUsersController(UserManager<AppUser> userManager, AppDbContext context, ILogger<AppUsersController> logger) : ControllerBase
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly AppDbContext _context;
-        private readonly ILogger<AppUsersController> _logger;
-
-        public AppUsersController(UserManager<AppUser> userManager, AppDbContext context, ILogger<AppUsersController> logger)
-        {
-            _userManager = userManager;
-            _context = context;
-            _logger = logger;
-        }
+        private readonly UserManager<AppUser> _userManager = userManager;
+        private readonly AppDbContext _context = context;
+        private readonly ILogger<AppUsersController> _logger = logger;
 
         [HttpGet]
         [Authorize(Roles = "HR,Admin")]
@@ -73,7 +66,7 @@ namespace Interchée.Controllers
                 return StatusCode(500, new ApiResponse<List<AppUserDto>>
                 {
                     Success = false,
-                    Errors = new List<string> { "An error occurred while fetching users" }
+                    Errors = ["An error occurred while fetching users"]
                 });
             }
         }
@@ -125,7 +118,7 @@ namespace Interchée.Controllers
                 return StatusCode(500, new ApiResponse<List<AppUserDto>>
                 {
                     Success = false,
-                    Errors = new List<string> { "An error occurred while fetching supervisors" }
+                    Errors = ["An error occurred while fetching supervisors"]
                 });
             }
         }
@@ -177,7 +170,7 @@ namespace Interchée.Controllers
                 return StatusCode(500, new ApiResponse<List<AppUserDto>>
                 {
                     Success = false,
-                    Errors = new List<string> { "An error occurred while fetching interns" }
+                    Errors = ["An error occurred while fetching interns"]
                 });
             }
         }
@@ -192,14 +185,14 @@ namespace Interchée.Controllers
                     return Unauthorized(new ApiResponse<AppUserDto>
                     {
                         Success = false,
-                        Errors = new List<string> { "Unauthorized" }
+                        Errors = ["Unauthorized"]
                     });
 
                 if (!Guid.TryParse(userIdString, out Guid userId))
                     return Unauthorized(new ApiResponse<AppUserDto>
                     {
                         Success = false,
-                        Errors = new List<string> { "Invalid user ID" }
+                        Errors = ["Invalid user ID"]
                     });
 
                 var user = await _userManager.Users
@@ -210,7 +203,7 @@ namespace Interchée.Controllers
                     return NotFound(new ApiResponse<AppUserDto>
                     {
                         Success = false,
-                        Errors = new List<string> { "User not found" }
+                        Errors = ["User not found"]
                     });
 
                 var userDto = new AppUserDto
@@ -240,7 +233,7 @@ namespace Interchée.Controllers
                 return StatusCode(500, new ApiResponse<AppUserDto>
                 {
                     Success = false,
-                    Errors = new List<string> { "An error occurred while fetching user information" }
+                    Errors = ["An error occurred while fetching user information"]      
                 });
             }
         }

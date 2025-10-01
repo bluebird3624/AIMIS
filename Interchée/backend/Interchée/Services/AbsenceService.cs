@@ -5,16 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interchée.Services
 {
-    public class AbsenceService : IAbsenceService
+    public class AbsenceService(AppDbContext context, ILogger<AbsenceService> logger) : IAbsenceService
     {
-        private readonly AppDbContext _context;
-        private readonly ILogger<AbsenceService> _logger;
-
-        public AbsenceService(AppDbContext context, ILogger<AbsenceService> logger)
-        {
-            _context = context;
-            _logger = logger;
-        }
+        private readonly AppDbContext _context = context;
+        private readonly ILogger<AbsenceService> _logger = logger;
 
         public async Task<ServiceResult<AbsenceRequestDto>> CreateAbsenceRequestAsync(CreateAbsenceRequestDto request, string userId)
         {

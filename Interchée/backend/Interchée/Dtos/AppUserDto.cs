@@ -12,7 +12,7 @@
         public string? DepartmentName { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
-        public IList<string> Roles { get; set; } = new List<string>();
+        public IList<string> Roles { get; set; } = [];
     }
 
     public class UpdateUserDepartmentDto
@@ -22,6 +22,6 @@
 
     public class UpdateUserRolesDto
     {
-        public List<string> Roles { get; set; } = new();
+        public List<string> Roles { get; set; } = [];
     }
 }

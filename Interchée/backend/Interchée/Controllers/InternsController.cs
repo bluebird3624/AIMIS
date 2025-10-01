@@ -7,25 +7,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Interchee.Controllers
+namespace Interchée.Controllers
+
 {
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class InternsController : ControllerBase
+    public class InternsController(AppDbContext context, UserManager<AppUser> userManager, ILogger<InternsController> logger) : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly ILogger<InternsController> _logger;
+        private readonly AppDbContext _context = context;
+        private readonly UserManager<AppUser> _userManager = userManager;
+        private readonly ILogger<InternsController> _logger = logger;
 
         public string? AppUserIdString { get; private set; }
-
-        public InternsController(AppDbContext context, UserManager<AppUser> userManager, ILogger<InternsController> logger)
-        {
-            _context = context;
-            _userManager = userManager;
-            _logger = logger;
-        }
 
         [HttpGet]
         [Authorize(Roles = "HR,Admin,Supervisor")]
@@ -77,7 +71,7 @@ namespace Interchee.Controllers
                 return StatusCode(500, new ApiResponse<List<InternDto>>
                 {
                     Success = false,
-                    Errors = new List<string> { "An error occurred while fetching interns" }
+                    Errors = ["An error occurred while fetching interns"]
                 });
             }
         }
@@ -93,14 +87,14 @@ namespace Interchee.Controllers
                     return Unauthorized(new ApiResponse<InternDto>
                     {
                         Success = false,
-                        Errors = new List<string> { "Unauthorized" }
+                        Errors = ["Unauthorized"]
                     });
 
                 if (!Guid.TryParse(userIdString, out Guid userId))
                     return Unauthorized(new ApiResponse<InternDto>
                     {
                         Success = false,
-                        Errors = new List<string> { "Invalid user ID" }
+                        Errors = ["Invalid user ID"]
                     });
 
                 var intern = await _context.Interns
@@ -140,7 +134,7 @@ namespace Interchee.Controllers
                     return NotFound(new ApiResponse<InternDto>
                     {
                         Success = false,
-                        Errors = new List<string> { "Intern profile not found" }
+                        Errors = ["Intern profile not found"]
                     });
 
                 return Ok(new ApiResponse<InternDto>
@@ -155,7 +149,7 @@ namespace Interchee.Controllers
                 return StatusCode(500, new ApiResponse<InternDto>
                 {
                     Success = false,
-                    Errors = new List<string> { "An error occurred while fetching intern profile" }
+                    Errors = ["An error occurred while fetching intern profile"]        
                 });
             }
         }

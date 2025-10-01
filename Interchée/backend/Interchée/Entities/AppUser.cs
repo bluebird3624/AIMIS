@@ -12,8 +12,8 @@ namespace Interchée.Entities
         public bool IsActive { get; set; } = true;
 
         // Navigation properties for Absence Management Module
-        public virtual ICollection<Intern> SupervisedInterns { get; set; } = new List<Intern>();
-        public virtual ICollection<AbsenceRequest> ApprovedAbsenceRequests { get; set; } = new List<AbsenceRequest>();
+        public virtual ICollection<Intern> SupervisedInterns { get; set; } = [];
+        public virtual ICollection<AbsenceRequest> ApprovedAbsenceRequests { get; set; } = [];
 
         // Computed properties
         [NotMapped]

@@ -10,14 +10,9 @@ namespace Interchée.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AbsenceRequestController : ControllerBase
+    public class AbsenceRequestController(IAbsenceService absenceService) : ControllerBase
     {
-        private readonly IAbsenceService _absenceService;
-
-        public AbsenceRequestController(IAbsenceService absenceService)
-        {
-            _absenceService = absenceService;
-        }
+        private readonly IAbsenceService _absenceService = absenceService;
 
         [HttpPost]
         [Authorize(Roles = "Intern")]
@@ -28,7 +23,7 @@ namespace Interchée.Controllers
                 return Unauthorized(new ApiResponse<AbsenceRequestDto>
                 {
                     Success = false,
-                    Errors = new List<string> { "Unauthorized" }
+                    Errors = ["Unauthorized"]
                 });
 
             var result = await _absenceService.CreateAbsenceRequestAsync(request, userId);
@@ -37,7 +32,7 @@ namespace Interchée.Controllers
                 return BadRequest(new ApiResponse<AbsenceRequestDto>
                 {
                     Success = false,
-                    Errors = new List<string> { result.Message ?? "Unknown error" }
+                    Errors = [result.Message ?? "Unknown error"]
                 });
 
             return Ok(new ApiResponse<AbsenceRequestDto>
@@ -57,7 +52,7 @@ namespace Interchée.Controllers
                 return Unauthorized(new ApiResponse<List<AbsenceRequestDto>>
                 {
                     Success = false,
-                    Errors = new List<string> { "Unauthorized" }
+                    Errors = ["Unauthorized"]
                 });
 
             var result = await _absenceService.GetMyAbsenceRequestsAsync(userId);
@@ -66,7 +61,7 @@ namespace Interchée.Controllers
                 return BadRequest(new ApiResponse<List<AbsenceRequestDto>>
                 {
                     Success = false,
-                    Errors = new List<string> { result.Message ?? "Unknown error" }
+                    Errors = [result.Message ?? "Unknown error"]
                 });
 
             return Ok(new ApiResponse<List<AbsenceRequestDto>>
