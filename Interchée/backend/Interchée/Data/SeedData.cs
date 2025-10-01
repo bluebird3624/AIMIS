@@ -24,8 +24,8 @@ namespace Interchée.Data
             if (!await db.Departments.AnyAsync())
             {
                 db.Departments.AddRange(
-                    new Department { Name = "IT", Code = "IT" },
-                    new Department { Name = "Finance", Code = "FIN" }
+                    new Department { DepartmentName = "IT", Code = "IT" },
+                    new Department { DepartmentName = "Finance", Code = "FIN" }
                 );
                 await db.SaveChangesAsync();
             }
@@ -53,14 +53,21 @@ namespace Interchée.Data
                 await userMgr.AddToRoleAsync(admin, Roles.Admin);
 
                 // Department-scoped Admin role (IT by default)
-                var itDeptId = await db.Departments.Where(d => d.Name == "IT").Select(d => d.Id).FirstAsync();
-                db.DepartmentRoleAssignments.Add(new DepartmentRoleAssignment
+                var itDeptId = await db.Departments
+                    .Where(d => d.DepartmentName == "IT")
+                    .Select(d => (int?)d.Id)
+                    .FirstOrDefaultAsync();
+
+                if (itDeptId.HasValue)
                 {
-                    UserId = admin.Id,
-                    DepartmentId = (int)itDeptId,
-                    RoleName = Roles.Admin
-                });
-                await db.SaveChangesAsync();
+                    db.DepartmentRoleAssignments.Add(new DepartmentRoleAssignment
+                    {
+                        UserId = admin.Id,
+                        DepartmentId = itDeptId.Value,
+                        RoleName = Roles.Admin
+                    });
+                    await db.SaveChangesAsync();
+                }
             }
         }
     }

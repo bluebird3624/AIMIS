@@ -26,5 +26,6 @@ namespace Interchée.Entities
 
         public object? Department { get; internal set; }
         public int? DepartmentId { get; internal set; }
+        public object DepartmentName { get; internal set; }
     }
 }

@@ -5,28 +5,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interchée.Services
 {
-    public class AbsenceService : IAbsenceService
+    public class AbsenceService(AppDbContext context, ILogger<AbsenceService> logger) : IAbsenceService
     {
-        private readonly AppDbContext _context;
-        private readonly ILogger<AbsenceService> _logger;
-
         public Guid? SupervisorId { get; private set; }
         public Guid UserId { get; private set; }
-
-        public AbsenceService(AppDbContext context, ILogger<AbsenceService> logger)
-        {
-            _context = context;
-            _logger = logger;
-        }
 
         public async Task<ServiceResult<AbsenceRequestDto>> CreateAbsenceRequestAsync(CreateAbsenceRequestDto request, string userId)
         {
             try
             {
-                _logger.LogInformation("Creating absence request for user {UserId}", userId);
+                logger.LogInformation("Creating absence request for user {UserId}", userId);
 
                 // Get intern associated with user
-                var intern = await _context.Interns
+                var intern = await context.Interns
                     .Include(i => i.User)
                     .FirstOrDefaultAsync(i => i.UserId.ToString() == userId);
 
@@ -56,15 +47,15 @@ namespace Interchée.Services
                     RequestedAt = DateTime.UtcNow
                 };
 
-                _context.AbsenceRequests.Add(absenceRequest);
-                await _context.SaveChangesAsync();
+                context.AbsenceRequests.Add(absenceRequest);
+                await context.SaveChangesAsync();
 
                 var dto = MapToAbsenceRequestDto(absenceRequest);
                 return ServiceResult<AbsenceRequestDto>.Ok(dto, "Absence request created successfully");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating absence request for user {UserId}", userId);
+                logger.LogError(ex, "Error creating absence request for user {UserId}", userId);
                 return ServiceResult<AbsenceRequestDto>.Fail("An error occurred while creating absence request");
             }
         }
@@ -73,9 +64,9 @@ namespace Interchée.Services
         {
             try
             {
-                _logger.LogInformation("Processing absence request {RequestId} by approver {ApproverId}", requestId, ApproverId);
+                logger.LogInformation("Processing absence request {RequestId} by approver {ApproverId}", requestId, ApproverId);
 
-                var absenceRequest = await _context.AbsenceRequests
+                var absenceRequest = await context.AbsenceRequests
                     .Include(ar => ar.Intern)
                     .ThenInclude(i => i.User)
                     .FirstOrDefaultAsync(ar => ar.Id == requestId);
@@ -94,16 +85,16 @@ namespace Interchée.Services
                 if (!request.IsApproved)
                     absenceRequest.RejectionReason = request.RejectionReason;
 
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
 
                 var action = request.IsApproved ? "approved" : "rejected";
-                _logger.LogInformation("Absence request {RequestId} {Action}", requestId, action);
+                logger.LogInformation("Absence request {RequestId} {Action}", requestId, action);
 
                 return ServiceResult.Ok($"Absence request {action} successfully");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error processing absence request {RequestId}", requestId);
+                logger.LogError(ex, "Error processing absence request {RequestId}", requestId);
                 return ServiceResult.Fail("An error occurred while processing the absence request");
             }
         }
@@ -112,11 +103,11 @@ namespace Interchée.Services
         {
             try
             {
-                var intern = await _context.Interns.FirstOrDefaultAsync(i => i.UserId == UserId);
+                var intern = await context.Interns.FirstOrDefaultAsync(i => i.UserId == UserId);
                 if (intern == null)
                     return ServiceResult<List<AbsenceRequestDto>>.Fail("Intern not found");
 
-                var requests = await _context.AbsenceRequests
+                var requests = await context.AbsenceRequests
                     .Where(ar => ar.InternId == intern.Id)
                     .Include(ar => ar.Intern)
                     .ThenInclude(i => i.User)
@@ -132,7 +123,7 @@ namespace Interchée.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching absence requests for user {UserId}", userId);
+                logger.LogError(ex, "Error fetching absence requests for user {UserId}", userId);
                 return ServiceResult<List<AbsenceRequestDto>>.Fail("An error occurred while fetching absence requests");
             }
         }
@@ -141,12 +132,12 @@ namespace Interchée.Services
         {
             try
             {
-                var supervisedInternIds = await _context.Interns
+                var supervisedInternIds = await context.Interns
                     .Where(i => i.SupervisorId == SupervisorId)
                     .Select(i => i.Id)
                     .ToListAsync();
 
-                var requests = await _context.AbsenceRequests
+                var requests = await context.AbsenceRequests
                     .Where(ar => supervisedInternIds.Contains(ar.InternId) && ar.Status == AbsenceStatus.Pending)
                     .Include(ar => ar.Intern)
                     .ThenInclude(i => i.User)
@@ -159,7 +150,7 @@ namespace Interchée.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching pending absence requests for supervisor {SupervisorId}", supervisorId);
+                logger.LogError(ex, "Error fetching pending absence requests for supervisor {SupervisorId}", supervisorId);
                 return ServiceResult<List<AbsenceRequestDto>>.Fail("An error occurred while fetching pending requests");
             }
         }
@@ -168,14 +159,14 @@ namespace Interchée.Services
         {
             try
             {
-                var intern = await _context.Interns
+                var intern = await context.Interns
                     .Include(i => i.User)
                     .FirstOrDefaultAsync(i => i.Id == internId);
 
                 if (intern == null)
                     return ServiceResult<AbsenceSummaryDto>.Fail("Intern not found");
 
-                var requests = await _context.AbsenceRequests
+                var requests = await context.AbsenceRequests
                     .Where(ar => ar.InternId == internId)
                     .ToListAsync();
 
@@ -198,7 +189,7 @@ namespace Interchée.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching absence summary for intern {InternId}", internId);
+                logger.LogError(ex, "Error fetching absence summary for intern {InternId}", internId);
                 return ServiceResult<AbsenceSummaryDto>.Fail("An error occurred while fetching absence summary");
             }
         }
@@ -213,7 +204,7 @@ namespace Interchée.Services
                 var currentMonthStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
                 var currentMonthEnd = currentMonthStart.AddMonths(1).AddDays(-1);
 
-                var monthlyAbsenceDays = await _context.AbsenceRequests
+                var monthlyAbsenceDays = await context.AbsenceRequests
                     .Where(ar => ar.InternId == internId &&
                                 ar.Status == AbsenceStatus.Approved &&
                                 ar.StartDate >= currentMonthStart &&
@@ -224,7 +215,7 @@ namespace Interchée.Services
                     return ServiceResult<bool>.Fail("Absence request exceeds monthly limit of 5 days");
 
                 // Check total internship limit (20 days total)
-                var totalAbsenceDays = await _context.AbsenceRequests
+                var totalAbsenceDays = await context.AbsenceRequests
                     .Where(ar => ar.InternId == internId && ar.Status == AbsenceStatus.Approved)
                     .SumAsync(ar => ar.TotalDays);
 
@@ -235,7 +226,7 @@ namespace Interchée.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error checking absence limits for intern {InternId}", internId);
+                logger.LogError(ex, "Error checking absence limits for intern {InternId}", internId);
                 return ServiceResult<bool>.Fail("An error occurred while checking absence limits");
             }
         }
@@ -244,7 +235,7 @@ namespace Interchée.Services
         {
             try
             {
-                var requests = await _context.AbsenceRequests
+                var requests = await context.AbsenceRequests
                     .Include(ar => ar.Intern)
                     .ThenInclude(i => i.User)
                     .ThenInclude(u => u.Department)
@@ -262,7 +253,7 @@ namespace Interchée.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching department absences for department {DepartmentId}", departmentId);
+                logger.LogError(ex, "Error fetching department absences for department {DepartmentId}", departmentId);
                 return ServiceResult<List<AbsenceRequestDto>>.Fail("An error occurred while fetching department absences");
             }
         }

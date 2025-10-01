@@ -66,8 +66,8 @@ namespace Interchée.Data
         {
             b.Entity<Department>(e =>
             {
-                e.Property(x => x.Name).HasMaxLength(128).IsRequired();
-                e.HasIndex(x => x.Name).IsUnique();
+                e.Property(x => x.DepartmentName).HasMaxLength(128).IsRequired();
+                e.HasIndex(x => x.DepartmentName).IsUnique();
                 e.Property(x => x.Code).HasMaxLength(32);
                
             });

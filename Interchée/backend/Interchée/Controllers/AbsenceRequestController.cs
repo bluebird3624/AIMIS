@@ -1,62 +1,79 @@
 ﻿// Controllers/AbsenceRequestsController.cs (updated)
-using Interchee.Common;
+using Interchée.Common;
 using Interchée.Dtos;
+using Interchée.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
-[HttpPost]
-[Authorize(Roles = "Intern")]
-public async Task<ActionResult<ApiResponse<AbsenceRequestDto>>> CreateAbsenceRequest(CreateAbsenceRequestDto request)
+namespace Interchée.Controllers
 {
-    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-    if (string.IsNullOrEmpty(userId))
-        return Unauthorized(new ApiResponse<AbsenceRequestDto>
-        {
-            Success = false,
-            Errors = new List<string> { "Unauthorized" }
-        });
-
-    var result = await _absenceService.CreateAbsenceRequestAsync(request, userId);
-
-    if (!result.Success)
-        return BadRequest(new ApiResponse<AbsenceRequestDto>
-        {
-            Success = false,
-            Errors = new List<string> { result.Message }
-        });
-
-    return Ok(new ApiResponse<AbsenceRequestDto>
+    [ApiController]
+    [Route("[controller]")]
+    public class AbsenceRequestController : ControllerBase
     {
-        Success = true,
-        Data = result.Data,
-        Message = result.Message
-    });
-}
+        private readonly IAbsenceService _absenceService;
 
-[HttpGet("my-requests")]
-[Authorize(Roles = "Intern")]
-public async Task<ActionResult<ApiResponse<List<AbsenceRequestDto>>>> GetMyAbsenceRequests()
-{
-    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-    if (string.IsNullOrEmpty(userId))
-        return Unauthorized(new ApiResponse<List<AbsenceRequestDto>>
+        public AbsenceRequestController(IAbsenceService absenceService)
         {
-            Success = false,
-            Errors = new List<string> { "Unauthorized" }
-        });
+            _absenceService = absenceService;
+        }
 
-    var result = await _absenceService.GetMyAbsenceRequestsAsync(userId);
-
-    if (!result.Success)
-        return BadRequest(new ApiResponse<List<AbsenceRequestDto>>
+        [HttpPost]
+        [Authorize(Roles = "Intern")]
+        public async Task<ActionResult<ApiResponse<AbsenceRequestDto>>> CreateAbsenceRequest(CreateAbsenceRequestDto request)
         {
-            Success = false,
-            Errors = new List<string> { result.Message }
-        });
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new ApiResponse<AbsenceRequestDto>
+                {
+                    Success = false,
+                    Errors = new List<string> { "Unauthorized" }
+                });
 
-    return Ok(new ApiResponse<List<AbsenceRequestDto>>
-    {
-        Success = true,
-        Data = result.Data
-    });
+            var result = await _absenceService.CreateAbsenceRequestAsync(request, userId);
+
+            if (!result.Success)
+                return BadRequest(new ApiResponse<AbsenceRequestDto>
+                {
+                    Success = false,
+                    Errors = new List<string> { result.Message ?? "Unknown error" }
+                });
+
+            return Ok(new ApiResponse<AbsenceRequestDto>
+            {
+                Success = true,
+                Data = result.Data,
+                Message = result.Message ?? string.Empty // Fix CS8601: ensure Message is not null
+            });
+        }
+
+        [HttpGet("my-requests")]
+        [Authorize(Roles = "Intern")]
+        public async Task<ActionResult<ApiResponse<List<AbsenceRequestDto>>>> GetMyAbsenceRequests()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new ApiResponse<List<AbsenceRequestDto>>
+                {
+                    Success = false,
+                    Errors = new List<string> { "Unauthorized" }
+                });
+
+            var result = await _absenceService.GetMyAbsenceRequestsAsync(userId);
+
+            if (!result.Success)
+                return BadRequest(new ApiResponse<List<AbsenceRequestDto>>
+                {
+                    Success = false,
+                    Errors = new List<string> { result.Message ?? "Unknown error" }
+                });
+
+            return Ok(new ApiResponse<List<AbsenceRequestDto>>
+            {
+                Success = true,
+                Data = result.Data
+            });
+        }
+    }
 }
