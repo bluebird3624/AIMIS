@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Interchée.DTOs.Grades;
+using Interchée.DTOs;
 
-namespace Interchée.DTOs.Submissions
+namespace Interchée.DTOs
 {
     public class SubmitAssignmentDto
     {

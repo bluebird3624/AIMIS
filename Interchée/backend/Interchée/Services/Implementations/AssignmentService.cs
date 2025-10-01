@@ -1,7 +1,5 @@
 ﻿using Interchée.Data;
 using Interchée.DTOs;
-using Interchée.DTOs.Grades;
-using Interchée.DTOs.Submissions;
 using Interchée.Entities;
 using Interchée.Repositories.Interfaces;
 using Interchée.Services.Interfaces;
@@ -57,7 +55,7 @@ namespace Interchée.Services.Implementations
         public async Task<AssignmentResponseDto?> GetAssignmentAsync(int id)
         {
             var assignment = await _assignmentRepo.GetByIdAsync(id);
-            if (assignment == null) return null;
+            if (assignment is null) return null;
 
             var submissions = await _submissionRepo.GetByAssignmentAsync(id);
 
@@ -135,10 +133,7 @@ namespace Interchée.Services.Implementations
 
         public async Task<AssignmentResponseDto> UpdateAssignmentAsync(int id, UpdateAssignmentDto dto)
         {
-            var assignment = await _assignmentRepo.GetByIdAsync(id);
-            if (assignment == null)
-                throw new ArgumentException("Assignment not found");
-
+            var assignment = await _assignmentRepo.GetByIdAsync(id) ?? throw new ArgumentException("Assignment not found");
             if (!string.IsNullOrEmpty(dto.Title))
                 assignment.Title = dto.Title;
 
@@ -151,18 +146,12 @@ namespace Interchée.Services.Implementations
             await _assignmentRepo.UpdateAsync(assignment);
 
             var updatedAssignment = await GetAssignmentAsync(id);
-            if (updatedAssignment == null)
-                throw new InvalidOperationException("Updated assignment not found");
-
-            return updatedAssignment;
+            return updatedAssignment is null ? throw new InvalidOperationException("Updated assignment not found") : updatedAssignment;
         }
 
         public async Task DeleteAssignmentAsync(int id)
         {
-            var assignment = await _assignmentRepo.GetByIdAsync(id);
-            if (assignment == null)
-                throw new ArgumentException("Assignment not found");
-
+           
             await _assignmentRepo.DeleteAsync(id);
         }
 
@@ -170,10 +159,7 @@ namespace Interchée.Services.Implementations
 
         public async Task<SubmissionResponseDto> SubmitAssignmentAsync(int assignmentId, SubmitAssignmentDto dto, Guid internId)
         {
-            var assignment = await _assignmentRepo.GetByIdAsync(assignmentId);
-            if (assignment == null)
-                throw new ArgumentException("Assignment not found");
-
+            
             if (await _submissionRepo.HasInternSubmittedAsync(assignmentId, internId))
                 throw new InvalidOperationException("Assignment already submitted");
 
@@ -214,10 +200,10 @@ namespace Interchée.Services.Implementations
         public async Task<SubmissionResponseDto?> GetSubmissionAsync(int submissionId)
         {
             var submission = await _submissionRepo.GetByIdAsync(submissionId);
-            if (submission == null) return null;
+            if (submission is null) return null;
 
             GradeResponseDto? gradeDto = null;
-            if (submission.Grade != null && submission.Grade.GradedBy != null)
+            if (submission.Grade is { GradedBy: not null })
             {
                 gradeDto = new GradeResponseDto
                 {
@@ -274,10 +260,7 @@ namespace Interchée.Services.Implementations
 
         public async Task<GradeResponseDto> GradeSubmissionAsync(int submissionId, GradeSubmissionDto dto, Guid supervisorId)
         {
-            var submission = await _submissionRepo.GetByIdAsync(submissionId);
-            if (submission == null)
-                throw new ArgumentException("Submission not found");
-
+            var submission = await _submissionRepo.GetByIdAsync(submissionId) ?? throw new ArgumentException("Submission not found");
             var grade = new Grade
             {
                 SubmissionId = submissionId,
@@ -307,7 +290,7 @@ namespace Interchée.Services.Implementations
         public async Task<GradeResponseDto?> GetGradeAsync(int submissionId)
         {
             var grade = await _gradeRepo.GetBySubmissionIdAsync(submissionId);
-            if (grade == null) return null;
+            if (grade is null) return null;
 
             return new GradeResponseDto
             {

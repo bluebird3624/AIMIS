@@ -1,6 +1,4 @@
-﻿using Interchée.DTOs.Submissions;
-using Interchée.DTOs.Grades;
-using Interchée.DTOs;
+﻿using Interchée.DTOs;
 
 namespace Interchée.Services.Interfaces
 {

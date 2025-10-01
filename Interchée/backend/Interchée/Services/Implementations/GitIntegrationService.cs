@@ -2,14 +2,9 @@
 
 namespace Interchée.Services.Implementations
 {
-    public class GitIntegrationService : IGitIntegrationService
+    public class GitIntegrationService(HttpClient httpClient) : IGitIntegrationService
     {
-        private readonly HttpClient _httpClient;
-
-        public GitIntegrationService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
+        private readonly HttpClient _httpClient = httpClient;
 
         public async Task<bool> ValidateGitUrlAsync(string gitUrl)
         {

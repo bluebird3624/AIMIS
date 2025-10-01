@@ -10,6 +10,7 @@ namespace Interchée.Repositories.Interfaces
         Task<IEnumerable<AssignmentSubmission>> GetByInternAsync(Guid internId);
         Task<AssignmentSubmission> CreateAsync(AssignmentSubmission submission);
         Task UpdateAsync(AssignmentSubmission submission);
+        Task DeleteAsync(int id);
         Task<bool> HasInternSubmittedAsync(int assignmentId, Guid internId);
     }
 }

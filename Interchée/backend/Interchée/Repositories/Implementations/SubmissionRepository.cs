@@ -5,14 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interchée.Repositories.Implementations
 {
-    public class SubmissionRepository : ISubmissionRepository
+    public class SubmissionRepository(AppDbContext context) : ISubmissionRepository
     {
-        private readonly AppDbContext _context;
-
-        public SubmissionRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public async Task<AssignmentSubmission?> GetByIdAsync(int id)
         {
@@ -30,7 +25,6 @@ namespace Interchée.Repositories.Implementations
                 .Include(s => s.Assignment)
                 .Include(s => s.Intern)
                 .Include(s => s.Grade)
-                .Include(s => s.Feedbacks)
                 .FirstOrDefaultAsync(s => s.AssignmentId == assignmentId && s.InternId == internId);
         }
 
@@ -66,6 +60,16 @@ namespace Interchée.Repositories.Implementations
         {
             _context.AssignmentSubmissions.Update(submission);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var submission = await GetByIdAsync(id);
+            if (submission != null)
+            {
+                _context.AssignmentSubmissions.Remove(submission);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<bool> HasInternSubmittedAsync(int assignmentId, Guid internId)

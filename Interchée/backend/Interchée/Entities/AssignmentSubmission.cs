@@ -32,6 +32,6 @@ namespace Interchée.Entities
         public Assignment Assignment { get; set; } = default!;
         public AppUser Intern { get; set; } = default!;
         public Grade? Grade { get; set; }
-        public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+        public ICollection<Feedback> Feedbacks { get; set; } = [];
     }
 }

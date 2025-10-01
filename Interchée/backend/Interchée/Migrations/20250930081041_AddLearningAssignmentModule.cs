@@ -8,6 +8,9 @@ namespace Interchée.Migrations
     /// <inheritdoc />
     public partial class AddLearningAssignmentModule : Migration
     {
+        private static readonly string[] columns = ["AssignmentId", "InternId"];
+        private static readonly string[] columnsArray = ["UserId", "DepartmentId", "RoleName"];
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -428,7 +431,7 @@ namespace Interchée.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AssignmentSubmissions_AssignmentId_InternId",
                 table: "AssignmentSubmissions",
-                columns: new[] { "AssignmentId", "InternId" },
+                columns: columns,
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -444,7 +447,7 @@ namespace Interchée.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_DepartmentRoleAssignments_UserId_DepartmentId_RoleName",
                 table: "DepartmentRoleAssignments",
-                columns: new[] { "UserId", "DepartmentId", "RoleName" },
+                columns: columnsArray,
                 unique: true);
 
             migrationBuilder.CreateIndex(

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Interchée.DTOs.Grades
+namespace Interchée.DTOs
 {
     public class GradeSubmissionDto
     {

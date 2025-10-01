@@ -1,4 +1,4 @@
-﻿using Interchée.DTOs.Grades;
+﻿using Interchée.DTOs;
 
 namespace Interchée.Services.Interfaces
 {

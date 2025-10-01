@@ -5,14 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Interchée.Repositories.Implementations
 {
-    public class GradeRepository : IGradeRepository
+    public class GradeRepository(AppDbContext context) : IGradeRepository
     {
-        private readonly AppDbContext _context;
-
-        public GradeRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public async Task<Grade?> GetBySubmissionIdAsync(int submissionId)
         {

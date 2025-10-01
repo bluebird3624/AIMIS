@@ -7,9 +7,8 @@ using System.Reflection.Emit;
 
 namespace Interchée.Data
 {
-    public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         // === EXISTING DbSets ===
         public DbSet<Department> Departments => Set<Department>();
