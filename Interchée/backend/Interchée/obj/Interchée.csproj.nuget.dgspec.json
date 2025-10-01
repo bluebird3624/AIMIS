@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mamad\\source\\repos\\AIMIS\\Interchée\\backend\\Interchée\\Interchée.csproj": {}
+    "C:\\Users\\User\\Downloads\\Agile\\Agile Web Dev\\attachee management system\\AIMIS\\Interchée\\backend\\Interchée\\Interchée.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mamad\\source\\repos\\AIMIS\\Interchée\\backend\\Interchée\\Interchée.csproj": {
+    "C:\\Users\\User\\Downloads\\Agile\\Agile Web Dev\\attachee management system\\AIMIS\\Interchée\\backend\\Interchée\\Interchée.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mamad\\source\\repos\\AIMIS\\Interchée\\backend\\Interchée\\Interchée.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Downloads\\Agile\\Agile Web Dev\\attachee management system\\AIMIS\\Interchée\\backend\\Interchée\\Interchée.csproj",
         "projectName": "Interchée",
-        "projectPath": "C:\\Users\\mamad\\source\\repos\\AIMIS\\Interchée\\backend\\Interchée\\Interchée.csproj",
-        "packagesPath": "C:\\Users\\mamad\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mamad\\source\\repos\\AIMIS\\Interchée\\backend\\Interchée\\obj\\",
+        "projectPath": "C:\\Users\\User\\Downloads\\Agile\\Agile Web Dev\\attachee management system\\AIMIS\\Interchée\\backend\\Interchée\\Interchée.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Downloads\\Agile\\Agile Web Dev\\attachee management system\\AIMIS\\Interchée\\backend\\Interchée\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\mamad\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
