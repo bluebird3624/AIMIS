@@ -9,8 +9,12 @@ function WelcomePage() {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate('/Onboarding') 
+    navigate('/login') ;
   }
+
+  const redirect = () => {
+    window.location.href = 'https://self-onboarding.agilebiz.co.ke/home';
+  };
 
   return (
   <div className="body-welcome " style={{ backgroundImage : "url('/src/assets/RegistratioPage.png')" } }>
@@ -24,9 +28,9 @@ function WelcomePage() {
     <div className='button-container'>
 
     <button className='enroll-button' onClick={handleClick}>
-        Enroll
+        Log in
     </button>
-    <button className='aboutus-button'>
+    <button className='aboutus-button' onClick={redirect}>
       About Us
     </button>
     </div>
