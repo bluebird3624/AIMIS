@@ -1,289 +1,242 @@
-﻿using Interchée.Data;
+﻿using Interchee.Common;
+using Interchée.Data;
+using Interchee.Entities;
 using Interchée.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Interchée.Controllers
+namespace Interchee.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AbsenceRequestsController : ControllerBase
+    [Authorize]
+    public class UsersController : ControllerBase
     {
+        private readonly UserManager<AppUser> _userManager;
         private readonly AppDbContext _context;
-        private readonly ILogger<AbsenceRequestsController> _logger;
+        private readonly ILogger<UsersController> _logger;
 
-        public AbsenceRequestsController(AppDbContext context, ILogger<AbsenceRequestsController> logger)
+        public UsersController(UserManager<AppUser> userManager, AppDbContext context, ILogger<UsersController> logger)
         {
+            _userManager = userManager;
             _context = context;
             _logger = logger;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetAbsenceRequests()
+        [Authorize(Roles = "HR,Admin")]
+        public async Task<ActionResult<ApiResponse<List<UserDto>>>> GetUsers()
         {
             try
             {
-                var absenceRequests = await _context.AbsenceRequests
-                    .Include(ar => ar.Intern).ThenInclude(i => i.User)
-                    .Include(ar => ar.ApprovedBy)
-                    .OrderByDescending(ar => ar.RequestedAt)
-                    .Select(ar => new
+                var users = await _userManager.Users
+                    .Include(u => u.Department)
+                    .Select(u => new UserDto
                     {
-                        ar.Id,
-                        ar.InternId,
-                        InternName = $"{ar.Intern.User.FirstName} {ar.Intern.User.LastName}",
-                        ar.Reason,
-                        ar.StartDate,
-                        ar.EndDate,
-                        ar.Status,
-                        ar.RejectionReason,
-                        ApprovedByName = ar.ApprovedBy != null ? $"{ar.ApprovedBy.FirstName} {ar.ApprovedBy.LastName}" : null,
-                        ar.RequestedAt,
-                        ar.ReviewedAt,
-                        TotalDays = (ar.EndDate - ar.StartDate).Days + 1
+                        Id = u.Id,
+                        UserName = u.UserName,
+                        Email = u.Email,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName,
+                        FullName = u.FullName,
+                        DepartmentId = u.DepartmentId,
+                        DepartmentName = u.Department != null ? u.Department.Name : null,
+                        IsActive = u.IsActive,
+                        CreatedAt = u.CreatedAt
                     })
                     .ToListAsync();
 
-                return Ok(absenceRequests);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching absence requests");
-                return StatusCode(500, "An error occurred while fetching absence requests");
-            }
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<object>> GetAbsenceRequest(int id)
-        {
-            try
-            {
-                var absenceRequest = await _context.AbsenceRequests
-                    .Include(ar => ar.Intern).ThenInclude(i => i.User)
-                    .Include(ar => ar.ApprovedBy)
-                    .Where(ar => ar.Id == id)
-                    .Select(ar => new
-                    {
-                        ar.Id,
-                        ar.InternId,
-                        InternName = $"{ar.Intern.User.FirstName} {ar.Intern.User.LastName}",
-                        InternEmail = ar.Intern.User.Email,
-                        ar.Reason,
-                        ar.StartDate,
-                        ar.EndDate,
-                        ar.Status,
-                        ar.RejectionReason,
-                        ApprovedByName = ar.ApprovedBy != null ? $"{ar.ApprovedBy.FirstName} {ar.ApprovedBy.LastName}" : null,
-                        ApprovedByEmail = ar.ApprovedBy != null ? ar.ApprovedBy.Email : null,
-                        ar.RequestedAt,
-                        ar.ReviewedAt,
-                        TotalDays = (ar.EndDate - ar.StartDate).Days + 1
-                    })
-                    .FirstOrDefaultAsync();
-
-                if (absenceRequest == null) return NotFound();
-                return absenceRequest;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching absence request with ID: {AbsenceRequestId}", id);
-                return StatusCode(500, "An error occurred while fetching the absence request");
-            }
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<AbsenceRequest>> CreateAbsenceRequest(CreateAbsenceRequestDto request)
-        {
-            try
-            {
-                if (request.StartDate > request.EndDate)
-                    return BadRequest("Start date cannot be after end date");
-
-                if (request.StartDate < DateTime.Today)
-                    return BadRequest("Cannot request absence for past dates");
-
-                var intern = await _context.Interns
-                    .Include(i => i.User)
-                    .FirstOrDefaultAsync(i => i.UserId == request.UserId);
-
-                if (intern == null) return BadRequest("Intern not found");
-
-                var absenceRequest = new AbsenceRequest
+                // Get roles for each user
+                foreach (var user in users)
                 {
-                    InternId = intern.Id,
-                    Reason = request.Reason,
-                    StartDate = request.StartDate,
-                    EndDate = request.EndDate,
-                    Status = AbsenceStatus.Pending,
-                    RequestedAt = DateTime.UtcNow
+                    var appUser = await _userManager.FindByIdAsync(user.Id);
+                    user.Roles = await _userManager.GetRolesAsync(appUser);
+                }
+
+                return Ok(ApiResponse.Success(users));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching users");
+                return StatusCode(500, ApiResponse.Error<List<UserDto>>("An error occurred while fetching users"));
+            }
+        }
+
+        [HttpGet("supervisors")]
+        [Authorize(Roles = "HR,Admin,Supervisor")]
+        public async Task<ActionResult<ApiResponse<List<UserDto>>>> GetSupervisors()
+        {
+            try
+            {
+                var supervisors = await _userManager.GetUsersInRoleAsync("Supervisor");
+                var supervisorDtos = supervisors.Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    FullName = u.FullName,
+                    DepartmentId = u.DepartmentId,
+                    DepartmentName = u.Department != null ? u.Department.Name : null,
+                    IsActive = u.IsActive
+                }).ToList();
+
+                return Ok(ApiResponse.Success(supervisorDtos));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching supervisors");
+                return StatusCode(500, ApiResponse.Error<List<UserDto>>("An error occurred while fetching supervisors"));
+            }
+        }
+
+        [HttpGet("interns")]
+        [Authorize(Roles = "HR,Admin,Supervisor")]
+        public async Task<ActionResult<ApiResponse<List<UserDto>>>> GetInterns()
+        {
+            try
+            {
+                var interns = await _userManager.GetUsersInRoleAsync("Intern");
+                var internDtos = interns.Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    FullName = u.FullName,
+                    DepartmentId = u.DepartmentId,
+                    DepartmentName = u.Department != null ? u.Department.Name : null,
+                    IsActive = u.IsActive
+                }).ToList();
+
+                return Ok(ApiResponse.Success(internDtos));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching interns");
+                return StatusCode(500, ApiResponse.Error<List<UserDto>>("An error occurred while fetching interns"));
+            }
+        }
+
+        [HttpGet("me")]
+        public async Task<ActionResult<ApiResponse<UserDto>>> GetCurrentUser()
+        {
+            try
+            {
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                    return Unauthorized(ApiResponse.Error<UserDto>("Unauthorized"));
+
+                var user = await _userManager.Users
+                    .Include(u => u.Department)
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+
+                if (user == null)
+                    return NotFound(ApiResponse.Error<UserDto>("User not found"));
+
+                var userDto = new UserDto
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    FullName = user.FullName,
+                    DepartmentId = user.DepartmentId,
+                    DepartmentName = user.Department != null ? user.Department.Name : null,
+                    IsActive = user.IsActive,
+                    CreatedAt = user.CreatedAt,
+                    Roles = await _userManager.GetRolesAsync(user)
                 };
 
-                _context.AbsenceRequests.Add(absenceRequest);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetAbsenceRequest), new { id = absenceRequest.Id }, absenceRequest);
+                return Ok(ApiResponse.Success(userDto));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating absence request");
-                return StatusCode(500, "An error occurred while creating the absence request");
+                _logger.LogError(ex, "Error fetching current user");
+                return StatusCode(500, ApiResponse.Error<UserDto>("An error occurred while fetching user information"));
             }
         }
 
-        [HttpPut("{id}/approve")]
-        public async Task<IActionResult> ApproveAbsenceRequest(int id, ApproveAbsenceRequestDto request)
+        [HttpPut("{id}/department")]
+        [Authorize(Roles = "HR,Admin")]
+        public async Task<ActionResult<ApiResponse>> UpdateUserDepartment(string id, UpdateUserDepartmentDto request)
         {
             try
             {
-                var absenceRequest = await _context.AbsenceRequests
-                    .Include(ar => ar.Intern).ThenInclude(i => i.User)
-                    .FirstOrDefaultAsync(ar => ar.Id == id);
+                var user = await _userManager.FindByIdAsync(id);
+                if (user == null)
+                    return NotFound(ApiResponse.Error("User not found"));
 
-                if (absenceRequest == null) return NotFound();
-                if (absenceRequest.Status != AbsenceStatus.Pending)
-                    return BadRequest("Absence request has already been processed");
+                var department = await _context.Departments.FindAsync(request.DepartmentId);
+                if (department == null)
+                    return BadRequest(ApiResponse.Error("Department not found"));
 
-                var approver = await _context.Users.FindAsync(request.ApproverId);
-                if (approver == null) return BadRequest("Approver not found");
+                user.DepartmentId = request.DepartmentId;
+                await _userManager.UpdateAsync(user);
 
-                absenceRequest.Status = request.IsApproved ? AbsenceStatus.Approved : AbsenceStatus.Rejected;
-                absenceRequest.ApprovedById = request.ApproverId;
-                absenceRequest.ReviewedAt = DateTime.UtcNow;
-
-                if (!request.IsApproved && !string.IsNullOrEmpty(request.RejectionReason))
-                    absenceRequest.RejectionReason = request.RejectionReason;
-
-                await _context.SaveChangesAsync();
-                return NoContent();
+                return Ok(ApiResponse.Success("User department updated successfully"));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error processing absence request with ID: {AbsenceRequestId}", id);
-                return StatusCode(500, "An error occurred while processing the absence request");
+                _logger.LogError(ex, "Error updating user department for user {UserId}", id);
+                return StatusCode(500, ApiResponse.Error("An error occurred while updating user department"));
             }
         }
 
-        [HttpGet("intern/{internId}")]
-        public async Task<ActionResult<IEnumerable<object>>> GetAbsenceRequestsByIntern(int internId)
+        [HttpPut("{id}/roles")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ApiResponse>> UpdateUserRoles(string id, UpdateUserRolesDto request)
         {
             try
             {
-                var absenceRequests = await _context.AbsenceRequests
-                    .Where(ar => ar.InternId == internId)
-                    .Include(ar => ar.Intern).ThenInclude(i => i.User)
-                    .Include(ar => ar.ApprovedBy)
-                    .OrderByDescending(ar => ar.RequestedAt)
-                    .Select(ar => new
-                    {
-                        ar.Id,
-                        ar.Reason,
-                        ar.StartDate,
-                        ar.EndDate,
-                        ar.Status,
-                        ar.RejectionReason,
-                        ApprovedByName = ar.ApprovedBy != null ? $"{ar.ApprovedBy.FirstName} {ar.ApprovedBy.LastName}" : null,
-                        ar.RequestedAt,
-                        ar.ReviewedAt,
-                        TotalDays = (ar.EndDate - ar.StartDate).Days + 1
-                    })
-                    .ToListAsync();
+                var user = await _userManager.FindByIdAsync(id);
+                if (user == null)
+                    return NotFound(ApiResponse.Error("User not found"));
 
-                return Ok(absenceRequests);
+                var currentRoles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user, currentRoles);
+
+                var result = await _userManager.AddToRolesAsync(user, request.Roles);
+                if (!result.Succeeded)
+                    return BadRequest(ApiResponse.Error("Failed to update user roles"));
+
+                return Ok(ApiResponse.Success("User roles updated successfully"));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching absence requests for intern ID: {InternId}", internId);
-                return StatusCode(500, "An error occurred while fetching absence requests");
-            }
-        }
-
-        [HttpGet("pending")]
-        public async Task<ActionResult<IEnumerable<object>>> GetPendingAbsenceRequests()
-        {
-            try
-            {
-                var pendingRequests = await _context.AbsenceRequests
-                    .Where(ar => ar.Status == AbsenceStatus.Pending)
-                    .Include(ar => ar.Intern).ThenInclude(i => i.User)
-                    .Include(ar => ar.Intern.Supervisor)
-                    .OrderBy(ar => ar.StartDate)
-                    .Select(ar => new
-                    {
-                        ar.Id,
-                        ar.InternId,
-                        InternName = $"{ar.Intern.User.FirstName} {ar.Intern.User.LastName}",
-                        InternEmail = ar.Intern.User.Email,
-                        SupervisorName = ar.Intern.Supervisor != null ?
-                            $"{ar.Intern.Supervisor.FirstName} {ar.Intern.Supervisor.LastName}" : "No Supervisor",
-                        ar.Reason,
-                        ar.StartDate,
-                        ar.EndDate,
-                        ar.RequestedAt,
-                        TotalDays = (ar.EndDate - ar.StartDate).Days + 1
-                    })
-                    .ToListAsync();
-
-                return Ok(pendingRequests);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching pending absence requests");
-                return StatusCode(500, "An error occurred while fetching pending absence requests");
-            }
-        }
-
-        [HttpGet("summary/{internId}")]
-        public async Task<ActionResult<object>> GetAbsenceSummary(int internId)
-        {
-            try
-            {
-                var intern = await _context.Interns
-                    .Include(i => i.User)
-                    .FirstOrDefaultAsync(i => i.Id == internId);
-
-                if (intern == null) return NotFound("Intern not found");
-
-                var absenceRequests = await _context.AbsenceRequests
-                    .Where(ar => ar.InternId == internId)
-                    .ToListAsync();
-
-                var summary = new
-                {
-                    InternId = internId,
-                    InternName = $"{intern.User.FirstName} {intern.User.LastName}",
-                    TotalAbsenceDays = absenceRequests
-                        .Where(r => r.Status == AbsenceStatus.Approved)
-                        .Sum(r => (r.EndDate - r.StartDate).Days + 1),
-                    PendingRequests = absenceRequests.Count(r => r.Status == AbsenceStatus.Pending),
-                    ApprovedRequests = absenceRequests.Count(r => r.Status == AbsenceStatus.Approved),
-                    RejectedRequests = absenceRequests.Count(r => r.Status == AbsenceStatus.Rejected),
-                    RemainingAbsenceDays = Math.Max(0, 20 - absenceRequests
-                        .Where(r => r.Status == AbsenceStatus.Approved)
-                        .Sum(r => (r.EndDate - r.StartDate).Days + 1))
-                };
-
-                return Ok(summary);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching absence summary for intern ID: {InternId}", internId);
-                return StatusCode(500, "An error occurred while fetching absence summary");
+                _logger.LogError(ex, "Error updating user roles for user {UserId}", id);
+                return StatusCode(500, ApiResponse.Error("An error occurred while updating user roles"));
             }
         }
     }
 
-    public class CreateAbsenceRequestDto
+    public class UserDto
     {
-        public Guid UserId { get; set; }
-        public string? Reason { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public string Id { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string FullName { get; set; }
+        public int? DepartmentId { get; set; }
+        public string DepartmentName { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public IList<string> Roles { get; set; } = new List<string>();
     }
 
-    public class ApproveAbsenceRequestDto
+    public class UpdateUserDepartmentDto
     {
-        public Guid ApproverId { get; set; }
-        public bool IsApproved { get; set; }
-        public string RejectionReason { get; set; }
+        public int DepartmentId { get; set; }
+    }
+
+    public class UpdateUserRolesDto
+    {
+        public List<string> Roles { get; set; } = new();
     }
 }
