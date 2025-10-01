@@ -12,6 +12,8 @@ using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowedOrigins = "_myAllowOrigins";
+
 
 // --- Serilog (console + file, configured via appsettings.json)
 Log.Logger = new LoggerConfiguration()
@@ -32,6 +34,17 @@ builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowedOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+});
 
 // --- JWT Authentication (reads from appsettings: Jwt:Issuer/Audience/Key)
 var jwtSection = builder.Configuration.GetSection("Jwt");
@@ -89,6 +102,7 @@ var app = builder.Build();
 // --- pipeline
 app.UseSerilogRequestLogging();
 
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi().AllowAnonymous();        // serves /openapi/v1.json
@@ -103,6 +117,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(MyAllowedOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();
