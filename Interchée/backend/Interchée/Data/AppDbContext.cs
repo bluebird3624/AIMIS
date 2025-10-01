@@ -11,6 +11,8 @@ namespace Interchée.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+        public DbSet<OnboardingRequest> OnboardingRequests => Set<OnboardingRequest>();
+
         public DbSet<Department> Departments => Set<Department>();
         public DbSet<DepartmentRoleAssignment> DepartmentRoleAssignments => Set<DepartmentRoleAssignment>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
@@ -62,6 +64,29 @@ namespace Interchée.Data
                     .WithMany()
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            b.Entity<OnboardingRequest>(e =>
+            {
+                e.Property(x => x.Email).HasMaxLength(256).IsRequired();
+
+                e.Property(x => x.FirstName).HasMaxLength(64).IsRequired();
+                e.Property(x => x.LastName).HasMaxLength(64).IsRequired();
+                e.Property(x => x.MiddleName).HasMaxLength(64);
+
+                e.Property(x => x.FullName).HasMaxLength(128).IsRequired();
+
+                e.Property(x => x.Status).HasMaxLength(32).IsRequired(); // Pending/Approved/Rejected
+
+                e.Property(x => x.RequestedAt).IsRequired();
+
+                e.HasIndex(x => new { x.Email, x.Status })
+                 .HasDatabaseName("IX_Onboard_Email_Status");
+
+                e.HasOne(x => x.Department)
+                 .WithMany()
+                 .HasForeignKey(x => x.DepartmentId)
+                 .OnDelete(DeleteBehavior.Restrict); // preserve history
             });
         }
     }
