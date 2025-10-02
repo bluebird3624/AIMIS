@@ -1,0 +1,360 @@
+2025-10-02 08:48:21.702 +03:00 [INF] Executed DbCommand (24ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-02 08:48:21.781 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-02 08:48:21.829 +03:00 [INF] Executed DbCommand (45ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-02 08:48:21.972 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-02 08:48:21.983 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-02 08:48:21.985 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-02 08:48:22.052 +03:00 [INF] Executed DbCommand (64ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-02 08:48:22.066 +03:00 [INF] Applying migration '20251002054747_moduleupdte'.
+2025-10-02 08:48:22.143 +03:00 [INF] Executed DbCommand (34ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE [Departments] ADD [Name] nvarchar(max) NULL;
+2025-10-02 08:48:22.156 +03:00 [INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20251002054747_moduleupdte', N'9.0.9');
+2025-10-02 08:48:22.164 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-02 08:48:42.363 +03:00 [INF] Executed DbCommand (41ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-02 08:48:42.484 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-02 08:48:42.562 +03:00 [INF] Executed DbCommand (63ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-02 08:48:42.762 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-02 08:48:42.810 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-02 08:48:42.821 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-02 08:48:42.850 +03:00 [INF] Executed DbCommand (16ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-02 08:48:42.883 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-02 08:48:42.897 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-02 08:48:43.689 +03:00 [INF] Executed DbCommand (104ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-02 08:48:43.810 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-02 08:48:43.823 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-02 08:48:43.836 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-02 08:48:43.852 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-02 08:48:43.916 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-02 08:48:44.029 +03:00 [INF] User profile is available. Using 'C:\Users\kimmv\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-02 08:48:44.102 +03:00 [INF] Executed DbCommand (36ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Department], [a].[DepartmentId], [a].[DepartmentName], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-02 08:48:45.021 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-02 08:48:45.026 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-02 08:48:45.146 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-02 08:48:45.149 +03:00 [INF] Hosting environment: Development
+2025-10-02 08:48:45.153 +03:00 [INF] Content root path: C:\Users\kimmv\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-02 08:49:02.179 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/ - null null
+2025-10-02 08:49:02.711 +03:00 [INF] HTTP GET / responded 404 in 38.5945 ms
+2025-10-02 08:49:02.734 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/ - 404 0 null 575.5241ms
+2025-10-02 08:49:02.758 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/, Response status code: 404
+2025-10-02 08:49:11.492 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/ - null null
+2025-10-02 08:49:11.544 +03:00 [INF] HTTP GET / responded 404 in 2.3193 ms
+2025-10-02 08:49:11.655 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/ - 404 0 null 164.109ms
+2025-10-02 08:49:11.770 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/, Response status code: 404
+2025-10-02 08:49:48.474 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/v1 - null null
+2025-10-02 08:49:48.552 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-02 08:49:49.023 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-02 08:49:49.063 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-02 08:49:49.071 +03:00 [INF] HTTP GET /Scalar/v1 responded 200 in 538.2559 ms
+2025-10-02 08:49:49.079 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/v1 - 200 null text/html 605.4489ms
+2025-10-02 08:49:49.176 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/scalar.js - null null
+2025-10-02 08:49:49.182 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/scalar.aspnetcore.js - null null
+2025-10-02 08:49:49.193 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 08:49:49.213 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-02 08:49:49.215 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-02 08:49:49.401 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 209.0703ms
+2025-10-02 08:49:49.450 +03:00 [INF] Sending file with download name ''.
+2025-10-02 08:49:49.450 +03:00 [INF] Sending file with download name ''.
+2025-10-02 08:49:49.470 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-02 08:49:49.488 +03:00 [INF] HTTP GET /Scalar/scalar.aspnetcore.js responded 200 in 273.1341 ms
+2025-10-02 08:49:49.503 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/scalar.aspnetcore.js - 200 1046 text/javascript 321.7775ms
+2025-10-02 08:49:49.553 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-02 08:49:49.563 +03:00 [INF] HTTP GET /Scalar/scalar.js responded 200 in 350.6145 ms
+2025-10-02 08:49:49.569 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/scalar.js - 200 869947 text/javascript 393.2432ms
+2025-10-02 08:49:50.319 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_vs/browserLink - null null
+2025-10-02 08:49:50.502 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_vs/browserLink - 200 null text/javascript; charset=UTF-8 183.202ms
+2025-10-02 08:49:50.996 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-02 08:49:51.007 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 08:49:51.467 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-02 08:49:51.470 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 08:49:51.476 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 08:49:51.479 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 472.5910 ms
+2025-10-02 08:49:51.488 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 491.8788ms
+2025-10-02 08:49:51.512 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 08:49:51.518 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 41.8248 ms
+2025-10-02 08:49:51.527 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 59.7797ms
+2025-10-02 08:49:52.684 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/favicon.svg - null null
+2025-10-02 08:49:52.704 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-02 08:49:52.708 +03:00 [INF] Sending file with download name ''.
+2025-10-02 08:49:52.713 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-02 08:49:52.719 +03:00 [INF] HTTP GET /Scalar/favicon.svg responded 200 in 15.4378 ms
+2025-10-02 08:49:52.726 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/favicon.svg - 200 533 image/svg+xml 42.4023ms
+2025-10-02 08:52:16.366 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 72
+2025-10-02 08:52:16.398 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 08:52:16.417 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 08:52:16.423 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 45.2762 ms
+2025-10-02 08:52:16.429 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 62.9754ms
+2025-10-02 08:52:16.444 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 08:52:16.464 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.1619 ms
+2025-10-02 08:52:16.473 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 28.6553ms
+2025-10-02 08:52:16.489 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 08:52:38.737 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 72
+2025-10-02 08:52:38.750 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 08:52:38.757 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 08:52:38.762 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 13.0226 ms
+2025-10-02 08:52:38.772 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 34.8621ms
+2025-10-02 08:52:38.778 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 08:52:38.797 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.0959 ms
+2025-10-02 08:52:38.805 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 27.3298ms
+2025-10-02 08:52:38.820 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 08:57:31.971 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 72
+2025-10-02 08:57:31.999 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 08:57:32.003 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 08:57:32.006 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 10.9647 ms
+2025-10-02 08:57:32.015 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 44.0998ms
+2025-10-02 08:57:32.021 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 08:57:32.039 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.1008 ms
+2025-10-02 08:57:32.046 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 24.9894ms
+2025-10-02 08:57:32.060 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 08:57:34.225 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 72
+2025-10-02 08:57:34.238 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 08:57:34.242 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 08:57:34.246 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 7.9692 ms
+2025-10-02 08:57:34.255 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 29.3523ms
+2025-10-02 08:57:34.265 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 08:57:34.284 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.2637 ms
+2025-10-02 08:57:34.293 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 28.5008ms
+2025-10-02 08:57:34.309 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 09:48:50.066 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/v1 - null null
+2025-10-02 09:48:50.123 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-02 09:48:50.135 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-02 09:48:50.140 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-02 09:48:50.145 +03:00 [INF] HTTP GET /Scalar/v1 responded 200 in 22.7823 ms
+2025-10-02 09:48:50.151 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/v1 - 200 null text/html 85.5483ms
+2025-10-02 09:48:50.323 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/scalar.js - null null
+2025-10-02 09:48:50.327 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/scalar.aspnetcore.js - null null
+2025-10-02 09:48:50.369 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-02 09:48:50.338 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 09:48:50.387 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-02 09:48:50.396 +03:00 [INF] Sending file with download name ''.
+2025-10-02 09:48:50.408 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 70.3959ms
+2025-10-02 09:48:50.432 +03:00 [INF] Sending file with download name ''.
+2025-10-02 09:48:50.447 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-02 09:48:50.460 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-02 09:48:50.464 +03:00 [INF] HTTP GET /Scalar/scalar.js responded 304 in 123.3889 ms
+2025-10-02 09:48:50.468 +03:00 [INF] HTTP GET /Scalar/scalar.aspnetcore.js responded 304 in 81.0291 ms
+2025-10-02 09:48:50.475 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/scalar.js - 304 null null 151.9911ms
+2025-10-02 09:48:50.484 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/scalar.aspnetcore.js - 304 null null 157.7482ms
+2025-10-02 09:48:51.317 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_vs/browserLink - null null
+2025-10-02 09:48:51.411 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_vs/browserLink - 200 null text/javascript; charset=UTF-8 93.2414ms
+2025-10-02 09:48:52.235 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-02 09:48:52.248 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:48:52.286 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:48:52.289 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-02 09:48:52.292 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 44.7361 ms
+2025-10-02 09:48:52.301 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:48:52.309 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 73.5819ms
+2025-10-02 09:48:52.354 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:48:52.358 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 56.3871 ms
+2025-10-02 09:48:52.367 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 77.9958ms
+2025-10-02 09:48:52.513 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/favicon.svg - null null
+2025-10-02 09:48:52.531 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-02 09:48:52.537 +03:00 [INF] Sending file with download name ''.
+2025-10-02 09:48:52.540 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-02 09:48:52.545 +03:00 [INF] HTTP GET /Scalar/favicon.svg responded 304 in 13.5325 ms
+2025-10-02 09:48:52.551 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/favicon.svg - 304 null null 37.3932ms
+2025-10-02 09:49:54.076 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 72
+2025-10-02 09:49:54.094 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 09:49:54.099 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 09:49:54.103 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 9.6112 ms
+2025-10-02 09:49:54.110 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 33.5859ms
+2025-10-02 09:49:54.134 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 09:49:54.144 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.2775 ms
+2025-10-02 09:49:54.151 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 16.6072ms
+2025-10-02 09:49:54.162 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 09:49:56.397 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 72
+2025-10-02 09:49:56.409 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 09:49:56.414 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 09:49:56.419 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 11.5214 ms
+2025-10-02 09:49:56.429 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 31.5202ms
+2025-10-02 09:49:56.436 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 09:49:56.456 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.1340 ms
+2025-10-02 09:49:56.466 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 30.7365ms
+2025-10-02 09:49:56.482 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 09:49:56.558 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 72
+2025-10-02 09:49:56.570 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 09:49:56.575 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 09:49:56.579 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 9.1270 ms
+2025-10-02 09:49:56.588 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 29.706ms
+2025-10-02 09:49:56.594 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 09:49:56.611 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.2233 ms
+2025-10-02 09:49:56.619 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 24.6201ms
+2025-10-02 09:49:56.635 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 09:49:56.734 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 72
+2025-10-02 09:49:56.746 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 09:49:56.749 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 09:49:56.753 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 7.3903 ms
+2025-10-02 09:49:56.759 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 26.0056ms
+2025-10-02 09:49:56.768 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 09:49:56.786 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.1839 ms
+2025-10-02 09:49:56.799 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 30.7136ms
+2025-10-02 09:49:56.818 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 09:49:56.950 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 72
+2025-10-02 09:49:56.961 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 09:49:56.966 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 09:49:56.969 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 8.9553 ms
+2025-10-02 09:49:56.975 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 24.9239ms
+2025-10-02 09:49:56.983 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 09:49:56.999 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.1821 ms
+2025-10-02 09:49:57.006 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 22.8785ms
+2025-10-02 09:49:57.020 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 09:49:58.547 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 72
+2025-10-02 09:49:58.560 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 09:49:58.566 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 09:49:58.570 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 10.2589 ms
+2025-10-02 09:49:58.577 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 29.9197ms
+2025-10-02 09:49:58.585 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 09:49:58.606 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.0797 ms
+2025-10-02 09:49:58.615 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 30.572ms
+2025-10-02 09:49:58.629 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 09:50:43.421 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/v1 - null null
+2025-10-02 09:50:43.458 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-02 09:50:43.469 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-02 09:50:43.472 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-02 09:50:43.475 +03:00 [INF] HTTP GET /Scalar/v1 responded 200 in 17.7731 ms
+2025-10-02 09:50:43.483 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/v1 - 200 null text/html 62.3505ms
+2025-10-02 09:50:43.609 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/scalar.js - null null
+2025-10-02 09:50:43.616 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/scalar.aspnetcore.js - null null
+2025-10-02 09:50:43.614 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 09:50:43.655 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-02 09:50:43.659 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-02 09:50:43.669 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 55.016ms
+2025-10-02 09:50:43.688 +03:00 [INF] Sending file with download name ''.
+2025-10-02 09:50:43.691 +03:00 [INF] Sending file with download name ''.
+2025-10-02 09:50:43.706 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-02 09:50:43.709 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-02 09:50:43.713 +03:00 [INF] HTTP GET /Scalar/scalar.js responded 304 in 58.0859 ms
+2025-10-02 09:50:43.718 +03:00 [INF] HTTP GET /Scalar/scalar.aspnetcore.js responded 304 in 59.6588 ms
+2025-10-02 09:50:43.725 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/scalar.js - 304 null null 115.9119ms
+2025-10-02 09:50:43.733 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/scalar.aspnetcore.js - 304 null null 116.5578ms
+2025-10-02 09:50:44.854 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_vs/browserLink - null null
+2025-10-02 09:50:44.892 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_vs/browserLink - 200 null text/javascript; charset=UTF-8 37.4324ms
+2025-10-02 09:50:45.172 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-02 09:50:45.183 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:50:45.223 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:50:45.228 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-02 09:50:45.229 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 46.2878 ms
+2025-10-02 09:50:45.238 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:50:45.245 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 72.2663ms
+2025-10-02 09:50:45.283 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:50:45.288 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 50.1463 ms
+2025-10-02 09:50:45.292 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 64.6569ms
+2025-10-02 09:50:46.424 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/favicon.svg - null null
+2025-10-02 09:50:46.437 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-02 09:50:46.442 +03:00 [INF] Sending file with download name ''.
+2025-10-02 09:50:46.449 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-02 09:50:46.453 +03:00 [INF] HTTP GET /Scalar/favicon.svg responded 304 in 16.4931 ms
+2025-10-02 09:50:46.459 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/favicon.svg - 304 null null 34.4814ms
+2025-10-02 09:51:32.469 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/v1 - null null
+2025-10-02 09:51:32.490 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-02 09:51:32.494 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-02 09:51:32.499 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-02 09:51:32.521 +03:00 [INF] HTTP GET /Scalar/v1 responded 200 in 31.1685 ms
+2025-10-02 09:51:32.530 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/v1 - 200 null text/html 60.4342ms
+2025-10-02 09:51:32.611 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/scalar.js - null null
+2025-10-02 09:51:32.619 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/scalar.aspnetcore.js - null null
+2025-10-02 09:51:32.623 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-02 09:51:32.630 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-02 09:51:32.632 +03:00 [INF] Sending file with download name ''.
+2025-10-02 09:51:32.635 +03:00 [INF] Sending file with download name ''.
+2025-10-02 09:51:32.637 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-02 09:51:32.641 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-02 09:51:32.642 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 09:51:32.652 +03:00 [INF] HTTP GET /Scalar/scalar.js responded 304 in 29.0216 ms
+2025-10-02 09:51:32.669 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 26.6902ms
+2025-10-02 09:51:32.656 +03:00 [INF] HTTP GET /Scalar/scalar.aspnetcore.js responded 304 in 26.7010 ms
+2025-10-02 09:51:32.703 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/scalar.js - 304 null null 92.3374ms
+2025-10-02 09:51:32.739 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/scalar.aspnetcore.js - 304 null null 119.6307ms
+2025-10-02 09:51:33.409 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_vs/browserLink - null null
+2025-10-02 09:51:33.464 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_vs/browserLink - 200 null text/javascript; charset=UTF-8 54.2177ms
+2025-10-02 09:51:33.656 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-02 09:51:33.668 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:51:33.723 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:51:33.726 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-02 09:51:33.728 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 59.9569 ms
+2025-10-02 09:51:33.738 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:51:33.746 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 89.4907ms
+2025-10-02 09:51:33.762 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-02 09:51:33.768 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 30.5882 ms
+2025-10-02 09:51:33.778 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 52.5087ms
+2025-10-02 09:51:34.600 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/favicon.svg - null null
+2025-10-02 09:51:34.619 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-02 09:51:34.630 +03:00 [INF] Sending file with download name ''.
+2025-10-02 09:51:34.639 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-02 09:51:34.650 +03:00 [INF] HTTP GET /Scalar/favicon.svg responded 304 in 32.0131 ms
+2025-10-02 09:51:34.668 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/favicon.svg - 304 null null 67.9989ms

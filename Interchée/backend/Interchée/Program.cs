@@ -1,5 +1,6 @@
 using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Services; // Add this using statement
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,6 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .CreateLogger();
 builder.Host.UseSerilog();
- 
 
 // --- EF Core (SQL Server)
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -54,6 +54,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+
+// --- Service Registrations (ADD THIS SECTION)
+builder.Services.AddScoped<IAbsenceService, AbsenceService>();
+// Add other services as needed:
+// builder.Services.AddScoped<IUserService, UserService>();
+// builder.Services.AddScoped<IMapService, MapService>();
 
 // --- MVC + API docs
 builder.Services.AddControllers();

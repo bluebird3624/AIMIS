@@ -1,5 +1,4 @@
-﻿// Controllers/AbsenceRequestsController.cs (updated)
-using Interchée.Common;
+﻿using Interchée.Common;
 using Interchée.Dtos;
 using Interchée.Services;
 using Microsoft.AspNetCore.Authorization;
