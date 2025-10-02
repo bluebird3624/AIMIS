@@ -16,6 +16,7 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .CreateLogger();
 builder.Host.UseSerilog();
+ 
 
 // --- EF Core (SQL Server)
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -57,6 +58,7 @@ builder.Services.AddAuthorization();
 // --- MVC + API docs
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
@@ -66,6 +68,7 @@ app.UseSerilogRequestLogging();
 if (app.Environment.IsDevelopment())
 {
     // Scalar UI at /scalar with simple configuration
+    app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
         options.Title = "Interchée API Documentation";
