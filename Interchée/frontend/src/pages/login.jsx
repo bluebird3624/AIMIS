@@ -1,13 +1,33 @@
 import { useState } from "react";
 import '../Styles/login.css';
 import { useNavigate } from "react-router-dom";
+import { login } from "../services/auth";
+
 
 
 function Login(){
     const navigate = useNavigate();
 
-    const handleClick = () => {
-        navigate('/admin-dash') ;
+    const handleClick = async(event) => {
+      event.preventDefault();
+      try
+        {
+          const response = await login({email, password});
+        console.log('login page login response: ', response);
+        if (response.data.accessToken){
+          
+          navigate('/admin-dash');
+        }
+        else
+        {
+          console.log('user not authorized', response);
+        }
+      }
+      catch(error)
+      {
+        console.error('login failed', error);
+      }
+      
    }
 
 
