@@ -33,7 +33,6 @@ namespace Interchée.Controllers
                         Email = u.Email ?? string.Empty,
                         FirstName = u.FirstName ?? string.Empty,
                         LastName = u.LastName ?? string.Empty,
-                        FullName = $"{(u.FirstName ?? string.Empty)} {(u.LastName ?? string.Empty)}".Trim(),
                         DepartmentId = u.DepartmentId,
                         DepartmentName = u.Department != null ? u.Department.ToString() : "No Department",
                         IsActive = u.IsActive,
@@ -96,7 +95,6 @@ namespace Interchée.Controllers
                             Email = supervisor.Email ?? string.Empty,
                             FirstName = supervisor.FirstName ?? string.Empty,
                             LastName = supervisor.LastName ?? string.Empty,
-                            FullName = $"{(supervisor.FirstName ?? string.Empty)} {(supervisor.LastName ?? string.Empty)}".Trim(),
                             DepartmentId = supervisor.DepartmentId,
                             DepartmentName = supervisor.Department != null ? supervisor.Department.ToString() : "No Department",
                             IsActive = supervisor.IsActive
@@ -148,7 +146,6 @@ namespace Interchée.Controllers
                             Email = intern.Email ?? string.Empty,
                             FirstName = intern.FirstName ?? string.Empty,
                             LastName = intern.LastName ?? string.Empty,
-                            FullName = $"{(intern.FirstName ?? string.Empty)} {(intern.LastName ?? string.Empty)}".Trim(),
                             DepartmentId = intern.DepartmentId,
                             DepartmentName = intern.Department != null ? intern.Department.ToString() : "No Department",
                             IsActive = intern.IsActive
@@ -213,7 +210,6 @@ namespace Interchée.Controllers
                     Email = user.Email ?? string.Empty,
                     FirstName = user.FirstName ?? string.Empty,
                     LastName = user.LastName ?? string.Empty,
-                    FullName = $"{(user.FirstName ?? string.Empty)} {(user.LastName ?? string.Empty)}".Trim(),
                     DepartmentId = user.DepartmentId,
                     DepartmentName = user.Department != null ? user.Department.ToString() : "No Department",
                     IsActive = user.IsActive,
@@ -233,7 +229,7 @@ namespace Interchée.Controllers
                 return StatusCode(500, new ApiResponse<AppUserDto>
                 {
                     Success = false,
-                    Errors = ["An error occurred while fetching user information"]      
+                    Errors = ["An error occurred while fetching user information"]
                 });
             }
         }

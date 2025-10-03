@@ -14,18 +14,7 @@ namespace Interchée.Entities
         // Navigation properties for Absence Management Module
         public virtual ICollection<Intern> SupervisedInterns { get; set; } = [];
         public virtual ICollection<AbsenceRequest> ApprovedAbsenceRequests { get; set; } = [];
-
-        // Computed properties
-        [NotMapped]
-        public string FullName => MiddleName != null
-            ? $"{FirstName} {MiddleName} {LastName}"
-            : $"{FirstName} {LastName}";
-
-        [NotMapped]
-        public string DisplayName => $"{FirstName} {LastName}";
-
-        public string? Department { get; internal set; }
+        public object Department => $"{FirstName} {LastName}";
         public int? DepartmentId { get; internal set; }
-        public string? DepartmentName { get; internal set; }
     }
 }
