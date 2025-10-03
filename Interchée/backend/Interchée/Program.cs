@@ -56,6 +56,9 @@ builder.Services.AddAuthorization();
 
 // --- MVC + API docs (Swagger) + Scalar explorer
 builder.Services.AddControllers();
+
+builder.Services.AddOpenApi();
+
 builder.Services.AddEndpointsApiExplorer();
 
 
@@ -65,10 +68,27 @@ var app = builder.Build();
 app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
+
 {
-    
-    app.MapScalarApiReference("/scalar"); // Scalar UI at /scalar
+
+    app.MapOpenApi().AllowAnonymous();        // serves /openapi/v1.json
+
+    // Scalar v2 style: pass the route as the first arg, then configure pattern
+
+    app.MapScalarApiReference("/scalar", options =>
+
+    {
+
+        options
+
+            .WithTitle("InternAttache API")
+
+            .WithOpenApiRoutePattern("/openapi/{documentName}.json"); // default docName is "v1"
+
+    }).AllowAnonymous();
+
 }
+
 
 app.UseHttpsRedirection();
 
