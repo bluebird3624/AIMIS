@@ -1,17 +1,28 @@
-﻿using Interchée.DTOs;
+﻿using System.Security.Claims;
+using Interchée.DTOs;
 using Interchée.Entities;
 using Interchée.Repositories.Interfaces;
 using Interchée.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace Interchée.Services.Implementations
 {
-    public class GradeService(IGradeRepository gradeRepo, ISubmissionRepository submissionRepo) : IGradeService
+    public class GradeService(
+        IGradeRepository gradeRepo,
+        ISubmissionRepository submissionRepo,
+        UserManager<AppUser> userManager,
+        IHttpContextAccessor httpContextAccessor) : IGradeService
     {
         private readonly IGradeRepository _gradeRepo = gradeRepo;
         private readonly ISubmissionRepository _submissionRepo = submissionRepo;
+        private readonly UserManager<AppUser> _userManager = userManager;
+        private readonly IHttpContextAccessor _http = httpContextAccessor;
 
-        public async Task<GradeResponseDto> GradeSubmissionAsync(int submissionId, GradeSubmissionDto dto, Guid supervisorId)
+        public async Task<GradeResponseDto> GradeSubmissionAsync(int submissionId, GradeSubmissionDto dto)
         {
+            var user = await GetCurrentUserAsync(); // grader = current user
+
             var submission = await _submissionRepo.GetByIdAsync(submissionId)
                 ?? throw new ArgumentException("Submission not found");
 
@@ -20,7 +31,7 @@ namespace Interchée.Services.Implementations
                 SubmissionId = submissionId,
                 Score = dto.Score,
                 Comments = dto.Comments,
-                GradedById = supervisorId,
+                GradedById = user.Id,            // AppUser FK
                 GradedAt = DateTime.UtcNow
             };
 
@@ -56,14 +67,16 @@ namespace Interchée.Services.Implementations
             };
         }
 
-        public async Task<GradeResponseDto> UpdateGradeAsync(int submissionId, GradeSubmissionDto dto, Guid supervisorId)
+        public async Task<GradeResponseDto> UpdateGradeAsync(int submissionId, GradeSubmissionDto dto)
         {
+            var user = await GetCurrentUserAsync(); // updater = current user
+
             var grade = await _gradeRepo.GetBySubmissionIdAsync(submissionId)
                 ?? throw new ArgumentException("Grade not found");
 
             grade.Score = dto.Score;
             grade.Comments = dto.Comments;
-            grade.GradedById = supervisorId;
+            grade.GradedById = user.Id;             //  AppUser FK
             grade.GradedAt = DateTime.UtcNow;
 
             await _gradeRepo.CreateOrUpdateAsync(grade);
@@ -78,6 +91,17 @@ namespace Interchée.Services.Implementations
                     ? $"{grade.GradedBy.FirstName} {grade.GradedBy.LastName}"
                     : "Unknown Grader"
             };
+        }
+
+        // ===== Helpers =====
+        private async Task<AppUser> GetCurrentUserAsync()
+        {
+            var principal = _http.HttpContext?.User;
+            if (principal is null || !principal.Identity?.IsAuthenticated == true)
+                throw new UnauthorizedAccessException("User is not authenticated.");
+
+            var user = await _userManager.GetUserAsync(principal);
+            return user ?? throw new UnauthorizedAccessException("User not found.");
         }
     }
 }

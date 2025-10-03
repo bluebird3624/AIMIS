@@ -14,13 +14,20 @@ namespace Interchée.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Supervisor,Admin")]
+        [ProducesResponseType(typeof(GradeResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GradeSubmission(int submissionId, [FromBody] GradeSubmissionDto dto)
         {
             try
             {
-                var supervisorId = GetCurrentUserId();
-                var result = await _gradeService.GradeSubmissionAsync(submissionId, dto, supervisorId);
+                // ✅ Service resolves current AppUser internally; no user id needed here
+                var result = await _gradeService.GradeSubmissionAsync(submissionId, dto);
                 return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { error = ex.Message });
             }
             catch (ArgumentException ex)
             {
@@ -29,6 +36,8 @@ namespace Interchée.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(GradeResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetGrade(int submissionId)
         {
             var grade = await _gradeService.GetGradeAsync(submissionId);
@@ -37,26 +46,25 @@ namespace Interchée.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Supervisor,Admin")]
+        [ProducesResponseType(typeof(GradeResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateGrade(int submissionId, [FromBody] GradeSubmissionDto dto)
         {
             try
             {
-                var supervisorId = GetCurrentUserId();
-                var result = await _gradeService.UpdateGradeAsync(submissionId, dto, supervisorId);
+                // ✅ Service resolves current AppUser internally
+                var result = await _gradeService.UpdateGradeAsync(submissionId, dto);
                 return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { error = ex.Message });
             }
             catch (ArgumentException ex)
             {
                 return NotFound(new { error = ex.Message });
             }
-        }
-
-        private Guid GetCurrentUserId()
-        {
-            var userIdClaim = User.FindFirst("sub") ?? User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-            return userIdClaim != null && Guid.TryParse(userIdClaim.Value, out var userId)
-                ? userId
-                : throw new UnauthorizedAccessException("User ID not found in token");
         }
     }
 }

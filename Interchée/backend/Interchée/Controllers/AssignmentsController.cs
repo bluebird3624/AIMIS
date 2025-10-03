@@ -12,15 +12,20 @@ namespace Interchée.Controllers
     {
         private readonly IAssignmentService _assignmentService = assignmentService;
 
+        // CREATE
         [HttpPost]
         [Authorize(Roles = "Supervisor,Admin")]
         public async Task<IActionResult> CreateAssignment([FromBody] CreateAssignmentDto dto)
         {
             try
             {
-                var supervisorId = GetCurrentUserId();
-                var result = await _assignmentService.CreateAssignmentAsync(dto, supervisorId);
+                // ✅ New service signature doesn't need a user id
+                var result = await _assignmentService.CreateAssignmentAsync(dto);
                 return CreatedAtAction(nameof(GetAssignment), new { id = result.Id }, result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { error = ex.Message });
             }
             catch (Exception ex)
             {
@@ -28,6 +33,7 @@ namespace Interchée.Controllers
             }
         }
 
+        // READ ALL
         [HttpGet]
         public async Task<IActionResult> GetAllAssignments()
         {
@@ -35,6 +41,7 @@ namespace Interchée.Controllers
             return Ok(assignments);
         }
 
+        // READ ONE
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAssignment(int id)
         {
@@ -42,6 +49,7 @@ namespace Interchée.Controllers
             return assignment == null ? NotFound() : Ok(assignment);
         }
 
+        // UPDATE
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Supervisor,Admin")]
         public async Task<IActionResult> UpdateAssignment(int id, [FromBody] UpdateAssignmentDto dto)
@@ -57,6 +65,7 @@ namespace Interchée.Controllers
             }
         }
 
+        // DELETE
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Supervisor,Admin")]
         public async Task<IActionResult> DeleteAssignment(int id)
@@ -72,6 +81,7 @@ namespace Interchée.Controllers
             }
         }
 
+        // BY DEPARTMENT
         [HttpGet("department/{departmentId:int}")]
         public async Task<IActionResult> GetAssignmentsByDepartment(int departmentId)
         {
@@ -79,18 +89,26 @@ namespace Interchée.Controllers
             return Ok(assignments);
         }
 
+        // CURRENT INTERN'S ASSIGNMENTS
         [HttpGet("my-assignments")]
         [Authorize(Roles = "Intern,Attache")]
         public async Task<IActionResult> GetMyAssignments()
         {
-            var internId = GetCurrentUserId();
-            var assignments = await _assignmentService.GetAssignmentsForInternAsync(internId);
+            var appUserId = GetCurrentUserId(); // This is AppUser.Id (Guid)
+            // Ensure your service/repo expects AppUser.Id here.
+            // If it expects Intern.Id, resolve it first (map AppUser.Id -> Intern.Id).
+            var assignments = await _assignmentService.GetAssignmentsForInternAsync(appUserId);
             return Ok(assignments);
         }
 
+        // ===== Helpers =====
         private Guid GetCurrentUserId()
         {
-            var userIdClaim = User.FindFirst("sub") ?? User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            // Prefer NameIdentifier, fallback to 'sub'
+            var userIdClaim =
+                User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+                ?? User.FindFirst("sub");
+
             return userIdClaim != null && Guid.TryParse(userIdClaim.Value, out var userId)
                 ? userId
                 : throw new UnauthorizedAccessException("User ID not found in token");
