@@ -1,4 +1,5 @@
 ﻿using Interchée.Config;
+using Interchée.DTOs;
 using Interchée.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -61,6 +62,14 @@ namespace Interchée.Data
                     RoleName = Roles.Admin
                 });
                 await db.SaveChangesAsync();
+            }
+
+            var interns = new InternsSeed();
+
+            foreach(var intern in interns.interns)
+            {
+                //check if intern exists
+                //if null add intern
             }
         }
     }

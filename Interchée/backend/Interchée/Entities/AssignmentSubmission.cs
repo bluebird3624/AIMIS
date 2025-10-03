@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
 namespace Interchée.Entities
@@ -29,6 +30,7 @@ namespace Interchée.Entities
         public Guid InternId { get; set; }
 
         // Navigation properties
+        [ForeignKey(nameof(AssignmentId))]
         public Assignment Assignment { get; set; } = default!;
         public AppUser Intern { get; set; } = default!;
         public Grade? Grade { get; set; }

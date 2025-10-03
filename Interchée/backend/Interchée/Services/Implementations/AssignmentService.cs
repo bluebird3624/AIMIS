@@ -216,7 +216,7 @@ namespace Interchée.Services.Implementations
                 SubmissionId = submissionId,
                 Score = dto.Score,
                 Comments = dto.Comments,
-                GradedById = user.Id,          // ✅ AppUser FK
+                GradedById = user.Id,          //  AppUser FK
                 GradedAt = DateTime.UtcNow
             };
 
