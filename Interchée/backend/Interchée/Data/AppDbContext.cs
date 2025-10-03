@@ -15,6 +15,12 @@ namespace Interchée.Data
         public DbSet<DepartmentRoleAssignment> DepartmentRoleAssignments => Set<DepartmentRoleAssignment>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
+        //Absence Management
+
+        public DbSet<AbsenceRequest> AbsenceRequests => Set<AbsenceRequest>();
+        public DbSet<AbsenceDecision> AbsenceDecisions => Set<AbsenceDecision>();
+        public DbSet<AbsenceLimitPolicy> AbsenceLimitPolicies => Set<AbsenceLimitPolicy>();
+
         protected override void OnModelCreating(ModelBuilder b)
         {
             base.OnModelCreating(b);
@@ -62,6 +68,61 @@ namespace Interchée.Data
                     .WithMany()
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            
+            // AbsenceRequest
+            b.Entity<AbsenceRequest>(e =>
+            {
+                e.Property(x => x.Reason).IsRequired();
+                e.Property(x => x.Status).HasMaxLength(32).IsRequired();
+                e.Property(x => x.Days).HasPrecision(4, 1);
+
+                e.HasIndex(x => x.UserId);
+                e.HasIndex(x => x.DepartmentId);
+                e.HasIndex(x => new { x.Status, x.DepartmentId });
+
+                e.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.Department)
+                    .WithMany()
+                    .HasForeignKey(x => x.DepartmentId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // AbsenceDecision
+            b.Entity<AbsenceDecision>(e =>
+            {
+                e.Property(x => x.Decision).HasMaxLength(32).IsRequired();
+                e.Property(x => x.Comment);
+
+                e.HasOne(x => x.Request)
+                    .WithOne(x => x.Decision)
+                    .HasForeignKey<AbsenceDecision>(x => x.RequestId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasOne(x => x.DecidedByUser)
+                    .WithMany()
+                    .HasForeignKey(x => x.DecidedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // AbsenceLimitPolicy
+            b.Entity<AbsenceLimitPolicy>(e =>
+            {
+                e.Property(x => x.Scope).HasMaxLength(32).IsRequired();
+                e.Property(x => x.MaxDaysPerTerm).HasPrecision(5, 2);
+                e.Property(x => x.MaxDaysPerMonth).HasPrecision(4, 1);
+
+                e.HasIndex(x => new { x.Scope, x.DepartmentId, x.EffectiveFrom });
+
+                e.HasOne(x => x.Department)
+                    .WithMany()
+                    .HasForeignKey(x => x.DepartmentId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }
