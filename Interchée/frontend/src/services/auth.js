@@ -73,7 +73,7 @@ const constructUserData = (token) => {
 */
 export const login = async (credentials) => {
   try {
-    console.log(`login route called: ${credentials.email} + ${credentials.password}`);
+    // console.log(`login route called: ${credentials.email} + ${credentials.password}`);
     // Validate input
     if (!credentials.email || !credentials.password) {
       throw new Error('Email and password are required');
@@ -87,11 +87,11 @@ export const login = async (credentials) => {
 
     console.log('login respose', response);
     // Extract data from .NET response
-    const { accesToken, refreshToken, expiresAtUtc } = response.data;
-    const userData = constructUserData(accesToken);
+    const { accessToken, refreshToken, expiresAtUtc } = response.data;
+    const userData = constructUserData(accessToken);
 
     // Store tokens using sessionStorage
-    setToken(accesToken);
+    setToken(accessToken);
     if (refreshToken) {
       setRefreshToken(refreshToken);
     }
@@ -102,7 +102,7 @@ export const login = async (credentials) => {
     // Return user data for Redux state
     return {
       user: userData,
-      accesToken,
+      accessToken,
       expiresAtUtc
     };
 
@@ -367,6 +367,7 @@ export const transformAuthError = (error) => {
 
   // Handle network errors
   if (!error.response) {
+    console.log('undefined error: ', error);
     return {
       type: 'NETWORK_ERROR',
       message: 'Unable to connect to server. Please check your internet connection.',

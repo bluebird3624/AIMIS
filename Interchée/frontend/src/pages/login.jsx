@@ -6,15 +6,19 @@ import { login } from "../services/auth";
 
 
 function Login(){
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleClick = async(event) => {
       event.preventDefault();
       try
         {
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+         
           const response = await login({email, password});
-        console.log('login page login response: ', response);
-        if (response.data.accessToken){
+        // console.log('login page login response: ', response);
+        if (response.accessToken){
           
           navigate('/admin-dash');
         }
@@ -29,10 +33,7 @@ function Login(){
       }
       
    }
-
-
-
-
+  
 
     return(
         <>
