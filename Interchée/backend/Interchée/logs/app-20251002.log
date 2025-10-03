@@ -358,3 +358,23 @@ RolesAuthorizationRequirement:User.IsInRole must be true for one of the followin
 2025-10-02 09:51:34.639 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/favicon.svg'
 2025-10-02 09:51:34.650 +03:00 [INF] HTTP GET /Scalar/favicon.svg responded 304 in 32.0131 ms
 2025-10-02 09:51:34.668 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/favicon.svg - 304 null null 67.9989ms
+2025-10-02 11:46:01.807 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 62
+2025-10-02 11:46:01.845 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 11:46:01.851 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 11:46:01.861 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 38.8267 ms
+2025-10-02 11:46:01.868 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 88.0549ms
+2025-10-02 11:46:01.893 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 11:46:01.906 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.0956 ms
+2025-10-02 11:46:01.911 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 17.7725ms
+2025-10-02 11:46:01.923 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
+2025-10-02 12:13:02.103 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/AbsenceRequest - application/json 74
+2025-10-02 12:13:02.131 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern)
+2025-10-02 12:13:02.136 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-02 12:13:02.141 +03:00 [INF] HTTP POST /AbsenceRequest responded 302 in 11.2986 ms
+2025-10-02 12:13:02.151 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/AbsenceRequest - 302 0 null 47.5677ms
+2025-10-02 12:13:02.160 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - null null
+2025-10-02 12:13:02.181 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.1586 ms
+2025-10-02 12:13:02.191 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2FAbsenceRequest - 404 0 null 30.7851ms
+2025-10-02 12:13:02.218 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
