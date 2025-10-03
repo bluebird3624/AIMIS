@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     watch: {
-      ignored: ['**/AppData/**', 'C:/Users/User/AppData/**'],
+      ignored: ['**/AppData/**'],
     },
   },
 })
