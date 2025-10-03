@@ -14,7 +14,7 @@ namespace Interchée.Controllers
         private readonly IAbsenceService _absenceService = absenceService;
 
         [HttpPost]
-        [Authorize(Roles = "Intern")]
+        [Authorize(Roles = "Intern,Admin")]
         public async Task<ActionResult<ApiResponse<AbsenceRequestDto>>> CreateAbsenceRequest(CreateAbsenceRequestDto request)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

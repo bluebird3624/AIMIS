@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Serilog;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,21 +38,53 @@ var jwtIssuer = jwtSection.GetValue<string>("Issuer")!;
 var jwtAudience = jwtSection.GetValue<string>("Audience")!;
 var jwtKey = jwtSection.GetValue<string>("Key")!;
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(o =>
+builder.Services
+
+    .AddAuthentication(options =>
+
     {
+
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+    })
+
+    .AddJwtBearer(o =>
+
+    {
+
         o.TokenValidationParameters = new TokenValidationParameters
+
         {
+
             ValidateIssuerSigningKey = true,
+
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+
             ValidateIssuer = true,
+
             ValidIssuer = jwtIssuer,
+
             ValidateAudience = true,
+
             ValidAudience = jwtAudience,
+
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromSeconds(30) // small skew
+
+            ClockSkew = TimeSpan.FromSeconds(30),
+
+            NameClaimType = ClaimTypes.NameIdentifier,
+
+            RoleClaimType = ClaimTypes.Role
+
         };
+
     });
+
+
 
 builder.Services.AddAuthorization();
 
