@@ -1,9 +1,46 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+﻿# Frontend specific ignores
+Interchée/frontend/node_modules/
+Interchée/frontend/.env
+Interchée/frontend/.env.local
+Interchée/frontend/.env.development
+Interchée/frontend/.env.production
+Interchée/frontend/dist/
+Interchée/frontend/build/
 
-/.vs
-/Interchée/.vs/Interchée
+#workflows markdown files
+workflows/
 
+# All node_modules in project
+**/node_modules/
 
-.fake
+# All .env files in project
+**/.env
+**/.env.local
+**/.env.development
+**/.env.production
+**/.env.test
+
+# Vite specific
+**/dist/
+**/build/
+
+# Log files
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# Editor directories and files
+**/.vscode/
+**/.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
