@@ -1,0 +1,1970 @@
+2025-10-06 08:54:21.765 +03:00 [INF] Executed DbCommand (21ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 08:54:21.836 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 08:54:21.869 +03:00 [INF] Executed DbCommand (26ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 08:54:21.935 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 08:54:21.954 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 08:54:21.963 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 08:54:21.974 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 08:54:21.983 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 08:54:21.991 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 08:54:22.255 +03:00 [INF] Executed DbCommand (16ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 08:54:22.319 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 08:54:22.327 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 08:54:22.330 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 08:54:22.333 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 08:54:22.361 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 08:54:22.391 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 08:54:22.410 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 08:54:22.584 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 08:54:22.629 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 08:54:22.631 +03:00 [INF] Hosting environment: Development
+2025-10-06 08:54:22.632 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 08:54:48.518 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/scalar/v1 - null null
+2025-10-06 08:54:48.716 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-10-06 08:54:48.775 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 08:54:48.910 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-06 08:54:48.938 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 08:54:48.947 +03:00 [INF] HTTP GET /scalar/v1 responded 200 in 229.5031 ms
+2025-10-06 08:54:48.949 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/scalar/scalar.js - null null
+2025-10-06 08:54:48.949 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/scalar/scalar.aspnetcore.js - null null
+2025-10-06 08:54:48.949 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-06 08:54:48.966 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/scalar/v1 - 200 null text/html 449.7428ms
+2025-10-06 08:54:48.979 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 08:54:48.982 +03:00 [INF] CORS policy execution failed.
+2025-10-06 08:54:48.995 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 45.5962ms
+2025-10-06 08:54:49.002 +03:00 [INF] Request origin http://localhost:5007 does not have permission to access the resource.
+2025-10-06 08:54:49.010 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/_vs/browserLink - null null
+2025-10-06 08:54:49.010 +03:00 [INF] Sending file with download name ''.
+2025-10-06 08:54:49.015 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 08:54:49.020 +03:00 [INF] Sending file with download name ''.
+2025-10-06 08:54:49.023 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 08:54:49.026 +03:00 [INF] HTTP GET /scalar/scalar.aspnetcore.js responded 200 in 44.9141 ms
+2025-10-06 08:54:49.031 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/scalar/scalar.aspnetcore.js - 200 1046 text/javascript 82.719ms
+2025-10-06 08:54:49.045 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 08:54:49.049 +03:00 [INF] HTTP GET /scalar/scalar.js responded 200 in 72.1925 ms
+2025-10-06 08:54:49.056 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/scalar/scalar.js - 200 869947 text/javascript 107.3145ms
+2025-10-06 08:54:49.068 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/_vs/browserLink - 200 null text/javascript; charset=UTF-8 57.9653ms
+2025-10-06 08:54:49.255 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/openapi/v1.json - null null
+2025-10-06 08:54:49.262 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 08:54:49.541 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 08:54:49.543 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5007/openapi/v1.json - null null
+2025-10-06 08:54:49.544 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 281.5834 ms
+2025-10-06 08:54:49.548 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 08:54:49.550 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/openapi/v1.json - 200 null application/json;charset=utf-8 295.251ms
+2025-10-06 08:54:49.586 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 08:54:49.589 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 41.6973 ms
+2025-10-06 08:54:49.592 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5007/openapi/v1.json - 200 null application/json;charset=utf-8 49.2108ms
+2025-10-06 08:55:22.333 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5007/api/Assignments - application/json 86
+2025-10-06 08:55:22.346 +03:00 [INF] CORS policy execution failed.
+2025-10-06 08:55:22.350 +03:00 [INF] Request origin http://localhost:5007 does not have permission to access the resource.
+2025-10-06 08:55:22.357 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.CreateAssignment (Interchée)'
+2025-10-06 08:55:22.414 +03:00 [INF] Route matched with {action = "CreateAssignment", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateAssignment(Interchée.DTOs.CreateAssignmentDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 08:55:22.487 +03:00 [INF] Executing BadRequestObjectResult, writing value of type '<>f__AnonymousType1`1[[System.String, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-06 08:55:22.503 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.CreateAssignment (Interchée) in 73.3674ms
+2025-10-06 08:55:22.512 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.CreateAssignment (Interchée)'
+2025-10-06 08:55:22.518 +03:00 [INF] HTTP POST /api/Assignments responded 400 in 172.4609 ms
+2025-10-06 08:55:22.530 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5007/api/Assignments - 400 null application/json; charset=utf-8 197.068ms
+2025-10-06 09:33:35.800 +03:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2025-10-06 09:33:36.428 +03:00 [INF] No migrations were found in assembly 'Interchée'. A migration needs to be added before the database can be updated.
+2025-10-06 09:37:57.911 +03:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2025-10-06 09:37:58.332 +03:00 [INF] No migrations were found in assembly 'Interchée'. A migration needs to be added before the database can be updated.
+2025-10-06 09:37:58.482 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 09:37:58.493 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 09:37:58.515 +03:00 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 09:37:58.594 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 09:37:58.609 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 09:37:58.614 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 09:37:58.626 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 09:37:58.636 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 09:37:58.644 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 09:37:58.821 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 09:37:58.858 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 09:37:58.863 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 09:37:58.867 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 09:37:58.870 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 09:37:58.886 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 09:37:58.897 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 09:37:58.907 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 09:37:59.056 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 09:37:59.059 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 09:37:59.077 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 09:37:59.080 +03:00 [INF] Hosting environment: Development
+2025-10-06 09:37:59.081 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 10:02:24.491 +03:00 [INF] Executed DbCommand (240ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+CREATE DATABASE [InternAttacheDb2];
+2025-10-06 10:02:24.615 +03:00 [INF] Executed DbCommand (102ms) [Parameters=[], CommandType='"Text"', CommandTimeout='60']
+IF SERVERPROPERTY('EngineEdition') <> 5
+BEGIN
+    ALTER DATABASE [InternAttacheDb2] SET READ_COMMITTED_SNAPSHOT ON;
+END;
+2025-10-06 10:02:24.629 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 10:02:24.631 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 10:02:24.644 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 10:02:24.682 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 10:02:24.688 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 10:02:24.689 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 10:02:24.696 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 10:02:24.702 +03:00 [INF] Applying migration '20251006065810_InitialLearning'.
+2025-10-06 10:02:24.745 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetRoles] (
+    [Id] uniqueidentifier NOT NULL,
+    [Name] nvarchar(256) NULL,
+    [NormalizedName] nvarchar(256) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetRoles] PRIMARY KEY ([Id])
+);
+2025-10-06 10:02:24.747 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUsers] (
+    [Id] uniqueidentifier NOT NULL,
+    [IsActive] bit NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [FirstName] nvarchar(64) NOT NULL,
+    [LastName] nvarchar(64) NOT NULL,
+    [MiddleName] nvarchar(64) NULL,
+    [UserName] nvarchar(256) NULL,
+    [NormalizedUserName] nvarchar(256) NULL,
+    [Email] nvarchar(256) NULL,
+    [NormalizedEmail] nvarchar(256) NULL,
+    [EmailConfirmed] bit NOT NULL,
+    [PasswordHash] nvarchar(max) NULL,
+    [SecurityStamp] nvarchar(max) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [PhoneNumberConfirmed] bit NOT NULL,
+    [TwoFactorEnabled] bit NOT NULL,
+    [LockoutEnd] datetimeoffset NULL,
+    [LockoutEnabled] bit NOT NULL,
+    [AccessFailedCount] int NOT NULL,
+    CONSTRAINT [PK_AspNetUsers] PRIMARY KEY ([Id])
+);
+2025-10-06 10:02:24.749 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Departments] (
+    [Id] int NOT NULL IDENTITY,
+    [Name] nvarchar(128) NOT NULL,
+    [Code] nvarchar(32) NULL,
+    [IsActive] bit NOT NULL,
+    CONSTRAINT [PK_Departments] PRIMARY KEY ([Id])
+);
+2025-10-06 10:02:24.750 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetRoleClaims] (
+    [Id] int NOT NULL IDENTITY,
+    [RoleId] uniqueidentifier NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [AspNetRoles] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:24.751 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUserClaims] (
+    [Id] int NOT NULL IDENTITY,
+    [UserId] uniqueidentifier NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetUserClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:24.754 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUserLogins] (
+    [LoginProvider] nvarchar(450) NOT NULL,
+    [ProviderKey] nvarchar(450) NOT NULL,
+    [ProviderDisplayName] nvarchar(max) NULL,
+    [UserId] uniqueidentifier NOT NULL,
+    CONSTRAINT [PK_AspNetUserLogins] PRIMARY KEY ([LoginProvider], [ProviderKey]),
+    CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:24.758 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUserRoles] (
+    [UserId] uniqueidentifier NOT NULL,
+    [RoleId] uniqueidentifier NOT NULL,
+    CONSTRAINT [PK_AspNetUserRoles] PRIMARY KEY ([UserId], [RoleId]),
+    CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [AspNetRoles] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:24.760 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AspNetUserTokens] (
+    [UserId] uniqueidentifier NOT NULL,
+    [LoginProvider] nvarchar(450) NOT NULL,
+    [Name] nvarchar(450) NOT NULL,
+    [Value] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY ([UserId], [LoginProvider], [Name]),
+    CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:25.629 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [RefreshTokens] (
+    [Id] bigint NOT NULL IDENTITY,
+    [UserId] uniqueidentifier NOT NULL,
+    [Token] nvarchar(512) NOT NULL,
+    [ExpiresAt] datetime2 NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [RevokedAt] datetime2 NULL,
+    [CreatedByIp] nvarchar(max) NULL,
+    CONSTRAINT [PK_RefreshTokens] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_RefreshTokens_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:25.633 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Assignments] (
+    [Id] bigint NOT NULL IDENTITY,
+    [DepartmentId] int NOT NULL,
+    [Title] nvarchar(160) NOT NULL,
+    [Description] nvarchar(max) NULL,
+    [CreatedByUserId] uniqueidentifier NOT NULL,
+    [DueAt] datetime2 NULL,
+    [Status] nvarchar(32) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_Assignments] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Assignments_AspNetUsers_CreatedByUserId] FOREIGN KEY ([CreatedByUserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_Assignments_Departments_DepartmentId] FOREIGN KEY ([DepartmentId]) REFERENCES [Departments] ([Id]) ON DELETE NO ACTION
+);
+2025-10-06 10:02:25.638 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [DepartmentRoleAssignments] (
+    [Id] bigint NOT NULL IDENTITY,
+    [UserId] uniqueidentifier NOT NULL,
+    [DepartmentId] int NOT NULL,
+    [RoleName] nvarchar(64) NOT NULL,
+    [AssignedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_DepartmentRoleAssignments] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_DepartmentRoleAssignments_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_DepartmentRoleAssignments_Departments_DepartmentId] FOREIGN KEY ([DepartmentId]) REFERENCES [Departments] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:25.641 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AssignmentAssignees] (
+    [Id] bigint NOT NULL IDENTITY,
+    [AssignmentId] bigint NOT NULL,
+    [UserId] uniqueidentifier NOT NULL,
+    [AssignedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_AssignmentAssignees] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AssignmentAssignees_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_AssignmentAssignees_Assignments_AssignmentId] FOREIGN KEY ([AssignmentId]) REFERENCES [Assignments] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:25.646 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [AssignmentSubmissions] (
+    [Id] bigint NOT NULL IDENTITY,
+    [AssignmentId] bigint NOT NULL,
+    [UserId] uniqueidentifier NOT NULL,
+    [RepoUrl] nvarchar(512) NULL,
+    [Branch] nvarchar(120) NULL,
+    [LatestCommitSha] nvarchar(64) NULL,
+    [SubmittedAt] datetime2 NULL,
+    [Status] nvarchar(32) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_AssignmentSubmissions] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AssignmentSubmissions_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_AssignmentSubmissions_Assignments_AssignmentId] FOREIGN KEY ([AssignmentId]) REFERENCES [Assignments] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:25.652 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [FeedbackComments] (
+    [Id] bigint NOT NULL IDENTITY,
+    [SubmissionId] bigint NOT NULL,
+    [AuthorUserId] uniqueidentifier NOT NULL,
+    [Comment] nvarchar(max) NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_FeedbackComments] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_FeedbackComments_AspNetUsers_AuthorUserId] FOREIGN KEY ([AuthorUserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_FeedbackComments_AssignmentSubmissions_SubmissionId] FOREIGN KEY ([SubmissionId]) REFERENCES [AssignmentSubmissions] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:28.651 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [Grades] (
+    [Id] bigint NOT NULL IDENTITY,
+    [SubmissionId] bigint NOT NULL,
+    [Score] decimal(5,2) NOT NULL,
+    [MaxScore] decimal(5,2) NOT NULL,
+    [RubricJson] nvarchar(max) NULL,
+    [GradedByUserId] uniqueidentifier NOT NULL,
+    [GradedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_Grades] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_Grades_AspNetUsers_GradedByUserId] FOREIGN KEY ([GradedByUserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE NO ACTION,
+    CONSTRAINT [FK_Grades_AssignmentSubmissions_SubmissionId] FOREIGN KEY ([SubmissionId]) REFERENCES [AssignmentSubmissions] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:28.653 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE TABLE [SubmissionCommits] (
+    [Id] bigint NOT NULL IDENTITY,
+    [SubmissionId] bigint NOT NULL,
+    [Sha] nvarchar(64) NOT NULL,
+    [Message] nvarchar(max) NULL,
+    [AuthorEmail] nvarchar(256) NULL,
+    [CommittedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_SubmissionCommits] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_SubmissionCommits_AssignmentSubmissions_SubmissionId] FOREIGN KEY ([SubmissionId]) REFERENCES [AssignmentSubmissions] ([Id]) ON DELETE CASCADE
+);
+2025-10-06 10:02:28.657 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetRoleClaims_RoleId] ON [AspNetRoleClaims] ([RoleId]);
+2025-10-06 10:02:28.659 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [RoleNameIndex] ON [AspNetRoles] ([NormalizedName]) WHERE [NormalizedName] IS NOT NULL;
+2025-10-06 10:02:28.660 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetUserClaims_UserId] ON [AspNetUserClaims] ([UserId]);
+2025-10-06 10:02:28.661 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetUserLogins_UserId] ON [AspNetUserLogins] ([UserId]);
+2025-10-06 10:02:28.663 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AspNetUserRoles_RoleId] ON [AspNetUserRoles] ([RoleId]);
+2025-10-06 10:02:28.664 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [EmailIndex] ON [AspNetUsers] ([NormalizedEmail]);
+2025-10-06 10:02:28.666 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [UserNameIndex] ON [AspNetUsers] ([NormalizedUserName]) WHERE [NormalizedUserName] IS NOT NULL;
+2025-10-06 10:02:28.668 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_AssignmentAssignees_AssignmentId_UserId] ON [AssignmentAssignees] ([AssignmentId], [UserId]);
+2025-10-06 10:02:28.670 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AssignmentAssignees_UserId] ON [AssignmentAssignees] ([UserId]);
+2025-10-06 10:02:28.670 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Assignments_CreatedByUserId] ON [Assignments] ([CreatedByUserId]);
+2025-10-06 10:02:28.672 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Assignments_DepartmentId] ON [Assignments] ([DepartmentId]);
+2025-10-06 10:02:28.673 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Assignments_DepartmentId_Status] ON [Assignments] ([DepartmentId], [Status]);
+2025-10-06 10:02:28.674 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AssignmentSubmissions_AssignmentId] ON [AssignmentSubmissions] ([AssignmentId]);
+2025-10-06 10:02:28.674 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AssignmentSubmissions_AssignmentId_Status] ON [AssignmentSubmissions] ([AssignmentId], [Status]);
+2025-10-06 10:02:31.258 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_AssignmentSubmissions_AssignmentId_UserId] ON [AssignmentSubmissions] ([AssignmentId], [UserId]);
+2025-10-06 10:02:31.259 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AssignmentSubmissions_UserId] ON [AssignmentSubmissions] ([UserId]);
+2025-10-06 10:02:31.260 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_DepartmentRoleAssignments_DepartmentId] ON [DepartmentRoleAssignments] ([DepartmentId]);
+2025-10-06 10:02:31.263 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_DepartmentRoleAssignments_UserId_DepartmentId_RoleName] ON [DepartmentRoleAssignments] ([UserId], [DepartmentId], [RoleName]);
+2025-10-06 10:02:31.263 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_Departments_Name] ON [Departments] ([Name]);
+2025-10-06 10:02:31.264 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_FeedbackComments_AuthorUserId] ON [FeedbackComments] ([AuthorUserId]);
+2025-10-06 10:02:31.265 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_FeedbackComments_SubmissionId] ON [FeedbackComments] ([SubmissionId]);
+2025-10-06 10:02:31.265 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_Grades_GradedByUserId] ON [Grades] ([GradedByUserId]);
+2025-10-06 10:02:31.266 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_Grades_SubmissionId] ON [Grades] ([SubmissionId]);
+2025-10-06 10:02:31.267 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_RefreshTokens_Token] ON [RefreshTokens] ([Token]);
+2025-10-06 10:02:31.268 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_RefreshTokens_UserId] ON [RefreshTokens] ([UserId]);
+2025-10-06 10:02:31.269 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE UNIQUE INDEX [IX_SubmissionCommits_SubmissionId_Sha] ON [SubmissionCommits] ([SubmissionId], [Sha]);
+2025-10-06 10:02:31.272 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20251006065810_InitialLearning', N'9.0.9');
+2025-10-06 10:02:31.275 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 10:04:10.493 +03:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2025-10-06 10:04:11.313 +03:00 [INF] Executed DbCommand (19ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 10:04:11.329 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 10:04:11.353 +03:00 [INF] Executed DbCommand (21ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 10:04:11.412 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 10:04:11.427 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 10:04:11.431 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 10:04:11.439 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 10:04:11.447 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 10:04:11.450 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 10:04:11.632 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 10:04:11.644 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 10:04:11.734 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (Size = 256), @p3='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AspNetRoles] ([Id], [ConcurrencyStamp], [Name], [NormalizedName])
+VALUES (@p0, @p1, @p2, @p3);
+2025-10-06 10:04:11.753 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 10:04:11.757 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 10:04:11.761 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (Size = 256), @p3='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AspNetRoles] ([Id], [ConcurrencyStamp], [Name], [NormalizedName])
+VALUES (@p0, @p1, @p2, @p3);
+2025-10-06 10:04:11.764 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 10:04:11.766 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 10:04:11.768 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (Size = 256), @p3='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AspNetRoles] ([Id], [ConcurrencyStamp], [Name], [NormalizedName])
+VALUES (@p0, @p1, @p2, @p3);
+2025-10-06 10:04:11.769 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 10:04:11.771 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 10:04:11.773 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (Size = 256), @p3='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AspNetRoles] ([Id], [ConcurrencyStamp], [Name], [NormalizedName])
+VALUES (@p0, @p1, @p2, @p3);
+2025-10-06 10:04:11.774 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 10:04:11.776 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 10:04:11.778 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (Size = 256), @p3='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AspNetRoles] ([Id], [ConcurrencyStamp], [Name], [NormalizedName])
+VALUES (@p0, @p1, @p2, @p3);
+2025-10-06 10:04:11.792 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 10:04:11.828 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@p0='?' (Size = 32), @p1='?' (DbType = Boolean), @p2='?' (Size = 128), @p3='?' (Size = 32), @p4='?' (DbType = Boolean), @p5='?' (Size = 128)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+MERGE [Departments] USING (
+VALUES (@p0, @p1, @p2, 0),
+(@p3, @p4, @p5, 1)) AS i ([Code], [IsActive], [Name], _Position) ON 1=0
+WHEN NOT MATCHED THEN
+INSERT ([Code], [IsActive], [Name])
+VALUES (i.[Code], i.[IsActive], i.[Name])
+OUTPUT INSERTED.[Id], i._Position;
+2025-10-06 10:04:11.847 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 10:04:11.856 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 10:04:11.931 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedUserName] = @__normalizedUserName_0
+2025-10-06 10:04:11.944 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2025-10-06 10:04:12.003 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Int32), @p2='?' (Size = 4000), @p3='?' (DbType = DateTime2), @p4='?' (Size = 256), @p5='?' (DbType = Boolean), @p6='?' (Size = 64), @p7='?' (DbType = Boolean), @p8='?' (Size = 64), @p9='?' (DbType = Boolean), @p10='?' (DbType = DateTimeOffset), @p11='?' (Size = 64), @p12='?' (Size = 256), @p13='?' (Size = 256), @p14='?' (Size = 4000), @p15='?' (Size = 4000), @p16='?' (DbType = Boolean), @p17='?' (Size = 4000), @p18='?' (DbType = Boolean), @p19='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [AspNetUsers] ([Id], [AccessFailedCount], [ConcurrencyStamp], [CreatedAt], [Email], [EmailConfirmed], [FirstName], [IsActive], [LastName], [LockoutEnabled], [LockoutEnd], [MiddleName], [NormalizedEmail], [NormalizedUserName], [PasswordHash], [PhoneNumber], [PhoneNumberConfirmed], [SecurityStamp], [TwoFactorEnabled], [UserName])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19);
+2025-10-06 10:04:12.019 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedRoleName_0
+2025-10-06 10:04:12.051 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Guid), @__p_1='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[UserId], [a].[RoleId]
+FROM [AspNetUserRoles] AS [a]
+WHERE [a].[UserId] = @__p_0 AND [a].[RoleId] = @__p_1
+2025-10-06 10:04:12.057 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedRoleName_0
+2025-10-06 10:04:12.074 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedUserName] = @__normalizedUserName_0
+2025-10-06 10:04:12.082 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2025-10-06 10:04:12.104 +03:00 [INF] Executed DbCommand (12ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Guid), @p21='?' (DbType = Guid), @p2='?' (DbType = Int32), @p3='?' (Size = 4000), @p22='?' (Size = 4000), @p4='?' (DbType = DateTime2), @p5='?' (Size = 256), @p6='?' (DbType = Boolean), @p7='?' (Size = 64), @p8='?' (DbType = Boolean), @p9='?' (Size = 64), @p10='?' (DbType = Boolean), @p11='?' (DbType = DateTimeOffset), @p12='?' (Size = 64), @p13='?' (Size = 256), @p14='?' (Size = 256), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = Boolean), @p18='?' (Size = 4000), @p19='?' (DbType = Boolean), @p20='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [AspNetUserRoles] ([RoleId], [UserId])
+VALUES (@p0, @p1);
+UPDATE [AspNetUsers] SET [AccessFailedCount] = @p2, [ConcurrencyStamp] = @p3, [CreatedAt] = @p4, [Email] = @p5, [EmailConfirmed] = @p6, [FirstName] = @p7, [IsActive] = @p8, [LastName] = @p9, [LockoutEnabled] = @p10, [LockoutEnd] = @p11, [MiddleName] = @p12, [NormalizedEmail] = @p13, [NormalizedUserName] = @p14, [PasswordHash] = @p15, [PhoneNumber] = @p16, [PhoneNumberConfirmed] = @p17, [SecurityStamp] = @p18, [TwoFactorEnabled] = @p19, [UserName] = @p20
+OUTPUT 1
+WHERE [Id] = @p21 AND [ConcurrencyStamp] = @p22;
+2025-10-06 10:04:12.123 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [d].[Id]
+FROM [Departments] AS [d]
+WHERE [d].[Name] = N'IT'
+2025-10-06 10:04:12.150 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (DbType = Int32), @p2='?' (Size = 64), @p3='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [DepartmentRoleAssignments] ([AssignedAt], [DepartmentId], [RoleName], [UserId])
+OUTPUT INSERTED.[Id]
+VALUES (@p0, @p1, @p2, @p3);
+2025-10-06 10:04:12.228 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 10:04:12.231 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 10:04:12.250 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 10:04:12.253 +03:00 [INF] Hosting environment: Development
+2025-10-06 10:04:12.254 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 11:40:23.766 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 11:40:24.108 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 11:42:29.937 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 11:42:45.752 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 11:42:46.189 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 11:42:46.199 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 11:42:46.219 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 11:42:46.279 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 11:42:46.287 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 11:42:46.289 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 11:42:46.316 +03:00 [INF] Executed DbCommand (25ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 11:42:46.326 +03:00 [INF] Applying migration '20251006084230_Added-submission-var'.
+2025-10-06 11:42:46.372 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE [AssignmentSubmissions] ADD [AssignmentId1] bigint NULL;
+2025-10-06 11:42:46.376 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+CREATE INDEX [IX_AssignmentSubmissions_AssignmentId1] ON [AssignmentSubmissions] ([AssignmentId1]);
+2025-10-06 11:42:46.381 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+ALTER TABLE [AssignmentSubmissions] ADD CONSTRAINT [FK_AssignmentSubmissions_Assignments_AssignmentId1] FOREIGN KEY ([AssignmentId1]) REFERENCES [Assignments] ([Id]);
+2025-10-06 11:42:46.385 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20251006084230_Added-submission-var', N'9.0.9');
+2025-10-06 11:42:46.389 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 11:42:56.783 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 11:42:57.424 +03:00 [INF] Executed DbCommand (23ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 11:42:57.451 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 11:42:57.488 +03:00 [INF] Executed DbCommand (31ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 11:42:57.558 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 11:42:57.581 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 11:42:57.587 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 11:42:57.609 +03:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 11:42:57.649 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 11:42:57.659 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 11:42:57.989 +03:00 [INF] Executed DbCommand (25ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 11:42:58.051 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 11:42:58.058 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 11:42:58.063 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 11:42:58.068 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 11:42:58.102 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 11:42:58.144 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 11:42:58.168 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 11:42:58.487 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 11:42:58.488 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 11:42:58.560 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 11:42:58.562 +03:00 [INF] Hosting environment: Development
+2025-10-06 11:42:58.563 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 11:43:30.768 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/ - null null
+2025-10-06 11:43:31.000 +03:00 [INF] HTTP GET / responded 404 in 62.3914 ms
+2025-10-06 11:43:31.010 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/ - 404 0 null 247.733ms
+2025-10-06 11:43:31.020 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/, Response status code: 404
+2025-10-06 11:43:37.768 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/v1 - null null
+2025-10-06 11:43:37.901 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 11:43:38.201 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-06 11:43:38.225 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 11:43:38.229 +03:00 [INF] HTTP GET /scalar/v1 responded 200 in 419.2423 ms
+2025-10-06 11:43:38.235 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/v1 - 200 null text/html 466.8179ms
+2025-10-06 11:43:38.245 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/scalar.js - null null
+2025-10-06 11:43:38.245 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/scalar.aspnetcore.js - null null
+2025-10-06 11:43:38.245 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-06 11:43:38.262 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 11:43:38.263 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 11:43:38.347 +03:00 [INF] Sending file with download name ''.
+2025-10-06 11:43:38.347 +03:00 [INF] Sending file with download name ''.
+2025-10-06 11:43:38.360 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 11:43:38.364 +03:00 [INF] HTTP GET /scalar/scalar.aspnetcore.js responded 200 in 101.5389 ms
+2025-10-06 11:43:38.394 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 149.1017ms
+2025-10-06 11:43:38.394 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/scalar.aspnetcore.js - 200 1046 text/javascript 149.3179ms
+2025-10-06 11:43:38.406 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_vs/browserLink - null null
+2025-10-06 11:43:38.409 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 11:43:38.413 +03:00 [INF] HTTP GET /scalar/scalar.js responded 200 in 158.6645 ms
+2025-10-06 11:43:38.417 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/scalar.js - 200 869947 text/javascript 171.9839ms
+2025-10-06 11:43:38.500 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_vs/browserLink - 200 null text/javascript; charset=UTF-8 93.8286ms
+2025-10-06 11:43:38.757 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 11:43:38.764 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 11:43:39.166 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 11:43:39.169 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 11:43:39.171 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 11:43:39.173 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 408.8095 ms
+2025-10-06 11:43:39.178 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 421.2668ms
+2025-10-06 11:43:39.203 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 11:43:39.205 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 33.9049 ms
+2025-10-06 11:43:39.210 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 44.7564ms
+2025-10-06 11:43:41.316 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/favicon.svg - null null
+2025-10-06 11:43:41.321 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-06 11:43:41.324 +03:00 [INF] Sending file with download name ''.
+2025-10-06 11:43:41.326 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-06 11:43:41.327 +03:00 [INF] HTTP GET /scalar/favicon.svg responded 200 in 7.0947 ms
+2025-10-06 11:43:41.330 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/favicon.svg - 200 533 image/svg+xml 14.4666ms
+2025-10-06 11:48:33.272 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 230
+2025-10-06 11:48:33.295 +03:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin|HR|Supervisor)
+2025-10-06 11:48:33.300 +03:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-10-06 11:48:33.302 +03:00 [INF] HTTP POST /assignments responded 401 in 20.3718 ms
+2025-10-06 11:48:33.307 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/assignments - 401 0 null 35.5655ms
+2025-10-06 11:51:07.319 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 230
+2025-10-06 11:51:07.413 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 11:51:07.436 +03:00 [INF] Route matched with {action = "Create", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Interchée.Contracts.Assignments.AssignmentReadDto]] Create(Interchée.Contracts.Assignments.AssignmentCreateDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 11:51:07.553 +03:00 [INF] Executed DbCommand (16ms) [Parameters=[@__userId_0='?' (DbType = Guid), @__dto_DepartmentId_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [DepartmentRoleAssignments] AS [d]
+        WHERE [d].[UserId] = @__userId_0 AND [d].[DepartmentId] = @__dto_DepartmentId_1 AND [d].[RoleName] IN (N'Admin', N'HR', N'Supervisor')) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 11:51:07.563 +03:00 [INF] Executing ForbidResult with authentication schemes ([]).
+2025-10-06 11:51:07.570 +03:00 [INF] AuthenticationScheme: Bearer was forbidden.
+2025-10-06 11:51:07.575 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.Create (Interchée) in 131.8945ms
+2025-10-06 11:51:07.578 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 11:51:07.582 +03:00 [INF] HTTP POST /assignments responded 403 in 241.9256 ms
+2025-10-06 11:51:07.588 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/assignments - 403 0 null 269.1155ms
+2025-10-06 11:54:20.791 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 11:54:21.450 +03:00 [INF] Executed DbCommand (26ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 11:54:21.472 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 11:54:21.511 +03:00 [INF] Executed DbCommand (31ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 11:54:21.593 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 11:54:21.615 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 11:54:21.621 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 11:54:21.633 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 11:54:21.648 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 11:54:21.655 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 11:54:22.023 +03:00 [INF] Executed DbCommand (22ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 11:54:22.075 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 11:54:22.082 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 11:54:22.087 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 11:54:22.094 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 11:54:22.122 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 11:54:22.158 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 11:54:22.176 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 11:54:22.533 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 11:54:22.538 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 11:54:22.598 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 11:54:22.599 +03:00 [INF] Hosting environment: Development
+2025-10-06 11:54:22.600 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 11:54:29.597 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 230
+2025-10-06 11:54:29.817 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 11:54:29.839 +03:00 [INF] Route matched with {action = "Create", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Interchée.Contracts.Assignments.AssignmentReadDto]] Create(Interchée.Contracts.Assignments.AssignmentCreateDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 11:54:29.928 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__userId_0='?' (DbType = Guid), @__dto_DepartmentId_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [DepartmentRoleAssignments] AS [d]
+        WHERE [d].[UserId] = @__userId_0 AND [d].[DepartmentId] = @__dto_DepartmentId_1 AND [d].[RoleName] IN (N'Admin', N'HR', N'Supervisor')) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 11:54:29.936 +03:00 [INF] Executing ForbidResult with authentication schemes ([]).
+2025-10-06 11:54:29.944 +03:00 [INF] AuthenticationScheme: Bearer was forbidden.
+2025-10-06 11:54:29.950 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.Create (Interchée) in 103.148ms
+2025-10-06 11:54:29.955 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 11:54:29.961 +03:00 [INF] HTTP POST /assignments responded 403 in 302.6207 ms
+2025-10-06 11:54:29.974 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/assignments - 403 0 null 383.0771ms
+2025-10-06 11:56:15.472 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/v1 - null null
+2025-10-06 11:56:15.713 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 11:56:16.016 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-06 11:56:16.038 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 11:56:16.040 +03:00 [INF] HTTP GET /scalar/v1 responded 200 in 333.2176 ms
+2025-10-06 11:56:16.047 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/v1 - 200 null text/html 575.6759ms
+2025-10-06 11:56:16.096 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/scalar.js - null null
+2025-10-06 11:56:16.096 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-06 11:56:16.104 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/scalar.aspnetcore.js - null null
+2025-10-06 11:56:16.127 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_vs/browserLink - null null
+2025-10-06 11:56:16.151 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 11:56:16.163 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 11:56:16.215 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 118.4311ms
+2025-10-06 11:56:16.251 +03:00 [INF] Sending file with download name ''.
+2025-10-06 11:56:16.251 +03:00 [INF] Sending file with download name ''.
+2025-10-06 11:56:16.263 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 11:56:16.270 +03:00 [INF] HTTP GET /scalar/scalar.aspnetcore.js responded 200 in 108.6208 ms
+2025-10-06 11:56:16.275 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/scalar.aspnetcore.js - 200 1046 text/javascript 177.592ms
+2025-10-06 11:56:16.296 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 11:56:16.300 +03:00 [INF] HTTP GET /scalar/scalar.js responded 200 in 149.9177 ms
+2025-10-06 11:56:16.307 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/scalar.js - 200 869947 text/javascript 211.746ms
+2025-10-06 11:56:16.308 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_vs/browserLink - 200 null text/javascript; charset=UTF-8 181.5632ms
+2025-10-06 11:56:16.463 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 11:56:16.472 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 11:56:16.835 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 11:56:16.839 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 11:56:16.842 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 11:56:16.844 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 372.5343 ms
+2025-10-06 11:56:16.852 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 388.4194ms
+2025-10-06 11:56:16.870 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 11:56:16.872 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 30.1899 ms
+2025-10-06 11:56:16.876 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 41.1557ms
+2025-10-06 11:56:18.244 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/favicon.svg - null null
+2025-10-06 11:56:18.255 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-06 11:56:18.258 +03:00 [INF] Sending file with download name ''.
+2025-10-06 11:56:18.261 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-06 11:56:18.262 +03:00 [INF] HTTP GET /scalar/favicon.svg responded 200 in 7.3710 ms
+2025-10-06 11:56:18.266 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/favicon.svg - 200 533 image/svg+xml 22.2308ms
+2025-10-06 11:57:10.715 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 240
+2025-10-06 11:57:10.775 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 11:57:10.779 +03:00 [INF] Route matched with {action = "Create", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Interchée.Contracts.Assignments.AssignmentReadDto]] Create(Interchée.Contracts.Assignments.AssignmentCreateDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 11:57:10.943 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__userId_0='?' (DbType = Guid), @__dto_DepartmentId_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [DepartmentRoleAssignments] AS [d]
+        WHERE [d].[UserId] = @__userId_0 AND [d].[DepartmentId] = @__dto_DepartmentId_1 AND [d].[RoleName] IN (N'Admin', N'HR', N'Supervisor')) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 11:57:10.951 +03:00 [INF] Executing ForbidResult with authentication schemes ([]).
+2025-10-06 11:57:10.954 +03:00 [INF] AuthenticationScheme: Bearer was forbidden.
+2025-10-06 11:57:10.960 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.Create (Interchée) in 175.1025ms
+2025-10-06 11:57:10.965 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 11:57:10.966 +03:00 [INF] HTTP POST /assignments responded 403 in 195.9906 ms
+2025-10-06 11:57:10.972 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/assignments - 403 0 null 257.5644ms
+2025-10-06 11:59:10.793 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 240
+2025-10-06 11:59:10.856 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 11:59:10.860 +03:00 [INF] Route matched with {action = "Create", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Interchée.Contracts.Assignments.AssignmentReadDto]] Create(Interchée.Contracts.Assignments.AssignmentCreateDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 11:59:10.877 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__userId_0='?' (DbType = Guid), @__dto_DepartmentId_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [DepartmentRoleAssignments] AS [d]
+        WHERE [d].[UserId] = @__userId_0 AND [d].[DepartmentId] = @__dto_DepartmentId_1 AND [d].[RoleName] IN (N'Admin', N'HR', N'Supervisor')) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 11:59:10.883 +03:00 [INF] Executing ForbidResult with authentication schemes ([]).
+2025-10-06 11:59:10.888 +03:00 [INF] AuthenticationScheme: Bearer was forbidden.
+2025-10-06 11:59:10.893 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.Create (Interchée) in 28.7984ms
+2025-10-06 11:59:10.900 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 11:59:10.908 +03:00 [INF] HTTP POST /assignments responded 403 in 75.2035 ms
+2025-10-06 11:59:10.914 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/assignments - 403 0 null 149.2535ms
+2025-10-06 12:09:03.931 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 12:09:04.636 +03:00 [INF] Executed DbCommand (25ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:09:04.682 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 12:09:04.725 +03:00 [INF] Executed DbCommand (36ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 12:09:04.795 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 12:09:04.819 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:09:04.823 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 12:09:04.838 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 12:09:04.860 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 12:09:04.869 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 12:09:05.219 +03:00 [INF] Executed DbCommand (22ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:09:05.282 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:09:05.288 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:09:05.292 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:09:05.299 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:09:05.326 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:09:05.370 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 12:09:05.392 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 12:09:05.686 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 12:09:05.689 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 12:09:05.742 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 12:09:05.747 +03:00 [INF] Hosting environment: Development
+2025-10-06 12:09:05.749 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 12:09:09.182 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 240
+2025-10-06 12:09:09.473 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 12:09:09.496 +03:00 [INF] Route matched with {action = "Create", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Interchée.Contracts.Assignments.AssignmentReadDto]] Create(Interchée.Contracts.Assignments.AssignmentCreateDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 12:09:09.615 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__userId_0='?' (DbType = Guid), @__dto_DepartmentId_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [DepartmentRoleAssignments] AS [d]
+        WHERE [d].[UserId] = @__userId_0 AND [d].[DepartmentId] = @__dto_DepartmentId_1 AND [d].[RoleName] IN (N'Admin', N'HR', N'Supervisor')) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:09:09.624 +03:00 [INF] Executing ForbidResult with authentication schemes ([]).
+2025-10-06 12:09:09.631 +03:00 [INF] AuthenticationScheme: Bearer was forbidden.
+2025-10-06 12:09:09.644 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.Create (Interchée) in 135.3093ms
+2025-10-06 12:09:09.654 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 12:09:09.664 +03:00 [INF] HTTP POST /assignments responded 403 in 413.3788 ms
+2025-10-06 12:09:09.692 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/assignments - 403 0 null 518.9317ms
+2025-10-06 12:10:17.175 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/assignments - null null
+2025-10-06 12:10:17.186 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.GetUserAssignments (Interchée)'
+2025-10-06 12:10:17.195 +03:00 [INF] Route matched with {action = "GetUserAssignments", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[Interchée.Contracts.Assignments.AssignmentReadDto]]] GetUserAssignments() on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 12:10:17.314 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT DISTINCT [d].[DepartmentId]
+FROM [DepartmentRoleAssignments] AS [d]
+WHERE [d].[UserId] = @__userId_0
+2025-10-06 12:10:17.443 +03:00 [INF] Executed DbCommand (21ms) [Parameters=[@__userDepartmentIds_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[Title], [a].[Description], [a].[DepartmentId], [a].[CreatedByUserId], [a].[DueAt], [a].[Status], [a].[CreatedAt], (
+    SELECT COUNT(*)
+    FROM [AssignmentAssignees] AS [a0]
+    WHERE [a].[Id] = [a0].[AssignmentId])
+FROM [Assignments] AS [a]
+WHERE [a].[DepartmentId] IN (
+    SELECT [u].[value]
+    FROM OPENJSON(@__userDepartmentIds_0) WITH ([value] int '$') AS [u]
+)
+2025-10-06 12:10:17.461 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Interchée.Contracts.Assignments.AssignmentReadDto, Interchée, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-06 12:10:17.476 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.GetUserAssignments (Interchée) in 278.6366ms
+2025-10-06 12:10:17.478 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.GetUserAssignments (Interchée)'
+2025-10-06 12:10:17.480 +03:00 [INF] HTTP GET /assignments responded 200 in 298.3356 ms
+2025-10-06 12:10:17.485 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/assignments - 200 null application/json; charset=utf-8 374.7375ms
+2025-10-06 12:10:32.074 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/assignments - null null
+2025-10-06 12:10:32.080 +03:00 [INF] Failed to validate the token.
+System.ArgumentException: IDX14102: Unable to decode the header '[PII of type 'Microsoft.IdentityModel.Logging.SecurityArtifact' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]' as Base64Url encoded string.
+ ---> System.FormatException: IDX10400: Unable to decode: '[PII of type 'System.String' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]' as Base64url encoded string.
+   at Microsoft.IdentityModel.Tokens.Base64UrlEncoder.Decode(ReadOnlySpan`1 strSpan, Span`1 output, Boolean needReplace, Int32 decodedLength)
+   at Microsoft.IdentityModel.Tokens.Base64UrlEncoder.Decode(ReadOnlySpan`1 strSpan, Span`1 output)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.CreateClaimSet(ReadOnlySpan`1 strSpan, Int32 startIndex, Int32 length, Boolean createHeaderClaimSet)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(ReadOnlyMemory`1 encodedTokenMemory)
+   --- End of inner exception stack trace ---
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(ReadOnlyMemory`1 encodedTokenMemory)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+2025-10-06 12:10:32.091 +03:00 [INF] Bearer was not authenticated. Failure message: IDX14102: Unable to decode the header '[PII of type 'Microsoft.IdentityModel.Logging.SecurityArtifact' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]' as Base64Url encoded string.
+2025-10-06 12:10:32.097 +03:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-06 12:10:32.110 +03:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-10-06 12:10:32.112 +03:00 [INF] HTTP GET /assignments responded 401 in 35.0486 ms
+2025-10-06 12:10:32.116 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/assignments - 401 0 null 42.6489ms
+2025-10-06 12:10:39.477 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/assignments - null null
+2025-10-06 12:10:39.481 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.GetUserAssignments (Interchée)'
+2025-10-06 12:10:39.484 +03:00 [INF] Route matched with {action = "GetUserAssignments", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[Interchée.Contracts.Assignments.AssignmentReadDto]]] GetUserAssignments() on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 12:10:39.494 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT DISTINCT [d].[DepartmentId]
+FROM [DepartmentRoleAssignments] AS [d]
+WHERE [d].[UserId] = @__userId_0
+2025-10-06 12:10:39.515 +03:00 [INF] Executed DbCommand (15ms) [Parameters=[@__userDepartmentIds_0='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[Title], [a].[Description], [a].[DepartmentId], [a].[CreatedByUserId], [a].[DueAt], [a].[Status], [a].[CreatedAt], (
+    SELECT COUNT(*)
+    FROM [AssignmentAssignees] AS [a0]
+    WHERE [a].[Id] = [a0].[AssignmentId])
+FROM [Assignments] AS [a]
+WHERE [a].[DepartmentId] IN (
+    SELECT [u].[value]
+    FROM OPENJSON(@__userDepartmentIds_0) WITH ([value] int '$') AS [u]
+)
+2025-10-06 12:10:39.519 +03:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Interchée.Contracts.Assignments.AssignmentReadDto, Interchée, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-06 12:10:39.521 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.GetUserAssignments (Interchée) in 34.5333ms
+2025-10-06 12:10:39.523 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.GetUserAssignments (Interchée)'
+2025-10-06 12:10:39.525 +03:00 [INF] HTTP GET /assignments responded 200 in 44.6774 ms
+2025-10-06 12:10:39.530 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/assignments - 200 null application/json; charset=utf-8 53.1494ms
+2025-10-06 12:11:35.008 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 12:11:35.772 +03:00 [INF] Executed DbCommand (30ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:11:35.790 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 12:11:35.825 +03:00 [INF] Executed DbCommand (29ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 12:11:35.907 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 12:11:35.928 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:11:35.933 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 12:11:35.944 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 12:11:35.960 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 12:11:35.968 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 12:11:36.262 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:11:36.318 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:11:36.325 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:11:36.331 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:11:36.346 +03:00 [INF] Executed DbCommand (9ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:11:36.382 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:11:36.417 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 12:11:36.438 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 12:11:36.760 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 12:11:36.762 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 12:11:36.846 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 12:11:36.847 +03:00 [INF] Hosting environment: Development
+2025-10-06 12:11:36.849 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 12:11:51.550 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 240
+2025-10-06 12:11:52.037 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 12:11:52.102 +03:00 [INF] Route matched with {action = "Create", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Interchée.Contracts.Assignments.AssignmentReadDto]] Create(Interchée.Contracts.Assignments.AssignmentCreateDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 12:11:52.345 +03:00 [INF] Executed DbCommand (11ms) [Parameters=[@__userId_0='?' (DbType = Guid), @__dto_DepartmentId_1='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [DepartmentRoleAssignments] AS [d]
+        WHERE [d].[UserId] = @__userId_0 AND [d].[DepartmentId] = @__dto_DepartmentId_1 AND [d].[RoleName] IN (N'Admin', N'HR', N'Supervisor')) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:11:52.367 +03:00 [INF] Executing ForbidResult with authentication schemes ([]).
+2025-10-06 12:11:52.380 +03:00 [INF] AuthenticationScheme: Bearer was forbidden.
+2025-10-06 12:11:52.406 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.Create (Interchée) in 278.6395ms
+2025-10-06 12:11:52.420 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 12:11:52.431 +03:00 [INF] HTTP POST /assignments responded 403 in 764.0392 ms
+2025-10-06 12:11:52.460 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/assignments - 403 0 null 926.0833ms
+2025-10-06 12:15:00.780 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 12:15:01.582 +03:00 [INF] Executed DbCommand (27ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:15:01.605 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 12:15:01.638 +03:00 [INF] Executed DbCommand (28ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 12:15:01.712 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 12:15:01.734 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:15:01.739 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 12:15:01.752 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 12:15:01.768 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 12:15:01.776 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 12:15:02.106 +03:00 [INF] Executed DbCommand (21ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:15:02.169 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:15:02.177 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:15:02.182 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:15:02.187 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:15:02.225 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:15:02.269 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 12:15:02.291 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 12:15:02.682 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 12:15:02.684 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 12:15:02.737 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 12:15:02.738 +03:00 [INF] Hosting environment: Development
+2025-10-06 12:15:02.739 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 12:15:16.017 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 240
+2025-10-06 12:15:16.474 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 12:15:16.526 +03:00 [INF] Route matched with {action = "Create", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Interchée.Contracts.Assignments.AssignmentReadDto]] Create(Interchée.Contracts.Assignments.AssignmentCreateDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 12:15:17.188 +03:00 [INF] Executed DbCommand (42ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (DbType = Guid), @p2='?' (DbType = Int32), @p3='?' (Size = 4000), @p4='?' (DbType = DateTime2), @p5='?' (Size = 32), @p6='?' (Size = 160)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [Assignments] ([CreatedAt], [CreatedByUserId], [DepartmentId], [Description], [DueAt], [Status], [Title])
+OUTPUT INSERTED.[Id]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+2025-10-06 12:15:17.245 +03:00 [ERR] An exception occurred in the database while saving changes for context type 'Interchée.Data.AppDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Assignments_AspNetUsers_CreatedByUserId". The conflict occurred in database "InternAttacheDb2", table "dbo.AspNetUsers", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:8f4f1aff-f260-404a-b592-591ffaf9024f
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Assignments_AspNetUsers_CreatedByUserId". The conflict occurred in database "InternAttacheDb2", table "dbo.AspNetUsers", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:8f4f1aff-f260-404a-b592-591ffaf9024f
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2025-10-06 12:15:37.228 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 12:15:37.884 +03:00 [INF] Executed DbCommand (23ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:15:37.907 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 12:15:37.942 +03:00 [INF] Executed DbCommand (28ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 12:15:38.036 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 12:15:38.060 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:15:38.064 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 12:15:38.078 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 12:15:38.096 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 12:15:38.104 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 12:15:38.470 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:15:38.522 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:15:38.529 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:15:38.536 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:15:38.541 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:15:38.565 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:15:38.678 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 12:15:38.716 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 12:15:38.988 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 12:15:38.990 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 12:15:39.039 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 12:15:39.040 +03:00 [INF] Hosting environment: Development
+2025-10-06 12:15:39.041 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 12:15:42.035 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/v1 - null null
+2025-10-06 12:15:42.567 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 12:15:42.922 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-06 12:15:42.953 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 12:15:42.968 +03:00 [INF] HTTP GET /scalar/v1 responded 200 in 607.2850 ms
+2025-10-06 12:15:42.977 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-06 12:15:42.976 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/scalar.js - null null
+2025-10-06 12:15:42.976 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/scalar.aspnetcore.js - null null
+2025-10-06 12:15:42.994 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/v1 - 200 null text/html 965.4843ms
+2025-10-06 12:15:43.012 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_vs/browserLink - null null
+2025-10-06 12:15:43.105 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 12:15:43.107 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 130.3218ms
+2025-10-06 12:15:43.118 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 12:15:43.210 +03:00 [INF] Sending file with download name ''.
+2025-10-06 12:15:43.210 +03:00 [INF] Sending file with download name ''.
+2025-10-06 12:15:43.229 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 12:15:43.234 +03:00 [INF] HTTP GET /scalar/scalar.aspnetcore.js responded 200 in 123.8360 ms
+2025-10-06 12:15:43.241 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/scalar.aspnetcore.js - 200 1046 text/javascript 264.6095ms
+2025-10-06 12:15:43.261 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 12:15:43.266 +03:00 [INF] HTTP GET /scalar/scalar.js responded 200 in 162.0518 ms
+2025-10-06 12:15:43.275 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_vs/browserLink - 200 null text/javascript; charset=UTF-8 262.7365ms
+2025-10-06 12:15:43.276 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/scalar.js - 200 869947 text/javascript 299.98ms
+2025-10-06 12:15:43.630 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 12:15:43.642 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 12:15:44.091 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 12:15:44.094 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 12:15:44.100 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 12:15:44.103 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 460.8049 ms
+2025-10-06 12:15:44.112 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 482.6977ms
+2025-10-06 12:15:44.132 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 12:15:44.138 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 38.3135 ms
+2025-10-06 12:15:44.143 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 51.9235ms
+2025-10-06 12:15:47.057 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/favicon.svg - null null
+2025-10-06 12:15:47.065 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-06 12:15:47.068 +03:00 [INF] Sending file with download name ''.
+2025-10-06 12:15:47.072 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-06 12:15:47.074 +03:00 [INF] HTTP GET /scalar/favicon.svg responded 200 in 9.6296 ms
+2025-10-06 12:15:47.081 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/favicon.svg - 200 533 image/svg+xml 24.148ms
+2025-10-06 12:16:53.341 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 230
+2025-10-06 12:16:53.595 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 12:16:53.660 +03:00 [INF] Route matched with {action = "Create", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Interchée.Contracts.Assignments.AssignmentReadDto]] Create(Interchée.Contracts.Assignments.AssignmentCreateDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 12:16:54.221 +03:00 [INF] Executed DbCommand (17ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (DbType = Guid), @p2='?' (DbType = Int32), @p3='?' (Size = 4000), @p4='?' (DbType = DateTime2), @p5='?' (Size = 32), @p6='?' (Size = 160)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [Assignments] ([CreatedAt], [CreatedByUserId], [DepartmentId], [Description], [DueAt], [Status], [Title])
+OUTPUT INSERTED.[Id]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+2025-10-06 12:16:54.274 +03:00 [ERR] An exception occurred in the database while saving changes for context type 'Interchée.Data.AppDbContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Assignments_AspNetUsers_CreatedByUserId". The conflict occurred in database "InternAttacheDb2", table "dbo.AspNetUsers", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:faa0e935-95a2-49b7-a9fd-c8c8503a3afb
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Assignments_AspNetUsers_CreatedByUserId". The conflict occurred in database "InternAttacheDb2", table "dbo.AspNetUsers", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:faa0e935-95a2-49b7-a9fd-c8c8503a3afb
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2025-10-06 12:21:33.484 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 12:21:34.144 +03:00 [INF] Executed DbCommand (22ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:21:34.164 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 12:21:34.200 +03:00 [INF] Executed DbCommand (32ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 12:21:34.275 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 12:21:34.298 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:21:34.307 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 12:21:34.324 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 12:21:34.346 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 12:21:34.355 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 12:21:34.727 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:21:34.809 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:21:34.817 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:21:34.822 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:21:34.827 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:21:34.878 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:21:34.987 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 12:21:35.007 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 12:21:35.389 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 12:21:35.391 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 12:21:35.453 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 12:21:35.456 +03:00 [INF] Hosting environment: Development
+2025-10-06 12:21:35.457 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 12:21:36.895 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 230
+2025-10-06 12:21:37.132 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 12:21:37.157 +03:00 [INF] Route matched with {action = "Create", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Interchée.Contracts.Assignments.AssignmentReadDto]] Create(Interchée.Contracts.Assignments.AssignmentCreateDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 12:21:37.246 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [AspNetUsers] AS [a]
+        WHERE [a].[Id] = @__userId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:21:37.260 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'System.String'.
+2025-10-06 12:21:37.269 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.Create (Interchée) in 102.5035ms
+2025-10-06 12:21:37.276 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 12:21:37.282 +03:00 [INF] HTTP POST /assignments responded 400 in 327.1535 ms
+2025-10-06 12:21:37.296 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/assignments - 400 null text/plain; charset=utf-8 406.8465ms
+2025-10-06 12:23:31.701 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/assignments - application/json 230
+2025-10-06 12:23:31.713 +03:00 [INF] Executing endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 12:23:31.716 +03:00 [INF] Route matched with {action = "Create", controller = "Assignments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Interchée.Contracts.Assignments.AssignmentReadDto]] Create(Interchée.Contracts.Assignments.AssignmentCreateDto) on controller Interchée.Controllers.AssignmentsController (Interchée).
+2025-10-06 12:23:31.872 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [AspNetUsers] AS [a]
+        WHERE [a].[Id] = @__userId_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:23:31.880 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'System.String'.
+2025-10-06 12:23:31.884 +03:00 [INF] Executed action Interchée.Controllers.AssignmentsController.Create (Interchée) in 162.5834ms
+2025-10-06 12:23:31.887 +03:00 [INF] Executed endpoint 'Interchée.Controllers.AssignmentsController.Create (Interchée)'
+2025-10-06 12:23:31.889 +03:00 [INF] HTTP POST /assignments responded 400 in 182.8683 ms
+2025-10-06 12:23:31.895 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/assignments - 400 null text/plain; charset=utf-8 237.9035ms
+2025-10-06 12:33:24.339 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 12:33:24.787 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:33:24.807 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 12:33:24.839 +03:00 [INF] Executed DbCommand (23ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 12:33:24.900 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 12:33:24.921 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:33:24.926 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 12:33:24.936 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 12:33:24.949 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 12:33:24.957 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 12:33:25.216 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:33:25.264 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:33:25.269 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:33:25.275 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:33:25.281 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:33:25.305 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:33:25.325 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 12:33:25.344 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 12:33:25.521 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 12:33:25.522 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 12:33:25.575 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 12:33:25.577 +03:00 [INF] Hosting environment: Development
+2025-10-06 12:33:25.578 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 12:33:32.616 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 12:33:33.051 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:33:33.075 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 12:33:33.102 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 12:33:33.173 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 12:33:33.193 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 12:33:33.199 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 12:33:33.211 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 12:33:33.223 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 12:33:33.229 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 12:33:33.489 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:33:33.537 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:33:33.545 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:33:33.552 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:33:33.559 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 12:33:33.580 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 12:33:33.596 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 12:33:33.609 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 12:33:33.759 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 12:33:33.761 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 12:33:33.801 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 12:33:33.805 +03:00 [INF] Hosting environment: Development
+2025-10-06 12:33:33.808 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 12:33:44.783 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/v1 - null null
+2025-10-06 12:33:45.027 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 12:33:45.223 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-06 12:33:45.243 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 12:33:45.251 +03:00 [INF] HTTP GET /scalar/v1 responded 200 in 275.8765 ms
+2025-10-06 12:33:45.271 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/v1 - 200 null text/html 489.8632ms
+2025-10-06 12:33:45.292 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/scalar.aspnetcore.js - null null
+2025-10-06 12:33:45.292 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/scalar.js - null null
+2025-10-06 12:33:45.295 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-06 12:33:45.306 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 12:33:45.306 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 12:33:45.313 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_vs/browserLink - null null
+2025-10-06 12:33:45.323 +03:00 [INF] Sending file with download name ''.
+2025-10-06 12:33:45.323 +03:00 [INF] Sending file with download name ''.
+2025-10-06 12:33:45.328 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 32.6893ms
+2025-10-06 12:33:45.331 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 12:33:45.339 +03:00 [INF] HTTP GET /scalar/scalar.aspnetcore.js responded 200 in 34.7027 ms
+2025-10-06 12:33:45.345 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/scalar.aspnetcore.js - 200 1046 text/javascript 53.0781ms
+2025-10-06 12:33:45.356 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 12:33:45.363 +03:00 [INF] HTTP GET /scalar/scalar.js responded 200 in 57.5710 ms
+2025-10-06 12:33:45.368 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/scalar.js - 200 869947 text/javascript 76.4716ms
+2025-10-06 12:33:45.384 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_vs/browserLink - 200 null text/javascript; charset=UTF-8 71.0348ms
+2025-10-06 12:33:45.627 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 12:33:45.638 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 12:33:45.937 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 12:33:45.938 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 12:33:45.948 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 12:33:45.952 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 318.4142 ms
+2025-10-06 12:33:45.961 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 333.8292ms
+2025-10-06 12:33:45.983 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 12:33:45.988 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 40.2675 ms
+2025-10-06 12:33:45.996 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 58.8427ms
+2025-10-06 12:33:48.178 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/favicon.svg - null null
+2025-10-06 12:33:48.186 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-06 12:33:48.189 +03:00 [INF] Sending file with download name ''.
+2025-10-06 12:33:48.192 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-06 12:33:48.195 +03:00 [INF] HTTP GET /scalar/favicon.svg responded 200 in 10.1108 ms
+2025-10-06 12:33:48.201 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/favicon.svg - 200 533 image/svg+xml 23.4367ms
+2025-10-06 12:34:05.272 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/assignments - null null
+2025-10-06 12:34:05.290 +03:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-06 12:34:05.304 +03:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-10-06 12:34:05.308 +03:00 [INF] HTTP GET /assignments responded 401 in 27.2683 ms
+2025-10-06 12:34:05.317 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/assignments - 401 0 null 44.854ms
+2025-10-06 13:03:15.015 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 13:03:15.607 +03:00 [INF] Executed DbCommand (29ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 13:03:15.631 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 13:03:15.667 +03:00 [INF] Executed DbCommand (27ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 13:03:15.729 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 13:03:15.754 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 13:03:15.765 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 13:03:15.782 +03:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 13:03:15.798 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 13:03:15.809 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 13:03:16.130 +03:00 [INF] Executed DbCommand (22ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 13:03:16.175 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 13:03:16.184 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 13:03:16.187 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 13:03:16.192 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 13:03:16.214 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 13:03:16.255 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 13:03:16.276 +03:00 [INF] Executed DbCommand (5ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 13:03:16.587 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 13:03:16.593 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 13:03:16.649 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 13:03:16.654 +03:00 [INF] Hosting environment: Development
+2025-10-06 13:03:16.657 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 13:03:30.881 +03:00 [WRN] The foreign key property 'AssignmentSubmission.AssignmentId1' was created in shadow state because a conflicting property with the simple name 'AssignmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+2025-10-06 13:03:31.461 +03:00 [INF] Executed DbCommand (21ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 13:03:31.488 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 13:03:31.524 +03:00 [INF] Executed DbCommand (26ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 13:03:31.620 +03:00 [INF] Executed DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 13:03:31.649 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 13:03:31.660 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 13:03:31.671 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 13:03:31.686 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 13:03:31.694 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 13:03:32.002 +03:00 [INF] Executed DbCommand (18ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 13:03:32.054 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 13:03:32.063 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 13:03:32.068 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 13:03:32.072 +03:00 [INF] Executed DbCommand (0ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 13:03:32.091 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 13:03:32.179 +03:00 [INF] User profile is available. Using 'C:\Users\USER\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 13:03:32.195 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 13:03:32.516 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 13:03:32.518 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 13:03:32.595 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 13:03:32.597 +03:00 [INF] Hosting environment: Development
+2025-10-06 13:03:32.598 +03:00 [INF] Content root path: C:\Users\USER\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 13:03:34.445 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/v1 - null null
+2025-10-06 13:03:34.711 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 13:03:34.810 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-06 13:03:34.825 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 13:03:34.832 +03:00 [INF] HTTP GET /scalar/v1 responded 200 in 242.1576 ms
+2025-10-06 13:03:34.848 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/v1 - 200 null text/html 408.7157ms
+2025-10-06 13:03:34.880 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/scalar.aspnetcore.js - null null
+2025-10-06 13:03:34.880 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/scalar.js - null null
+2025-10-06 13:03:34.880 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-06 13:03:34.892 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_vs/browserLink - null null
+2025-10-06 13:03:34.939 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 13:03:34.942 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 13:03:35.071 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 190.8613ms
+2025-10-06 13:03:35.076 +03:00 [INF] Sending file with download name ''.
+2025-10-06 13:03:35.076 +03:00 [INF] Sending file with download name ''.
+2025-10-06 13:03:35.093 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 13:03:35.095 +03:00 [INF] HTTP GET /scalar/scalar.aspnetcore.js responded 200 in 201.7997 ms
+2025-10-06 13:03:35.099 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/scalar.aspnetcore.js - 200 1046 text/javascript 219.2022ms
+2025-10-06 13:03:35.112 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 13:03:35.118 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_vs/browserLink - 200 null text/javascript; charset=UTF-8 226.1295ms
+2025-10-06 13:03:35.121 +03:00 [INF] HTTP GET /scalar/scalar.js responded 200 in 180.5838 ms
+2025-10-06 13:03:35.135 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/scalar.js - 200 869947 text/javascript 254.9019ms
+2025-10-06 13:03:35.396 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 13:03:35.411 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 13:03:35.593 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 13:03:35.594 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 13:03:35.602 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 13:03:35.605 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 194.2132 ms
+2025-10-06 13:03:35.608 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 211.8913ms
+2025-10-06 13:03:35.622 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 13:03:35.624 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 21.9019 ms
+2025-10-06 13:03:35.625 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 32.3075ms
+2025-10-06 13:03:37.268 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/scalar/favicon.svg - null null
+2025-10-06 13:03:37.275 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-06 13:03:37.280 +03:00 [INF] Sending file with download name ''.
+2025-10-06 13:03:37.284 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/favicon.svg'
+2025-10-06 13:03:37.286 +03:00 [INF] HTTP GET /scalar/favicon.svg responded 200 in 12.1736 ms
+2025-10-06 13:03:37.293 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/scalar/favicon.svg - 200 533 image/svg+xml 25.5536ms
+2025-10-06 13:09:41.940 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/assignments - null null
+2025-10-06 13:09:41.965 +03:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-06 13:09:41.973 +03:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-10-06 13:09:41.978 +03:00 [INF] HTTP GET /assignments responded 401 in 21.9681 ms
+2025-10-06 13:09:41.984 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/assignments - 401 0 null 44.4923ms
+2025-10-06 13:10:21.485 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/assignments - null null
+2025-10-06 13:10:21.607 +03:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '10/6/2025 9:52:56 AM', Current time (UTC): '10/6/2025 10:10:21 AM'.
+   at Microsoft.IdentityModel.Tokens.ValidatorUtilities.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at Microsoft.IdentityModel.Tokens.Validators.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateTokenPayloadAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateJWSAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+2025-10-06 13:10:21.621 +03:00 [INF] Bearer was not authenticated. Failure message: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '10/6/2025 9:52:56 AM', Current time (UTC): '10/6/2025 10:10:21 AM'.
+2025-10-06 13:10:21.625 +03:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-06 13:10:21.632 +03:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-10-06 13:10:21.638 +03:00 [INF] HTTP GET /assignments responded 401 in 130.4340 ms
+2025-10-06 13:10:21.644 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/assignments - 401 0 null 159.3727ms
+2025-10-06 13:10:23.999 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/assignments - null null
+2025-10-06 13:10:24.013 +03:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '10/6/2025 9:52:56 AM', Current time (UTC): '10/6/2025 10:10:24 AM'.
+   at Microsoft.IdentityModel.Tokens.ValidatorUtilities.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at Microsoft.IdentityModel.Tokens.Validators.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateTokenPayloadAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateJWSAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+2025-10-06 13:10:24.022 +03:00 [INF] Bearer was not authenticated. Failure message: IDX10223: Lifetime validation failed. The token is expired. ValidTo (UTC): '10/6/2025 9:52:56 AM', Current time (UTC): '10/6/2025 10:10:24 AM'.
+2025-10-06 13:10:24.029 +03:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2025-10-06 13:10:24.035 +03:00 [INF] AuthenticationScheme: Bearer was challenged.
+2025-10-06 13:10:24.042 +03:00 [INF] HTTP GET /assignments responded 401 in 32.1263 ms
+2025-10-06 13:10:24.052 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/assignments - 401 0 null 53.2288ms
