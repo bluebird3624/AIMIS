@@ -2,6 +2,7 @@ import { useState } from "react";
 import '../Styles/login.css';
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/auth";
+import { motion } from 'framer-motion';
 
 
 
@@ -19,14 +20,9 @@ function Login(){
          
           const response = await login({email, password});
         // console.log('login page login response: ', response);
-        if (response.accessToken){
-          
+      
           navigate('/admin-dash');
-        }
-        else
-        {
-          console.log('user not authorized', response);
-        }
+       
       }
       catch(error)
       {
@@ -41,7 +37,7 @@ function Login(){
             initial={{ x: '100%' }}
            animate={{ x: 0 }}
             exit={{ x: '-100%' }}
-            transition={{ type: 'keyframes', duration: 1.2 }}
+            transition={{ type: 'keyframes', duration: 2.1 }}
             className="absolute inset-0"
 
         >
@@ -75,9 +71,15 @@ function Login(){
                             />
                         </div>
 
-                        <button type="submit" className="login-button" onClick={handleClick}>
-                            Log In
+                        {/* Login Button */}
+                        <button 
+                            type="submit" 
+                            className="login-button" 
+                            disabled={loading}
+                        >
+                            {loading ? 'Logging in...' : 'Log In'}
                         </button>
+
 
                         <div className="forgot-password">
                             <a href="/forgot-password" className="forgot-link">
