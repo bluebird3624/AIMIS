@@ -14,5 +14,7 @@
         DateTime RequestedAt,
         Guid? ApprovedByUserId,
         DateTime? ApprovedAt,
-        string ProposedUserName);
+        string ProposedUserName,
+        List<DecisionReadDto>? Decisions);
+        
 }

@@ -87,9 +87,17 @@ namespace Interchée.Services
         private static string ComposeDisplay(string first, string last)
             => $"{(first ?? string.Empty).Trim()} {(last ?? string.Empty).Trim()}".Trim();
 
+        private static DecisionReadDto ToDecisionRead(OnboardingDecision d) =>
+        new(d.Id, d.Action, d.Reason, d.ActorUserId, d.CreatedAt);
         private OnboardingRequestReadDto ToRead(OnboardingRequest e, string proposedUserName)
         {
             var display = ComposeDisplay(e.FirstName, e.LastName);
+
+            var decisions = e.Decisions?
+            .OrderByDescending(d => d.CreatedAt)
+            .Select(ToDecisionRead)
+            .ToList();
+
             return new OnboardingRequestReadDto(
                 e.Id,
                 e.Email,
@@ -103,14 +111,25 @@ namespace Interchée.Services
                 e.RequestedAt,
                 e.ApprovedByUserId,
                 e.ApprovedAt,
-                proposedUserName
+                proposedUserName,
+                decisions
             );
         }
 
-        // -------------
-        // Create / List
-        // -------------
+        private async Task AddDecisionAsync(long requestId, Guid actorUserId, string action, string? reason = null)
+        {
+            _db.OnboardingDecisions.Add(new OnboardingDecision
+            {
+                RequestId = requestId,
+                Action = action,
+                Reason = string.IsNullOrWhiteSpace(reason) ? null : reason.Trim(),
+                ActorUserId = actorUserId,
+                CreatedAt = DateTime.UtcNow
+            });
+            await _db.SaveChangesAsync();
+        }
 
+        // CREATE
         public async Task<OnboardingRequestReadDto> CreateAsync(OnboardingRequestCreateDto dto)
         {
             var email = dto.Email.Trim().ToLowerInvariant();
@@ -141,12 +160,18 @@ namespace Interchée.Services
             _db.OnboardingRequests.Add(entity);
             await _db.SaveChangesAsync();
 
-            // Generate a *suggested* username (not persisted)
+            // Reload including Decisions so the mapper can project timeline (will be empty now)
+            var reloaded = await _db.OnboardingRequests
+                .Include(x => x.Decisions)
+                .FirstAsync(x => x.Id == entity.Id);
+
+            // Suggested username (not persisted)
             var proposed = await SuggestUniqueUserNameAsync(first, last);
 
-            return ToRead(entity, proposed);
+            return ToRead(reloaded, proposed);
         }
 
+        // LIST
         public async Task<List<OnboardingRequestReadDto>> GetAsync(string? status = null, int? departmentId = null)
         {
             var q = _db.OnboardingRequests.AsNoTracking().AsQueryable();
@@ -157,9 +182,12 @@ namespace Interchée.Services
             if (departmentId.HasValue)
                 q = q.Where(x => x.DepartmentId == departmentId.Value);
 
-            var list = await q.OrderByDescending(x => x.RequestedAt).ToListAsync();
+            // Eager-load decisions for timeline
+            var list = await q
+                .Include(x => x.Decisions)
+                .OrderByDescending(x => x.RequestedAt)
+                .ToListAsync();
 
-            // For lists, also include a proposal (best effort uniqueness vs current users)
             var result = new List<OnboardingRequestReadDto>(list.Count);
             foreach (var e in list)
             {
@@ -169,15 +197,12 @@ namespace Interchée.Services
             return result;
         }
 
-        // -------------
-        // Approve/Reject
-        // -------------
-
+        // APPROVE
         public async Task<OnboardingRequestReadDto> ApproveAsync(
-    long id,
-    ApproveOnboardingDto dto,
-    Guid approverUserId,
-    string roleName)
+            long id,
+            ApproveOnboardingDto dto,
+            Guid approverUserId,
+            string roleName)
         {
             var r = await _db.OnboardingRequests.FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new KeyNotFoundException("Onboarding request not found.");
@@ -185,18 +210,17 @@ namespace Interchée.Services
             if (r.Status != Pending)
                 throw new InvalidOperationException("Only pending requests can be approved.");
 
-            // ✅ Canonicalize & validate role (accepts 'attache', 'attaché', any case)
+            // Canonicalize/validate role
             var canonicalRole = RoleHelper.ToCanonical(roleName);
             if (canonicalRole is null)
                 throw new InvalidOperationException("Invalid role name.");
 
-            // Department must still be active
-            var activeDept = await _db.Departments
-                .AnyAsync(d => d.Id == r.DepartmentId && d.IsActive);
+            // Department must be active
+            var activeDept = await _db.Departments.AnyAsync(d => d.Id == r.DepartmentId && d.IsActive);
             if (!activeDept)
                 throw new InvalidOperationException("Department is inactive; cannot approve onboarding.");
 
-            // Friendly pre-checks before creating Identity user
+            // Pre-checks for user creation
             var userName = dto.UserName.Trim();
             if (await _userMgr.FindByNameAsync(userName) is not null)
                 throw new InvalidOperationException("Username is already taken.");
@@ -226,7 +250,6 @@ namespace Interchée.Services
                 throw new InvalidOperationException(msg);
             }
 
-            // ✅ Store canonical role name in the department-scoped assignment
             _db.DepartmentRoleAssignments.Add(new DepartmentRoleAssignment
             {
                 UserId = user.Id,
@@ -235,20 +258,37 @@ namespace Interchée.Services
                 AssignedAt = DateTime.UtcNow
             });
 
+            // Snapshot fields on the request
             r.Status = Approved;
             r.ApprovedByUserId = approverUserId;
             r.ApprovedAt = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
+
+            // Decision log: Approved (no reason)
+            _db.OnboardingDecisions.Add(new OnboardingDecision
+            {
+                RequestId = r.Id,
+                Action = "Approved",
+                Reason = null,
+                ActorUserId = approverUserId,
+                CreatedAt = DateTime.UtcNow
+            });
+            await _db.SaveChangesAsync();
+
             await tx.CommitAsync();
 
-            // If you have the helper; otherwise return your existing ToRead(r)
+            // Reload with decisions for read mapping
+            var reloaded = await _db.OnboardingRequests
+                .Include(x => x.Decisions)
+                .FirstAsync(x => x.Id == r.Id);
+
             var proposedForRead = await SuggestUniqueUserNameAsync(r.FirstName, r.LastName);
-            return ToRead(r, proposedForRead);
+            return ToRead(reloaded, proposedForRead);
         }
 
-
-        public async Task<OnboardingRequestReadDto> RejectAsync(long id, Guid approverUserId)
+        // REJECT  (now accepts a reason and logs the decision)
+        public async Task<OnboardingRequestReadDto> RejectAsync(long id, Guid approverUserId, string? reason = null)
         {
             var r = await _db.OnboardingRequests.FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new KeyNotFoundException("Onboarding request not found.");
@@ -257,13 +297,30 @@ namespace Interchée.Services
                 throw new InvalidOperationException("Only pending requests can be rejected.");
 
             r.Status = Rejected;
-            r.ApprovedByUserId = approverUserId;
+            r.ApprovedByUserId = approverUserId;   // who took the decision
             r.ApprovedAt = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
 
+            // Decision log: Rejected (with reason)
+            _db.OnboardingDecisions.Add(new OnboardingDecision
+            {
+                RequestId = r.Id,
+                Action = "Rejected",
+                Reason = string.IsNullOrWhiteSpace(reason) ? null : reason.Trim(),
+                ActorUserId = approverUserId,
+                CreatedAt = DateTime.UtcNow
+            });
+            await _db.SaveChangesAsync();
+
+            // Reload with decisions for read mapping
+            var reloaded = await _db.OnboardingRequests
+                .Include(x => x.Decisions)
+                .FirstAsync(x => x.Id == r.Id);
+
             var proposedForRead = await SuggestUniqueUserNameAsync(r.FirstName, r.LastName);
-            return ToRead(r, proposedForRead);
+            return ToRead(reloaded, proposedForRead);
         }
+
     }
 }

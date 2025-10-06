@@ -21,5 +21,8 @@
         public DateTime? ApprovedAt { get; set; }
 
         public Department? Department { get; set; }
+
+        public ICollection<OnboardingDecision> Decisions { get; set; } = new List<OnboardingDecision>();
     }
 }
+

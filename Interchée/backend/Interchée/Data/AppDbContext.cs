@@ -12,6 +12,7 @@ namespace Interchée.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<OnboardingRequest> OnboardingRequests => Set<OnboardingRequest>();
+        public DbSet<OnboardingDecision> OnboardingDecisions => Set<OnboardingDecision>();
 
         public DbSet<Department> Departments => Set<Department>();
         public DbSet<DepartmentRoleAssignment> DepartmentRoleAssignments => Set<DepartmentRoleAssignment>();
@@ -88,6 +89,30 @@ namespace Interchée.Data
                  .HasForeignKey(x => x.DepartmentId)
                  .OnDelete(DeleteBehavior.Restrict); // preserve history
             });
+
+            // OnboardingDecision
+            b.Entity<OnboardingDecision>(e =>
+            {
+                e.ToTable("OnboardingDecisions");
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Action)
+                    .HasMaxLength(32)
+                    .IsRequired();
+
+                e.Property(x => x.Reason)
+                    .HasMaxLength(1000);
+
+                e.Property(x => x.CreatedAt)
+                    .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+                e.HasOne(x => x.Request)
+                    .WithMany(r => r.Decisions)            // add Decisions nav on OnboardingRequest (see next)
+                    .HasForeignKey(x => x.RequestId)
+                    .OnDelete(DeleteBehavior.Cascade);     // delete log when request is deleted (usually you keep requests)
+            });
+
         }
     }
 }

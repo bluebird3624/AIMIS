@@ -6,6 +6,7 @@ using Interchée.Utils;                  //  canonicalize roles
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Interchée.Controllers
 {
@@ -108,7 +109,7 @@ namespace Interchée.Controllers
                 if (!Guid.TryParse(approverId, out var approverGuid))
                     return Unauthorized();
 
-                var result = await _svc.RejectAsync(id, approverGuid);
+                var result = await _svc.RejectAsync(id, approverGuid, dto.Reason);
                 return Ok(result);
             }
             catch (KeyNotFoundException)
@@ -120,5 +121,26 @@ namespace Interchée.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        /// <summary>Timeline of decisions for an onboarding request (Admin/HR).</summary>
+        [HttpGet("{id:long}/decisions")]
+        [Authorize(Roles = "Admin,HR")]
+        [ProducesResponseType(typeof(IEnumerable<DecisionReadDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<DecisionReadDto>>> GetDecisions(long id)
+        {
+            var exists = await _db.OnboardingRequests.AsNoTracking().AnyAsync(x => x.Id == id);
+            if (!exists) return NotFound();
+
+            var list = await _db.OnboardingDecisions
+                .AsNoTracking()
+                .Where(d => d.RequestId == id)
+                .OrderByDescending(d => d.CreatedAt)
+                .Select(d => new DecisionReadDto(d.Id, d.Action, d.Reason, d.ActorUserId, d.CreatedAt))
+                .ToListAsync();
+
+            return Ok(list);
+        }
+
     }
 }
