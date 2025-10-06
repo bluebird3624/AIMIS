@@ -1,11 +1,13 @@
 using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Serilog;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,20 +38,50 @@ var jwtIssuer = jwtSection.GetValue<string>("Issuer")!;
 var jwtAudience = jwtSection.GetValue<string>("Audience")!;
 var jwtKey = jwtSection.GetValue<string>("Key")!;
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(o =>
+builder.Services
+
+    .AddAuthentication(options =>
+
     {
+
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+    })
+
+    .AddJwtBearer(o =>
+
+    {
+
         o.TokenValidationParameters = new TokenValidationParameters
+
         {
+
             ValidateIssuerSigningKey = true,
+
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+
             ValidateIssuer = true,
+
             ValidIssuer = jwtIssuer,
+
             ValidateAudience = true,
+
             ValidAudience = jwtAudience,
+
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromSeconds(30) // small skew
+
+            ClockSkew = TimeSpan.FromSeconds(30),
+
+            NameClaimType = ClaimTypes.NameIdentifier,
+
+            RoleClaimType = ClaimTypes.Role
+
         };
+
     });
 
 builder.Services.AddAuthorization();
@@ -57,6 +89,10 @@ builder.Services.AddAuthorization();
 // --- MVC + API docs (Swagger) + Scalar explorer
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApi();
+
+builder.Services.AddHttpClient<SimpleGitService>();
+
 
 
 var app = builder.Build();
@@ -65,10 +101,27 @@ var app = builder.Build();
 app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
+
 {
-    
-    app.MapScalarApiReference("/scalar"); // Scalar UI at /scalar
+
+    app.MapOpenApi().AllowAnonymous();        // serves /openapi/v1.json
+
+    // Scalar v2 style: pass the route as the first arg, then configure pattern
+
+    app.MapScalarApiReference("/scalar", options =>
+
+    {
+
+        options
+
+            .WithTitle("InternAttache API")
+
+            .WithOpenApiRoutePattern("/openapi/{documentName}.json"); // default docName is "v1"
+
+    }).AllowAnonymous();
+
 }
+
 
 app.UseHttpsRedirection();
 
