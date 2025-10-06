@@ -3,6 +3,7 @@ using Interchée.Data;
 using Interchée.Entities;
 using Interchée.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -95,6 +96,7 @@ builder.Services.AddScoped<RefreshTokenService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RoleAssignmentService>();
 builder.Services.AddScoped<OnboardingService>();
+builder.Services.AddSingleton<IAuthorizationHandler, DepartmentRoleHandler>();
 
 
 var app = builder.Build();
