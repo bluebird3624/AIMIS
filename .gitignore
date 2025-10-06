@@ -5,5 +5,8 @@
 /.vs
 /Interchée/.vs/Interchée
 
+./node_modules
 /node_modules
 .fake
+.env
+Interchée/frontend/node_modules/
