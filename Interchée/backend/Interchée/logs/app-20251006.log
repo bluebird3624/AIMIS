@@ -1,0 +1,112 @@
+2025-10-06 09:35:54.350 +03:00 [INF] Executed DbCommand (91ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 09:35:54.508 +03:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-10-06 09:35:54.731 +03:00 [INF] Executed DbCommand (209ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+SELECT @result
+2025-10-06 09:35:54.980 +03:00 [INF] Executed DbCommand (33ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+2025-10-06 09:35:55.048 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2025-10-06 09:35:55.062 +03:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2025-10-06 09:35:55.199 +03:00 [INF] Executed DbCommand (114ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2025-10-06 09:35:55.232 +03:00 [INF] No migrations were applied. The database is already up to date.
+2025-10-06 09:35:55.263 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+DECLARE @result int;
+EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+SELECT @result
+2025-10-06 09:35:56.123 +03:00 [INF] Executed DbCommand (152ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 09:35:56.236 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 09:35:56.253 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 09:35:56.268 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 09:35:56.283 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-10-06 09:35:56.355 +03:00 [INF] Executed DbCommand (20ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Departments] AS [d]) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-10-06 09:35:56.483 +03:00 [INF] User profile is available. Using 'C:\Users\kimmv\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-06 09:35:56.545 +03:00 [INF] Executed DbCommand (24ms) [Parameters=[@__adminEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[ConcurrencyStamp], [a].[CreatedAt], [a].[Email], [a].[EmailConfirmed], [a].[FirstName], [a].[IsActive], [a].[LastName], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[MiddleName], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[SecurityStamp], [a].[TwoFactorEnabled], [a].[UserName]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[Email] = @__adminEmail_0
+2025-10-06 09:35:57.733 +03:00 [INF] Now listening on: https://localhost:7218
+2025-10-06 09:35:57.738 +03:00 [INF] Now listening on: http://localhost:5007
+2025-10-06 09:35:57.861 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-06 09:35:57.866 +03:00 [INF] Hosting environment: Development
+2025-10-06 09:35:57.873 +03:00 [INF] Content root path: C:\Users\kimmv\Source\Repos\AIMIS\Interchée\backend\Interchée
+2025-10-06 09:36:34.708 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/ - null null
+2025-10-06 09:36:35.311 +03:00 [INF] HTTP GET / responded 404 in 49.6542 ms
+2025-10-06 09:36:35.357 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/ - 404 0 null 674.879ms
+2025-10-06 09:36:35.387 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/, Response status code: 404
+2025-10-06 09:36:47.231 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/v1 - null null
+2025-10-06 09:36:47.856 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 09:36:48.235 +03:00 [INF] Write content with HTTP Response ContentType of text/html
+2025-10-06 09:36:48.266 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/{documentName?}'
+2025-10-06 09:36:48.271 +03:00 [INF] HTTP GET /Scalar/v1 responded 200 in 503.5685 ms
+2025-10-06 09:36:48.281 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/v1 - 200 null text/html 1050.0862ms
+2025-10-06 09:36:48.606 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/scalar.js - null null
+2025-10-06 09:36:48.610 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Scalar/scalar.aspnetcore.js - null null
+2025-10-06 09:36:48.616 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-06 09:36:48.644 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 09:36:48.644 +03:00 [INF] Executing endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 09:36:48.780 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_framework/aspnetcore-browser-refresh.js - 200 16505 application/javascript; charset=utf-8 164.8447ms
+2025-10-06 09:36:48.828 +03:00 [INF] Sending file with download name ''.
+2025-10-06 09:36:48.828 +03:00 [INF] Sending file with download name ''.
+2025-10-06 09:36:48.853 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.aspnetcore.js'
+2025-10-06 09:36:48.858 +03:00 [INF] HTTP GET /Scalar/scalar.aspnetcore.js responded 200 in 217.4138 ms
+2025-10-06 09:36:48.874 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/scalar.aspnetcore.js - 200 1046 text/javascript 264.1102ms
+2025-10-06 09:36:48.981 +03:00 [INF] Executed endpoint 'HTTP: GET /scalar/scalar.js'
+2025-10-06 09:36:49.004 +03:00 [INF] HTTP GET /Scalar/scalar.js responded 200 in 367.8328 ms
+2025-10-06 09:36:49.019 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Scalar/scalar.js - 200 884571 text/javascript 412.3105ms
+2025-10-06 09:36:49.958 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/_vs/browserLink - null null
+2025-10-06 09:36:50.293 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/_vs/browserLink - 200 null text/javascript; charset=UTF-8 335.1423ms
+2025-10-06 09:36:50.830 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 09:36:50.847 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 09:36:51.316 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/openapi/v1.json - null null
+2025-10-06 09:36:51.336 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 09:36:51.341 +03:00 [INF] Executing endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 09:36:51.344 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 497.4014 ms
+2025-10-06 09:36:51.387 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 556.7403ms
+2025-10-06 09:36:51.392 +03:00 [INF] Executed endpoint 'HTTP: GET /openapi/{documentName}.json'
+2025-10-06 09:36:51.406 +03:00 [INF] HTTP GET /openapi/v1.json responded 200 in 65.2032 ms
+2025-10-06 09:36:51.412 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/openapi/v1.json - 200 null application/json;charset=utf-8 95.6466ms
+2025-10-06 09:42:08.392 +03:00 [INF] Request starting HTTP/2 POST https://localhost:7218/absence-requests - application/json 74
+2025-10-06 09:42:08.430 +03:00 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Intern|Attache)
+2025-10-06 09:42:08.451 +03:00 [INF] AuthenticationScheme: Identity.Application was challenged.
+2025-10-06 09:42:08.457 +03:00 [INF] HTTP POST /absence-requests responded 302 in 50.6800 ms
+2025-10-06 09:42:08.465 +03:00 [INF] Request finished HTTP/2 POST https://localhost:7218/absence-requests - 302 0 null 72.9267ms
+2025-10-06 09:42:08.487 +03:00 [INF] Request starting HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2Fabsence-requests - null null
+2025-10-06 09:42:08.503 +03:00 [INF] HTTP GET /Account/Login responded 404 in 0.1870 ms
+2025-10-06 09:42:08.511 +03:00 [INF] Request finished HTTP/2 GET https://localhost:7218/Account/Login?ReturnUrl=%2Fabsence-requests - 404 0 null 24.1712ms
+2025-10-06 09:42:08.527 +03:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7218/Account/Login, Response status code: 404
