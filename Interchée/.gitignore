@@ -1,9 +1,10 @@
+# Visual Studio / .NET
 .vs/
 bin/
 obj/
 *.user
-**/*.cache
 **/project.assets.json
+**/*.cache
 **/*.dgspec.json
 **/*.nuget.g.props
 **/*.nuget.g.targets
