@@ -8,3 +8,5 @@ obj/
 **/*.dgspec.json
 **/*.nuget.g.props
 **/*.nuget.g.targets
+./Migrations/*
+
