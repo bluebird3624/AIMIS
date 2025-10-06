@@ -7,3 +7,66 @@
 
 
 .fake
+workflows/
+Interchée/frontend/.env
+
+
+#backend folder
+
+
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+[Bb]in/
+[Oo]bj/
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+Interch*/frontend/.env
+Interch*/backend/Interchée/[Oo]bj/
+Interch*/backend/Interchée/[Bb]in/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+=======
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+
