@@ -49,12 +49,12 @@ namespace Interchée.Controllers
         {
             var userId = User.GetUserId();
 
-            //// Verify user has role in target department
-            //var hasAccess = await _db.DepartmentRoleAssignments
-            //    .AnyAsync(ra => ra.UserId == userId && ra.DepartmentId == dto.DepartmentId &&
-            //                   (ra.RoleName == "Admin" || ra.RoleName == "HR" || ra.RoleName == "Supervisor"));
+            // Verify user has role in target department
+            var hasAccess = await _db.DepartmentRoleAssignments
+                .AnyAsync(ra => ra.UserId == userId && ra.DepartmentId == dto.DepartmentId &&
+                               (ra.RoleName == "Admin" || ra.RoleName == "HR" || ra.RoleName == "Supervisor"));
 
-            //if (!hasAccess) return Forbid();
+            if (!hasAccess) return Forbid();
 
             var userExists = await _db.Users.AnyAsync(u => u.Id == userId);
             if (!userExists)

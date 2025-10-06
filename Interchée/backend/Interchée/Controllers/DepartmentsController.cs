@@ -129,19 +129,19 @@ namespace Interchée.Controllers
             var roleAssignments = await _db.DepartmentRoleAssignments.CountAsync(x => x.DepartmentId == id);
             var onboardings = await _db.OnboardingRequests.CountAsync(x => x.DepartmentId == id);
 
-            // TODO: when you add these modules, include their checks here:
-            // var assignments   = await _db.Assignments.CountAsync(x => x.DepartmentId == id);
-            // var absences      = await _db.AbsenceRequests.CountAsync(x => x.DepartmentId == id);
+            
+             var assignments   = await _db.Assignments.CountAsync(x => x.DepartmentId == id);
+             var absences      = await _db.AbsenceRequests.CountAsync(x => x.DepartmentId == id);
 
-            if (roleAssignments > 0 || onboardings > 0 /* || assignments > 0 || absences > 0 */)
+            if (roleAssignments > 0 || onboardings > 0  || assignments > 0 || absences > 0 )
             {
                 return Conflict(new
                 {
                     message = "Department has related data. Deactivate instead, or remove references first.",
                     roleAssignments,
                     onboardings,
-                    // assignments,
-                    // absences
+                    assignments,
+                    absences
                 });
             }
 
