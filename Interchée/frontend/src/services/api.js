@@ -2,6 +2,9 @@ import axios from 'axios';
 
 import dotenv from 'dotenv';
 
+// Use environment variable for backend API URL. Set REACT_APP_BACKEND_API_URL in your .env file.
+const BACKEND_API_URL = import.meta.env.VITE_APP_BACKEND_API_URL;
+const env = import.meta.env.VITE_ENV;
 
 
 const BACKEND_API_URL = import.meta.env.VITE_APP_BACKEND_API_URL;
@@ -17,7 +20,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('authToken');
+        const token = sessionStorage.getItem('access_token');
         if(token){
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -31,7 +34,10 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    console.log(response);
+    if(env == 'development'){
+        console.log('backend response: ', response);
+    }
+    
     return response;
   },
   (error) => {
@@ -43,8 +49,3 @@ api.interceptors.response.use(
 
 
 export default api;
-
-export const authAPI = {
-    login: (email, password) =>
-        api.post('/auth/login', {email, password})
-}
