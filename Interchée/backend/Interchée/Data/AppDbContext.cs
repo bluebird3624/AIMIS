@@ -18,6 +18,13 @@ namespace Interchée.Data
         public DbSet<DepartmentRoleAssignment> DepartmentRoleAssignments => Set<DepartmentRoleAssignment>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
+        public DbSet<Assignment> Assignments => Set<Assignment>();
+        public DbSet<AssignmentAssignee> AssignmentAssignees => Set<AssignmentAssignee>();
+        public DbSet<AssignmentSubmission> AssignmentSubmissions => Set<AssignmentSubmission>();
+        public DbSet<SubmissionCommit> SubmissionCommits => Set<SubmissionCommit>();
+        public DbSet<Grade> Grades => Set<Grade>();
+        public DbSet<FeedbackComment> FeedbackComments => Set<FeedbackComment>();
+
         protected override void OnModelCreating(ModelBuilder b)
         {
             base.OnModelCreating(b);
@@ -113,6 +120,128 @@ namespace Interchée.Data
                     .OnDelete(DeleteBehavior.Cascade);     // delete log when request is deleted (usually you keep requests)
             });
 
+
+            // Assignment
+            b.Entity<Assignment>(e =>
+            {
+                e.Property(x => x.Title).HasMaxLength(160).IsRequired();
+                e.Property(x => x.Status).HasMaxLength(32).IsRequired();
+
+                // Indexes for performance
+                e.HasIndex(x => x.DepartmentId);
+                e.HasIndex(x => new { x.DepartmentId, x.Status });
+
+                // Relationships
+                e.HasOne(x => x.Department)
+                    .WithMany()
+                    .HasForeignKey(x => x.DepartmentId)
+                    .OnDelete(DeleteBehavior.Restrict); // Keep assignments if department is deleted
+
+                e.HasOne(x => x.CreatedByUser)
+                    .WithMany()
+                    .HasForeignKey(x => x.CreatedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict); // Keep assignments if user is deleted
+            });
+
+            // AssignmentAssignee (Junction table)
+            b.Entity<AssignmentAssignee>(e =>
+            {
+                // Unique constraint: user can't be assigned to same assignment multiple times
+                e.HasIndex(x => new { x.AssignmentId, x.UserId }).IsUnique();
+
+                // Relationships
+                e.HasOne(x => x.Assignment)
+                    .WithMany(a => a.Assignees)
+                    .HasForeignKey(x => x.AssignmentId)
+                    .OnDelete(DeleteBehavior.Cascade); // Remove assignments if assignment deleted
+
+                e.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); // Keep assignment history if user is deleted
+            });
+
+            // AssignmentSubmission
+            b.Entity<AssignmentSubmission>(e =>
+            {
+                e.Property(x => x.RepoUrl).HasMaxLength(512);
+                e.Property(x => x.Branch).HasMaxLength(120);
+                e.Property(x => x.LatestCommitSha).HasMaxLength(64);
+                e.Property(x => x.Status).HasMaxLength(32).IsRequired();
+
+                // Unique constraint: one submission per assignment per user
+                e.HasIndex(x => new { x.AssignmentId, x.UserId }).IsUnique();
+
+                // Performance indexes
+                e.HasIndex(x => x.AssignmentId);
+                e.HasIndex(x => new { x.AssignmentId, x.Status });
+
+                // Relationships
+                e.HasOne(x => x.Assignment)
+                    .WithMany()
+                    .HasForeignKey(x => x.AssignmentId)
+                    .OnDelete(DeleteBehavior.Cascade); // Remove submissions if assignment deleted
+
+                e.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); // Keep submission history if user is deleted
+            });
+
+            // SubmissionCommit
+            b.Entity<SubmissionCommit>(e =>
+            {
+                e.Property(x => x.Sha).HasMaxLength(64).IsRequired();
+                e.Property(x => x.AuthorEmail).HasMaxLength(256);
+
+                // Unique constraint: same commit can't be recorded multiple times for same submission
+                e.HasIndex(x => new { x.SubmissionId, x.Sha }).IsUnique();
+
+                // Relationship
+                e.HasOne(x => x.Submission)
+                    .WithMany(s => s.Commits)
+                    .HasForeignKey(x => x.SubmissionId)
+                    .OnDelete(DeleteBehavior.Cascade); // Remove commits if submission deleted
+            });
+
+            // Grade
+            b.Entity<Grade>(e =>
+            {
+                e.Property(x => x.Score).HasPrecision(5, 2);
+                e.Property(x => x.MaxScore).HasPrecision(5, 2);
+
+                // Unique constraint: one grade per submission
+                e.HasIndex(x => x.SubmissionId).IsUnique();
+
+                // Relationships
+                e.HasOne(x => x.Submission)
+                    .WithOne(s => s.Grade)
+                    .HasForeignKey<Grade>(x => x.SubmissionId)
+                    .OnDelete(DeleteBehavior.Cascade); // Remove grade if submission deleted
+
+                e.HasOne(x => x.GradedByUser)
+                    .WithMany()
+                    .HasForeignKey(x => x.GradedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict); // Keep grade history if user is deleted
+            });
+
+            // FeedbackComment
+            b.Entity<FeedbackComment>(e =>
+            {
+                e.Property(x => x.Comment).IsRequired();
+
+                // Relationships
+                e.HasOne(x => x.Submission)
+                    .WithMany(s => s.FeedbackComments)
+                    .HasForeignKey(x => x.SubmissionId)
+                    .OnDelete(DeleteBehavior.Cascade); // Remove comments if submission deleted
+
+                e.HasOne(x => x.AuthorUser)
+                    .WithMany()
+                    .HasForeignKey(x => x.AuthorUserId)
+                    .OnDelete(DeleteBehavior.Restrict); // Keep comment history if user is deleted
+            });
         }
     }
-}
+    }
+

@@ -61,20 +61,31 @@ builder.Services
         options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     })
     .AddJwtBearer(o =>
+
     {
+
         o.TokenValidationParameters = new TokenValidationParameters
+
         {
+
             ValidateIssuerSigningKey = true,
+
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+
             ValidateIssuer = true,
+
             ValidIssuer = jwtIssuer,
+
             ValidateAudience = true,
+
             ValidAudience = jwtAudience,
+
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromSeconds(30),
             NameClaimType = ClaimTypes.NameIdentifier,
             RoleClaimType = ClaimTypes.Role
         };
+
     });
 
 
@@ -97,7 +108,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RoleAssignmentService>();
 builder.Services.AddScoped<OnboardingService>();
 builder.Services.AddSingleton<IAuthorizationHandler, DepartmentRoleHandler>();
-
+builder.Services.AddHttpClient<SimpleGitService>();
 
 var app = builder.Build();
 
@@ -117,6 +128,7 @@ if (app.Environment.IsDevelopment())
             .WithOpenApiRoutePattern("/openapi/{documentName}.json"); // default docName is "v1"
     }).AllowAnonymous();
 }
+
 
 app.UseHttpsRedirection();
 app.UseCors(MyAllowedOrigins);

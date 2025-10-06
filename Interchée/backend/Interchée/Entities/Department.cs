@@ -7,6 +7,6 @@
         public string? Code { get; set; }
         public bool IsActive { get; set; } = true;
 
-        public ICollection<DepartmentRoleAssignment> Assignments { get; set; } = new List<DepartmentRoleAssignment>();
+        public ICollection<DepartmentRoleAssignment> Assignments { get; set; } = [];
     }
 }
