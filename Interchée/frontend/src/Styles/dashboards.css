@@ -12,3 +12,113 @@
   overflow: hidden;
   z-index: 10;
 }
+.menu-button{
+  margin-top: 10px;
+  margin-right: 40px;
+  height: fit-content;
+  width:fit-content ;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  float: right;
+}
+
+.material-symbols-rounded {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 700,
+  'GRAD' 0,
+  'opsz' 48
+}
+
+
+
+
+/* Menu overlay background */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Slide-in menu */
+.slide-in-menu {
+  border-radius: 10px;
+  top: 20px;
+  bottom: 20px;
+  position: fixed;
+  top: 0;
+  right: -35%; /* Start off-screen to the right */
+  width: 35% ;
+  height: 100%;
+  background-image: url('/src/assets/dashmenu.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transition: transform 1.7s ease-in-out;
+}
+
+.slide-in-menu.active {
+  transform: translateX(-100%); /* Slide into view */
+}
+
+/* Close button */
+.menu-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 35px;
+  color: #ffff;
+  cursor: pointer;
+}
+.menu-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically */
+  height: 100%;
+  gap: 15px; /* Space between buttons */
+}
+
+.menu-options {
+  padding: 15px 24px;
+  background: transparent;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 20px;
+  cursor: pointer;
+  width: 80%; /* Control button width */
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.menu-options:hover {
+  background: #1381cb;
+  transform: translateY(-1px) ;
+  box-shadow: 0 4px 12px rgba(249, 252, 255, 0.3);
+}
+
+.menu-icons {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 40
+}
