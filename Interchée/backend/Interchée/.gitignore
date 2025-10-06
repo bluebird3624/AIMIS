@@ -1,1 +1,10 @@
-./Migrations/*
+﻿# Visual Studio / .NET
+.vs/
+bin/
+obj/
+*.user
+**/project.assets.json
+**/*.cache
+**/*.dgspec.json
+**/*.nuget.g.props
+**/*.nuget.g.targets
