@@ -1,17 +1,72 @@
-﻿# Frontend specific ignores
-Interchée/frontend/node_modules/
-Interchée/frontend/.env
-Interchée/frontend/.env.local
-Interchée/frontend/.env.development
-Interchée/frontend/.env.production
-Interchée/frontend/dist/
-Interchée/frontend/build/
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
 
-#workflows markdown files
-workflows/
+/.vs
+/Interchée/.vs/Interchée
 
-./node_modules
-/node_modules
+
 .fake
-.env
-Interchée/frontend/node_modules/
+workflows/
+Interchée/frontend/.env
+
+
+#backend folder
+
+
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+[Bb]in/
+[Oo]bj/
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+Interch*/frontend/.env
+Interch*/backend/Interchée/[Oo]bj/
+Interch*/backend/Interchée/[Bb]in/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+=======
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+
