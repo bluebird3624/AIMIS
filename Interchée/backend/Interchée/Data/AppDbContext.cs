@@ -24,6 +24,11 @@ namespace Interchée.Data
         public DbSet<SubmissionCommit> SubmissionCommits => Set<SubmissionCommit>();
         public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<FeedbackComment> FeedbackComments => Set<FeedbackComment>();
+        //Absence Management
+
+        public DbSet<AbsenceRequest> AbsenceRequests => Set<AbsenceRequest>();
+        public DbSet<AbsenceDecision> AbsenceDecisions => Set<AbsenceDecision>();
+        public DbSet<AbsenceLimitPolicy> AbsenceLimitPolicies => Set<AbsenceLimitPolicy>();
 
         protected override void OnModelCreating(ModelBuilder b)
         {
@@ -77,7 +82,9 @@ namespace Interchée.Data
             b.Entity<OnboardingRequest>(e =>
             {
                 e.Property(x => x.Email).HasMaxLength(256).IsRequired();
-
+            
+            // AbsenceRequest
+            b.Entity<AbsenceRequest>(e =>
                 e.Property(x => x.FirstName).HasMaxLength(64).IsRequired();
                 e.Property(x => x.LastName).HasMaxLength(64).IsRequired();
                 e.Property(x => x.MiddleName).HasMaxLength(64);
@@ -100,6 +107,7 @@ namespace Interchée.Data
             // OnboardingDecision
             b.Entity<OnboardingDecision>(e =>
             {
+                e.Property(x => x.Reason).IsRequired();
                 e.ToTable("OnboardingDecisions");
 
                 e.HasKey(x => x.Id);
@@ -126,9 +134,12 @@ namespace Interchée.Data
             {
                 e.Property(x => x.Title).HasMaxLength(160).IsRequired();
                 e.Property(x => x.Status).HasMaxLength(32).IsRequired();
+                e.Property(x => x.Days).HasPrecision(4, 1);
 
+                e.HasIndex(x => x.UserId);
                 // Indexes for performance
                 e.HasIndex(x => x.DepartmentId);
+                e.HasIndex(x => new { x.Status, x.DepartmentId });
                 e.HasIndex(x => new { x.DepartmentId, x.Status });
 
                 // Relationships
@@ -158,6 +169,7 @@ namespace Interchée.Data
                 e.HasOne(x => x.User)
                     .WithMany()
                     .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
                     .OnDelete(DeleteBehavior.Restrict); // Keep assignment history if user is deleted
             });
 
@@ -182,8 +194,11 @@ namespace Interchée.Data
                     .HasForeignKey(x => x.AssignmentId)
                     .OnDelete(DeleteBehavior.Cascade); // Remove submissions if assignment deleted
 
+                e.HasOne(x => x.Department)
                 e.HasOne(x => x.User)
                     .WithMany()
+                    .HasForeignKey(x => x.DepartmentId)
+                    .OnDelete(DeleteBehavior.Restrict);
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Restrict); // Keep submission history if user is deleted
             });
@@ -206,42 +221,62 @@ namespace Interchée.Data
 
             // Grade
             b.Entity<Grade>(e =>
+            // AbsenceDecision
+            b.Entity<AbsenceDecision>(e =>
             {
                 e.Property(x => x.Score).HasPrecision(5, 2);
                 e.Property(x => x.MaxScore).HasPrecision(5, 2);
 
                 // Unique constraint: one grade per submission
                 e.HasIndex(x => x.SubmissionId).IsUnique();
+                e.Property(x => x.Decision).HasMaxLength(32).IsRequired();
+                e.Property(x => x.Comment);
 
                 // Relationships
                 e.HasOne(x => x.Submission)
                     .WithOne(s => s.Grade)
                     .HasForeignKey<Grade>(x => x.SubmissionId)
                     .OnDelete(DeleteBehavior.Cascade); // Remove grade if submission deleted
+                e.HasOne(x => x.Request)
+                    .WithOne(x => x.Decision)
+                    .HasForeignKey<AbsenceDecision>(x => x.RequestId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 e.HasOne(x => x.GradedByUser)
+                e.HasOne(x => x.DecidedByUser)
                     .WithMany()
                     .HasForeignKey(x => x.GradedByUserId)
                     .OnDelete(DeleteBehavior.Restrict); // Keep grade history if user is deleted
+                    .HasForeignKey(x => x.DecidedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             // FeedbackComment
             b.Entity<FeedbackComment>(e =>
+            // AbsenceLimitPolicy
+            b.Entity<AbsenceLimitPolicy>(e =>
             {
                 e.Property(x => x.Comment).IsRequired();
+                e.Property(x => x.Scope).HasMaxLength(32).IsRequired();
+                e.Property(x => x.MaxDaysPerTerm).HasPrecision(5, 2);
+                e.Property(x => x.MaxDaysPerMonth).HasPrecision(4, 1);
 
                 // Relationships
                 e.HasOne(x => x.Submission)
                     .WithMany(s => s.FeedbackComments)
                     .HasForeignKey(x => x.SubmissionId)
                     .OnDelete(DeleteBehavior.Cascade); // Remove comments if submission deleted
+                e.HasIndex(x => new { x.Scope, x.DepartmentId, x.EffectiveFrom });
 
                 e.HasOne(x => x.AuthorUser)
+                e.HasOne(x => x.Department)
                     .WithMany()
                     .HasForeignKey(x => x.AuthorUserId)
                     .OnDelete(DeleteBehavior.Restrict); // Keep comment history if user is deleted
+                    .HasForeignKey(x => x.DepartmentId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }
-    }
+}
 
