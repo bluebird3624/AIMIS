@@ -302,7 +302,7 @@ namespace Interchée.Data
 
                 // Relationships
                 e.HasOne(x => x.Assignment)
-                    .WithMany()
+                    .WithMany(a => a.Submissions)
                     .HasForeignKey(x => x.AssignmentId)
                     .OnDelete(DeleteBehavior.Cascade); // Remove submissions if assignment deleted
 

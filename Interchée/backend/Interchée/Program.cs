@@ -107,7 +107,7 @@ builder.Services.AddScoped<RefreshTokenService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RoleAssignmentService>();
 builder.Services.AddScoped<OnboardingService>();
-builder.Services.AddSingleton<IAuthorizationHandler, DepartmentRoleHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, DepartmentRoleHandler>();
 builder.Services.AddHttpClient<SimpleGitService>();
 
 var app = builder.Build();

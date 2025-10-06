@@ -49,10 +49,10 @@ namespace Interchée.Controllers
             // Issue access token
             var (access, expiresUtc) = await _jwt.CreateAccessTokenAsync(user);
 
-            // 🔐 Revoke any still-active refresh tokens for this user (single-session policy)
+            //  Revoke any still-active refresh tokens for this user (single-session policy)
             await _refreshSvc.RevokeAllActiveForUserAsync(user.Id);
 
-            // 🔁 Issue a fresh refresh token
+            //  Issue a fresh refresh token
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
             var refresh = await _jwt.CreateRefreshTokenAsync(user, ip);
 
