@@ -1,10 +1,13 @@
 import axios from 'axios';
 
+import dotenv from 'dotenv';
 
 // Use environment variable for backend API URL. Set REACT_APP_BACKEND_API_URL in your .env file.
 const BACKEND_API_URL = import.meta.env.VITE_APP_BACKEND_API_URL;
 const env = import.meta.env.VITE_ENV;
 
+
+const BACKEND_API_URL = import.meta.env.VITE_APP_BACKEND_API_URL;
 const api = axios.create({
     baseURL: BACKEND_API_URL,
     timeout: 15000,

@@ -1,4 +1,3 @@
-
 .body-login{
  background-size: cover;
   background-position: center;
@@ -10,7 +9,8 @@
   height: 100vh;
   margin: 0;
   padding: 0; 
-  overflow-y: auto; /* Ensure body can scroll */
+  overflow: hidden;
+  z-index: 10;
 }   
 
 .info-container{

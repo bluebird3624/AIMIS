@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Interchée")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+afb209af62d14ae52cb90ee5e6662a65da81ddcb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c0a45b030635af5ecd51302263df3ec0e43a80e1")]
 [assembly: System.Reflection.AssemblyProductAttribute("Interchée")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Interchée")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

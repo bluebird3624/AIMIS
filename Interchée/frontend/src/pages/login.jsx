@@ -8,6 +8,7 @@ import { login } from "../services/auth";
 function Login(){
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    
 
     const handleClick = async(event) => {
       event.preventDefault();
@@ -36,54 +37,58 @@ function Login(){
   
 
     return(
-        <>
-        
-        <div className="body-login" style={{ backgroundImage: "url('/src/assets/loginpage.png')"}}>
-            <div className="login-container">
-  <div className="login-header">
-    <p style={{ color: 'white'}} >Sign in to your account</p>
-  </div>
-  
-  <form className="login-form">
-    {/* Email Field */}
-    <div className="form-group">
-      <label htmlFor="email" className="login-form-label">Email Address</label>
-      <input
-        type="email"
-        id="email"
-        className="form-input"
-        placeholder="Enter your email"
-        required
-      />
-    </div>
+        <motion.div
+            initial={{ x: '100%' }}
+           animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'keyframes', duration: 1.2 }}
+            className="absolute inset-0"
 
-    {/* Password Field */}
-    <div className="form-group">
-      <label htmlFor="password" className="login-form-label">Password</label>
-      <input
-        type="password"
-        id="password"
-        className="form-input"
-        placeholder="Enter your password"
-        required
-      />
-    </div>
+        >
+            <div className="body-login"    style={{ backgroundImage: "url('/src/assets/loginpage.png')"}}
+>
+                <div className="login-container">
+                    <div className="login-header">
+                        <p style={{ color: 'white'}} >Sign in to your account</p>
+                    </div>
+                    
+                    <form className="login-form">
+                        <div className="form-group">
+                            <label htmlFor="email" className="login-form-label">Email Address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                className="form-input"
+                                placeholder="Enter your email"
+                                required
+                            />
+                        </div>
 
-    {/* Login Button */}
-    <button type="submit" className="login-button" onClick={handleClick}>
-      Log In
-    </button>
+                        <div className="form-group">
+                            <label htmlFor="password" className="login-form-label">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                className="form-input"
+                                placeholder="Enter your password"
+                                required
+                            />
+                        </div>
 
-    {/* Forgot Password Link */}
-    <div className="forgot-password">
-      <a href="/forgot-password" className="forgot-link">
-        Forgot your password?
-      </a>
-    </div>
-  </form>
-</div>
-        </div>
-        </>
+                        <button type="submit" className="login-button" onClick={handleClick}>
+                            Log In
+                        </button>
+
+                        <div className="forgot-password">
+                            <a href="/forgot-password" className="forgot-link">
+                                Forgot your password?
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </motion.div>
     );
 }
+
 export default Login;

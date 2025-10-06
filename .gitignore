@@ -10,37 +10,8 @@ Interchée/frontend/build/
 #workflows markdown files
 workflows/
 
-# All node_modules in project
-**/node_modules/
-
-# All .env files in project
-**/.env
-**/.env.local
-**/.env.development
-**/.env.production
-**/.env.test
-
-# Vite specific
-**/dist/
-**/build/
-
-# Log files
-**/npm-debug.log*
-**/yarn-debug.log*
-**/yarn-error.log*
-**/pnpm-debug.log*
-
-# Editor directories and files
-**/.vscode/
-**/.idea/
-*.swp
-*.swo
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+./node_modules
+/node_modules
+.fake
+.env
+Interchée/frontend/node_modules/
