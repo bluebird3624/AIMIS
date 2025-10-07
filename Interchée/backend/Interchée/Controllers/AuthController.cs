@@ -1,10 +1,12 @@
 ﻿using Interchée.Auth;
 using Interchée.Contracts.Auth;
 using Interchée.Entities;
+using Interchée.Services.Email;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 
 namespace Interchée.Controllers
@@ -144,6 +146,140 @@ namespace Interchée.Controllers
         [HttpGet("ping")]
         [AllowAnonymous]
         public IActionResult Ping() => Ok(new { ok = true, at = DateTime.UtcNow });
+
+
+
+        // POST /auth/change-password  (must be logged in)
+        [HttpPost("change-password")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
+
+            var user = await _users.FindByIdAsync(userId);
+            if (user == null) return Unauthorized();
+
+            var res = await _users.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
+            if (!res.Succeeded)
+            {
+                var msg = string.Join("; ", res.Errors.Select(e => e.Description));
+                return BadRequest(new { message = msg });
+            }
+            return NoContent();
+        }
+
+        // POST /auth/forgot-password  (anonymous)
+        [HttpPost("forgot-password")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto, [FromServices] IEmailSender emailSender)
+        {
+            // DO NOT leak whether the email exists (security)
+            var user = await _users.FindByEmailAsync(dto.Email.Trim().ToLowerInvariant());
+            if (user != null)
+            {
+                // Generate token and email a link
+                var token = await _users.GeneratePasswordResetTokenAsync(user);
+
+                // URL-safe encode token for link
+                var encodedToken = WebUtility.UrlEncode(token);
+
+                // In a real app, craft a proper frontend URL
+                var resetLink = $"https://your-frontend/reset-password?email={WebUtility.UrlEncode(user.Email!)}&token={encodedToken}";
+
+                var body = $@"
+            <p>You (or someone) requested a password reset.</p>
+            <p>If this was you, click the link below:</p>
+            <p><a href=""{resetLink}"">Reset Password</a></p>
+            <p>If you didn't request this, ignore this email.</p>";
+
+                await emailSender.SendAsync(user.Email!, "Reset your password", body);
+            }
+
+            // Always 204
+            return NoContent();
+        }
+
+        // POST /auth/reset-password  (anonymous)
+        [HttpPost("reset-password")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            var email = dto.Email.Trim().ToLowerInvariant();
+            var user = await _users.FindByEmailAsync(email);
+            if (user == null)
+            {
+                // Do not leak – still return 204
+                return NoContent();
+            }
+
+            // Token may arrive URL-encoded from the link; Identity expects the original string token.
+            // If you encoded with WebUtility.UrlEncode when generating the link, just pass dto.Token directly (client should send it raw or still encoded—Identity handles it as string).
+            var result = await _users.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
+            if (!result.Succeeded)
+            {
+                var msg = string.Join("; ", result.Errors.Select(e => e.Description));
+                return BadRequest(new { message = msg });
+            }
+            return NoContent();
+        }
+
+        // POST /auth/confirm-email  (anonymous)
+        [HttpPost("confirm-email")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto dto)
+        {
+            if (!Guid.TryParse(dto.UserId, out var guid)) return BadRequest(new { message = "Invalid user id." });
+
+            var user = await _users.FindByIdAsync(dto.UserId);
+            if (user == null) return NoContent(); // don't leak
+
+            var res = await _users.ConfirmEmailAsync(user, dto.Token);
+            if (!res.Succeeded)
+            {
+                var msg = string.Join("; ", res.Errors.Select(e => e.Description));
+                return BadRequest(new { message = msg });
+            }
+            return NoContent();
+        }
+
+        // GET /auth/roles  (current user's global Identity roles)
+        [HttpGet("roles")]
+        [Authorize]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetMyGlobalRoles()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
+
+            var user = await _users.FindByIdAsync(userId);
+            if (user == null) return Unauthorized();
+
+            var roles = await _users.GetRolesAsync(user);
+            return Ok(roles);
+        }
+
+        // GET /auth/users/{id}/roles  (Admin)
+        [HttpGet("users/{id:guid}/roles")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUserGlobalRoles(Guid id)
+        {
+            var user = await _users.FindByIdAsync(id.ToString());
+            if (user == null) return NotFound();
+            var roles = await _users.GetRolesAsync(user);
+            return Ok(roles);
+        }
+
 
     }
 }

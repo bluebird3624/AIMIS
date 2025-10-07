@@ -2,6 +2,7 @@ using Interchée.Auth;
 using Interchée.Data;
 using Interchée.Entities;
 using Interchée.Services;
+using Interchée.Services.Email;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -108,6 +109,10 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RoleAssignmentService>();
 builder.Services.AddScoped<OnboardingService>();
 builder.Services.AddScoped<IAuthorizationHandler, DepartmentRoleHandler>();
+builder.Services.AddSingleton<IEmailSender, DevEmailSender>();
+
+
+
 builder.Services.AddHttpClient<SimpleGitService>();
 
 var app = builder.Build();
