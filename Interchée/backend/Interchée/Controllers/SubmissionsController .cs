@@ -12,16 +12,11 @@ namespace Interchée.Controllers
     [ApiController]
     [Route("submissions")]
     [Authorize]
-    public class SubmissionsController : ControllerBase
+    public class SubmissionsController(AppDbContext db, SimpleGitService gitService, SubmissionStatusService statusService) : ControllerBase
     {
-        private readonly AppDbContext _db;
-        private readonly SimpleGitService _gitService;
-
-        public SubmissionsController(AppDbContext db, SimpleGitService gitService)
-        {
-            _db = db;
-            _gitService = gitService;
-        }
+        private readonly AppDbContext _db = db;
+        private readonly SimpleGitService _gitService = gitService;
+        private readonly SubmissionStatusService _statusService = statusService;
 
         /// <summary>Submit assignment (Intern/Attaché only)</summary>
         [HttpPost]
@@ -31,7 +26,7 @@ namespace Interchée.Controllers
         {
             var userId = User.GetUserId();
 
-            // ADD GIT VALIDATION
+            // GIT VALIDATION
             if (!_gitService.ValidateRepoUrl(dto.RepoUrl))
                 return BadRequest("Invalid Git repository URL. Must be a valid GitHub or GitLab repository.");
 
@@ -55,10 +50,10 @@ namespace Interchée.Controllers
                     AssignmentId = dto.AssignmentId,
                     UserId = userId,
                     RepoUrl = dto.RepoUrl,
-                    Branch = dto.Branch ?? "main", // Default to main branch
-                    Status = "Submitted",
+                    Branch = dto.Branch ?? "main",
+                    Status = "Submitted", // AUTOMATIC STATUS
                     SubmittedAt = DateTime.UtcNow,
-                    CreatedAt = DateTime.UtcNow // ADD THIS MISSING PROPERTY
+                    CreatedAt = DateTime.UtcNow
                 };
                 _db.AssignmentSubmissions.Add(submission);
             }
@@ -66,13 +61,15 @@ namespace Interchée.Controllers
             {
                 submission.RepoUrl = dto.RepoUrl;
                 submission.Branch = dto.Branch ?? submission.Branch;
-                submission.Status = "Submitted";
+                submission.Status = "Submitted"; // AUTOMATIC STATUS ON RE-SUBMIT
                 submission.SubmittedAt = DateTime.UtcNow;
             }
 
             await _db.SaveChangesAsync();
 
-            // GET ACTUAL COUNTS INSTEAD OF HARDCODED 0,0
+            // AUTOMATICALLY CHECK IF ASSIGNMENT SHOULD BE CLOSED
+            await _statusService.AutoCloseAssignmentIfAllSubmitted(dto.AssignmentId);
+
             var commitCount = await _db.SubmissionCommits
                 .CountAsync(c => c.SubmissionId == submission.Id);
             var feedbackCount = await _db.FeedbackComments
@@ -111,8 +108,6 @@ namespace Interchée.Controllers
             return submission != null ? Ok(submission) : NotFound();
         }
 
-        // ADD THESE NEW ENDPOINTS FOR GIT INTEGRATION:
-
         /// <summary>Add commit to submission (for webhooks or manual entry)</summary>
         [HttpPost("{submissionId:long}/commits")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -142,6 +137,9 @@ namespace Interchée.Controllers
 
             // Update latest commit
             submission.LatestCommitSha = dto.Sha;
+
+            // AUTOMATIC STATUS UPDATE BASED ON COMMIT CONTENT
+            await _statusService.UpdateSubmissionStatusFromCommit(submission, dto.Message);
 
             _db.SubmissionCommits.Add(commit);
             await _db.SaveChangesAsync();
@@ -187,6 +185,112 @@ namespace Interchée.Controllers
                 .ToListAsync();
 
             return Ok(submissions);
+        }
+
+        /// <summary>Update submission (change repo URL or branch)</summary>
+        [HttpPut("{id:long}")]
+        [Authorize(Roles = "Intern,Attache")]
+        [ProducesResponseType(typeof(SubmissionReadDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<SubmissionReadDto>> Update(long id, [FromBody] SubmissionUpdateDto dto)
+        {
+            var userId = User.GetUserId();
+            var submission = await _db.AssignmentSubmissions
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (submission == null) return NotFound();
+
+            // Validate new repo URL if provided
+            if (!string.IsNullOrEmpty(dto.RepoUrl) && !_gitService.ValidateRepoUrl(dto.RepoUrl))
+                return BadRequest("Invalid Git repository URL");
+
+            if (!string.IsNullOrEmpty(dto.RepoUrl))
+                submission.RepoUrl = dto.RepoUrl;
+
+            if (!string.IsNullOrEmpty(dto.Branch))
+                submission.Branch = dto.Branch;
+
+            await _db.SaveChangesAsync();
+
+            var commitCount = await _db.SubmissionCommits
+                .CountAsync(c => c.SubmissionId == submission.Id);
+            var feedbackCount = await _db.FeedbackComments
+                .CountAsync(f => f.SubmissionId == submission.Id);
+
+            var readDto = new SubmissionReadDto(
+                submission.Id, submission.AssignmentId, submission.UserId, submission.RepoUrl,
+                submission.Branch, submission.LatestCommitSha, submission.SubmittedAt,
+                submission.Status, submission.CreatedAt, null, commitCount, feedbackCount
+            );
+
+            return Ok(readDto);
+        }
+
+        /// <summary>Update submission status (Supervisors only - for grading)</summary>
+        [HttpPut("{id:long}/status")]
+        [Authorize(Roles = "Admin,HR,Supervisor")]
+        [ProducesResponseType(typeof(SubmissionReadDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<SubmissionReadDto>> UpdateStatus(long id, [FromBody] SubmissionStatusDto dto)
+        {
+            var submission = await _db.AssignmentSubmissions
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (submission == null) return NotFound();
+
+            submission.Status = dto.Status;
+            await _db.SaveChangesAsync();
+
+            // AUTOMATICALLY CHECK IF ASSIGNMENT SHOULD BE CLOSED
+            await _statusService.AutoCloseAssignmentIfAllReviewed(submission.AssignmentId);
+
+            var commitCount = await _db.SubmissionCommits
+                .CountAsync(c => c.SubmissionId == submission.Id);
+            var feedbackCount = await _db.FeedbackComments
+                .CountAsync(f => f.SubmissionId == submission.Id);
+
+            var readDto = new SubmissionReadDto(
+                submission.Id, submission.AssignmentId, submission.UserId, submission.RepoUrl,
+                submission.Branch, submission.LatestCommitSha, submission.SubmittedAt,
+                submission.Status, submission.CreatedAt, null, commitCount, feedbackCount
+            );
+
+            return Ok(readDto);
+        }
+
+        /// <summary>Delete submission</summary>
+        [HttpDelete("{id:long}")]
+        [Authorize(Roles = "Intern,Attache,Admin,HR,Supervisor")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var userId = User.GetUserId();
+            var submission = await _db.AssignmentSubmissions
+                .Include(s => s.Commits)
+                .Include(s => s.FeedbackComments)
+                .Include(s => s.Grade)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (submission == null) return NotFound();
+
+            // Users can only delete their own submissions unless they're supervisors
+            var isOwner = submission.UserId == userId;
+            var isSupervisor = User.IsInRole("Admin") || User.IsInRole("HR") || User.IsInRole("Supervisor");
+
+            if (!isOwner && !isSupervisor)
+                return Forbid();
+
+            // Remove related data first
+            _db.SubmissionCommits.RemoveRange(submission.Commits);
+            _db.FeedbackComments.RemoveRange(submission.FeedbackComments);
+            if (submission.Grade != null)
+                _db.Grades.Remove(submission.Grade);
+
+            _db.AssignmentSubmissions.Remove(submission);
+            await _db.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
