@@ -1,12 +1,9 @@
-﻿# Visual Studio / .NET
 .vs/
 bin/
 obj/
 *.user
-**/project.assets.json
 **/*.cache
+**/project.assets.json
 **/*.dgspec.json
 **/*.nuget.g.props
 **/*.nuget.g.targets
-./Migrations/*
-
