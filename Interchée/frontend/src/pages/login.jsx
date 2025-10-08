@@ -20,8 +20,15 @@ function Login(){
          
           const response = await login({email, password});
         // console.log('login page login response: ', response);
+        if(response.accessToken){
+            navigate('/admin-dash');
+        }
+        else
+        {
+            console.log('error logging in no access token received', response);
+        }
       
-          navigate('/admin-dash');
+          
        
       }
       catch(error)
@@ -48,7 +55,7 @@ function Login(){
                         <p style={{ color: 'white'}} >Sign in to your account</p>
                     </div>
                     
-                    <form className="login-form">
+                    <form className="login-form" onSubmit={handleClick}>
                         <div className="form-group">
                             <label htmlFor="email" className="login-form-label">Email Address</label>
                             <input

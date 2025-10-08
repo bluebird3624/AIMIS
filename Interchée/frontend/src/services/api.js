@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import dotenv from 'dotenv';
+const env = import.meta.env.VITE_ENV;
 
 
 
