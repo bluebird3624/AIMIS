@@ -14,12 +14,9 @@ namespace Interchée.Data
 
 {
 
-    public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>(options)
 
     {
-
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
         public DbSet<OnboardingRequest> OnboardingRequests => Set<OnboardingRequest>();
 
         public DbSet<OnboardingDecision> OnboardingDecisions => Set<OnboardingDecision>();

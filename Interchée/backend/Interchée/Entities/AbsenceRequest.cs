@@ -9,7 +9,7 @@
 
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
-        public decimal Days { get; set; } // Computed and stored (4,1)
+        public decimal Days { get; set; } 
 
         public string Reason { get; set; } = default!;
         public string Status { get; set; } = "Pending"; // Pending|Approved|Rejected|Cancelled

@@ -149,5 +149,66 @@ namespace Interchée.Controllers
 
             return Ok(readDto);
         }
+
+        /// <summary>Update my absence request (only if Pending)</summary>
+        [HttpPut("{id:long}")]
+        [Authorize(Roles = "Intern,Attache")]
+        [ProducesResponseType(typeof(AbsenceRequestReadDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<AbsenceRequestReadDto>> UpdateMyRequest(
+            long id, [FromBody] AbsenceRequestCreateDto dto)
+        {
+            var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var request = await _db.AbsenceRequests
+                .Include(x => x.Decision)
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+
+            if (request == null) return NotFound();
+            if (request.Status != "Pending") return BadRequest("Can only update pending requests");
+
+            var days = (decimal)(dto.EndDate.DayNumber - dto.StartDate.DayNumber) + 1;
+
+            request.StartDate = dto.StartDate;
+            request.EndDate = dto.EndDate;
+            request.Days = days;
+            request.Reason = dto.Reason.Trim();
+
+            await _db.SaveChangesAsync();
+
+            var readDto = new AbsenceRequestReadDto(
+                request.Id, request.UserId, request.DepartmentId,
+                request.StartDate, request.EndDate, request.Days,
+                request.Reason, request.Status, request.RequestedAt,
+                request.Decision != null ? new AbsenceDecisionReadDto(
+                    request.Decision.Id, request.Decision.DecidedByUserId,
+                    request.Decision.Decision, request.Decision.Comment, request.Decision.DecidedAt
+                ) : null
+            );
+
+            return Ok(readDto);
+        }
+        /// <summary>Delete my absence request (only if Pending)</summary>
+        [HttpDelete("{id:long}")]
+        [Authorize(Roles = "Intern,Attache")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DeleteMyRequest(long id)
+        {
+            var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var request = await _db.AbsenceRequests
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+
+            if (request == null) return NotFound();
+            if (request.Status != "Pending") return BadRequest("Can only delete pending requests");
+
+            _db.AbsenceRequests.Remove(request);
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
