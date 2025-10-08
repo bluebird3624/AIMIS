@@ -29,9 +29,10 @@ namespace Interchée.Controllers
             if (submission == null) return NotFound();
 
             // Verify grader has access to submission's department
-            var hasAccess = await _db.DepartmentRoleAssignments
-                .AnyAsync(ra => ra.UserId == userId && ra.DepartmentId == submission.Assignment.DepartmentId &&
-                               (ra.RoleName == "Admin" || ra.RoleName == "HR" || ra.RoleName == "Supervisor"));
+            var hasAccess = submission.Assignment != null &&
+                await _db.DepartmentRoleAssignments
+                    .AnyAsync(ra => ra.UserId == userId && ra.DepartmentId == submission.Assignment.DepartmentId &&
+                                   (ra.RoleName == "Admin" || ra.RoleName == "HR" || ra.RoleName == "Supervisor"));
 
             if (!hasAccess) return Forbid();
 

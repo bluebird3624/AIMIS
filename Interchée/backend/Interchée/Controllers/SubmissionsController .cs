@@ -86,6 +86,7 @@ namespace Interchée.Controllers
 
         /// <summary>Get user's submission for an assignment</summary>
         [HttpGet("assignment/{assignmentId:long}")]
+        [Authorize(Roles = "Intern,Attache")]
         [ProducesResponseType(typeof(SubmissionReadDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<SubmissionReadDto>> GetUserSubmission(long assignmentId)
         {

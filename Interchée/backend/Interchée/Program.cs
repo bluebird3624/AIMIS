@@ -1,7 +1,7 @@
-using Interchée.Auth;
-using Interchée.Data;
-using Interchée.Entities;
-using Interchée.Services;
+ï»¿using InterchÃ©e.Auth;
+using InterchÃ©e.Data;
+using InterchÃ©e.Entities;
+using InterchÃ©e.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -109,6 +109,8 @@ builder.Services.AddScoped<RoleAssignmentService>();
 builder.Services.AddScoped<OnboardingService>();
 builder.Services.AddScoped<IAuthorizationHandler, DepartmentRoleHandler>();
 builder.Services.AddHttpClient<SimpleGitService>();
+builder.Services.AddScoped<SubmissionStatusService>();     
+builder.Services.AddScoped<AssignmentStatusService>();
 
 var app = builder.Build();
 
