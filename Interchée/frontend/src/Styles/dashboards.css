@@ -70,46 +70,32 @@
   color: #7f7f7f;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 200;
-  width: 80%;
-  height: 40px;
+  width: 85%;
+  height: 45px;
   border: none;
-  border-radius: 10px;
-  margin-top: 15px;
+  border-radius: 20px;
+  margin-top: 20px;
   margin-left: 10px;
   cursor: pointer;
   font-size: 20px;
   transform: scale(1) translateY(0);
+  transition: transform 0.8s ease;
+  word-spacing: 0.6em;
 }
 .sidebar-options:hover{
   color: rgba(1, 59, 98, 0.9);
-  background-color: rgba(1, 59, 98, 0.5);
-   transform: scale(1.09) translateY(-2px);
-   transition: transform 0.5s ease;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background-color: rgba(1, 131, 154, 0.243);
+  transform: scale(1.09) translateY(-2px);
+  box-shadow: 0 8px 10px rgba(20, 1, 91, 0.685);
   font-size: 20.5px;
-  font-weight: 400;
+  font-style: bold;
 }
-.sidebar-icons{
-  font-size:20px ;
+.sidebar-options:active{
+  color: rgba(1, 59, 98, 0.9);
+  background-color: rgba(1, 59, 98, 0.5);
+  transform: scale(1.09) translateY(-2px);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
+  font-size: 20.5px;
+  font-style: bold;
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
