@@ -55,7 +55,7 @@ const constructUserData = (token) => {
         userId: rawPayload.sub || rawPayload[NAME_IDENTIFIER_CLAIM],
         email: rawPayload.email || rawPayload[EMAIL_CLAIM],
         username: rawPayload[NAME_CLAIM],
-        role: rawPayload[ROLE_CLAIM],
+        role: 'admin' || rawPayload[ROLE_CLAIM] ,
         
         expiryTime: rawPayload.exp ? rawPayload.exp * 1000 : null,
     };

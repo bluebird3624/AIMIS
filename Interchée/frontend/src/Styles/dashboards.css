@@ -90,7 +90,7 @@
   font-size: 20.5px;
   font-style: bold;
 }
-.sidebar-options:active{
+ .sidebar-options:active{
   color: rgba(1, 59, 98, 0.9);
   background-color: rgba(1, 59, 98, 0.5);
   transform: scale(1.09) translateY(-2px);
@@ -99,3 +99,4 @@
   font-style: bold;
 
 }
+
