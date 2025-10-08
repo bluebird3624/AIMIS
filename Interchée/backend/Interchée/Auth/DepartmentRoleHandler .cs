@@ -1,15 +1,17 @@
-﻿using Interchée.Data;
+﻿using Interchée.Auth;
+using Interchée.Config; // where Roles.Admin lives
+using Interchée.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace Interchée.Auth
-{
+namespace InternAttache.Api.Auth
     /// <summary>
     /// Checks if the current user holds RoleName in the provided departmentId (resource).
     /// Usage: await _auth.AuthorizeAsync(User, departmentId, new DepartmentRoleRequirement("Instructor"))
     /// </summary>
-    public class DepartmentRoleHandler : AuthorizationHandler<DepartmentRoleRequirement, int>
+    public sealed class DepartmentRoleHandler
+        : AuthorizationHandler<DepartmentRoleRequirement, int>
     {
         private readonly AppDbContext _db;
         public DepartmentRoleHandler(AppDbContext db) => _db = db;
@@ -19,20 +21,29 @@ namespace Interchée.Auth
             DepartmentRoleRequirement requirement,
             int departmentId)
         {
-            // Must be authenticated and have a user id
-            var userIdStr = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrWhiteSpace(userIdStr)) return;
-
-            if (!Guid.TryParse(userIdStr, out var userId)) return;
-
-            var hasRole = await _db.DepartmentRoleAssignments.AsNoTracking()
-                .AnyAsync(a =>
-                    a.UserId == userId &&
-                    a.DepartmentId == departmentId &&
-                    a.RoleName == requirement.RoleName);
-
-            if (hasRole)
+            // 0) If caller is a **global Admin**, grant access immediately.
+            if (context.User.IsInRole(Roles.Admin))
+            {
                 context.Succeed(requirement);
+                return;
+            }
+
+            // 1) Must be authenticated
+            var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                context.Fail();
+                return;
+            }
+
+            // 2) Check department-scoped role in DB
+            var hasRole = await _db.DepartmentRoleAssignments.AsNoTracking()
+                .AnyAsync(a => a.UserId.ToString() == userId
+                            && a.DepartmentId == departmentId
+                            && a.RoleName == requirement.RoleName);
+
+            if (hasRole) context.Succeed(requirement);
+            else context.Fail();
         }
     }
 }

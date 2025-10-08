@@ -3,6 +3,7 @@ using Interchée.Data;
 using Interchée.Entities;
 using Interchée.Services;
 using Interchée.Services.Email;
+using InternAttache.Api.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
