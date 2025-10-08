@@ -210,5 +210,130 @@ namespace Interchée.Controllers
 
             return NoContent();
         }
+        /// <summary>Create or update absence limit policy</summary>
+        [HttpPost("policies")]
+        [Authorize(Roles = "HR,Admin")]
+        [ProducesResponseType(typeof(AbsencePolicyReadDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<AbsencePolicyReadDto>> CreatePolicy([FromBody] AbsencePolicyCreateDto dto)
+        {
+            // Validate department exists if scope is Department
+            if (dto.Scope == "Department" && dto.DepartmentId.HasValue)
+            {
+                var departmentExists = await _db.Departments.AnyAsync(d => d.Id == dto.DepartmentId.Value);
+                if (!departmentExists) return BadRequest("Department not found");
+            }
+
+            // Check for overlapping policies
+            var overlapping = await _db.AbsenceLimitPolicies
+                .Where(p => p.Scope == dto.Scope &&
+                           p.DepartmentId == dto.DepartmentId &&
+                           p.EffectiveFrom <= (dto.EffectiveTo ?? DateOnly.MaxValue) &&
+                           (p.EffectiveTo >= dto.EffectiveFrom || p.EffectiveTo == null))
+                .AnyAsync();
+
+            if (overlapping) return BadRequest("Policy already exists for this period");
+
+            var policy = new AbsenceLimitPolicy
+            {
+                Scope = dto.Scope,
+                DepartmentId = dto.Scope == "Department" ? dto.DepartmentId : null,
+                MaxDaysPerTerm = dto.MaxDaysPerTerm,
+                MaxDaysPerMonth = dto.MaxDaysPerMonth,
+                EffectiveFrom = dto.EffectiveFrom,
+                EffectiveTo = dto.EffectiveTo
+            };
+
+            _db.AbsenceLimitPolicies.Add(policy);
+            await _db.SaveChangesAsync();
+
+            var readDto = new AbsencePolicyReadDto(
+                policy.Id, policy.Scope, policy.DepartmentId,
+                policy.MaxDaysPerTerm, policy.MaxDaysPerMonth,
+                policy.EffectiveFrom, policy.EffectiveTo
+            );
+
+            return Ok(readDto);
+        }
+
+        /// <summary>Get all absence limit policies</summary>
+        [HttpGet("policies")]
+        [Authorize(Roles = "HR,Admin,Supervisor")]
+        [ProducesResponseType(typeof(IEnumerable<AbsencePolicyReadDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<AbsencePolicyReadDto>>> GetPolicies()
+        {
+            var policies = await _db.AbsenceLimitPolicies
+                .Include(p => p.Department)
+                .OrderBy(p => p.Scope)
+                .ThenBy(p => p.DepartmentId)
+                .ThenBy(p => p.EffectiveFrom)
+                .Select(p => new AbsencePolicyReadDto(
+                    p.Id, p.Scope, p.DepartmentId,
+                    p.MaxDaysPerTerm, p.MaxDaysPerMonth,
+                    p.EffectiveFrom, p.EffectiveTo
+                ))
+                .ToListAsync();
+
+            return Ok(policies);
+        }
+
+        /// <summary>Get current effective policy for a department</summary>
+        [HttpGet("policies/current")]
+        [Authorize]
+        [ProducesResponseType(typeof(AbsencePolicyReadDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<AbsencePolicyReadDto>> GetCurrentPolicy(
+            [FromQuery] int? departmentId = null)
+        {
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            // Get global policy
+            var globalPolicy = await _db.AbsenceLimitPolicies
+                .Where(p => p.Scope == "Global" &&
+                           p.EffectiveFrom <= today &&
+                           (p.EffectiveTo >= today || p.EffectiveTo == null))
+                .OrderByDescending(p => p.EffectiveFrom)
+                .FirstOrDefaultAsync();
+
+            // Get department-specific policy if departmentId provided
+            AbsenceLimitPolicy? departmentPolicy = null;
+            if (departmentId.HasValue)
+            {
+                departmentPolicy = await _db.AbsenceLimitPolicies
+                    .Where(p => p.Scope == "Department" &&
+                               p.DepartmentId == departmentId &&
+                               p.EffectiveFrom <= today &&
+                               (p.EffectiveTo >= today || p.EffectiveTo == null))
+                    .OrderByDescending(p => p.EffectiveFrom)
+                    .FirstOrDefaultAsync();
+            }
+
+            // Prefer department policy over global policy
+            var effectivePolicy = departmentPolicy ?? globalPolicy;
+            if (effectivePolicy == null) return NotFound("No active policy found");
+
+            var readDto = new AbsencePolicyReadDto(
+                effectivePolicy.Id, effectivePolicy.Scope, effectivePolicy.DepartmentId,
+                effectivePolicy.MaxDaysPerTerm, effectivePolicy.MaxDaysPerMonth,
+                effectivePolicy.EffectiveFrom, effectivePolicy.EffectiveTo
+            );
+
+            return Ok(readDto);
+        }
+
+        /// <summary>Delete a policy</summary>
+        [HttpDelete("policies/{id:int}")]
+        [Authorize(Roles = "HR,Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeletePolicy(int id)
+        {
+            var policy = await _db.AbsenceLimitPolicies.FindAsync(id);
+            if (policy == null) return NotFound();
+
+            _db.AbsenceLimitPolicies.Remove(policy);
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
