@@ -34,6 +34,17 @@ function AdminDash() {
 
               </input>
             </div>
+            <div className='user-profile-section'>
+              <div className='user-avatar'>
+
+              </div>
+              <div className='user-info'>
+
+              </div>
+              <div className='profile-dropdown'>
+                
+              </div>
+            </div>
           </div>
 
 
