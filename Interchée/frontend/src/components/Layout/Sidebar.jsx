@@ -8,44 +8,45 @@ import {roles} from '../../utils/constants';
 const sidebarConfig = {
   adminDashboard: {
     id: 'adminDashboard',
-    name: 'Dashboard',
+    name: 'Home',
     path: '/admin-dash',
     iconOutline: icons.IoHomeOutline,
     iconSolid: icons.IoHome,
     roles: [roles.ADMIN, roles.HR]
   },
+
+
   attacheeDashboard: {
     id: 'attacheeDashboard',
-    name: 'Dashboard',
+    name: 'Home',
     path: '/attachee-dash',
     iconOutline: icons.IoHomeOutline,
     iconSolid: icons.IoHome,
     roles: [roles.ATTACHEE]
   },
+
+
   internDashboard: {
     id: 'internDashboard',
-    name: 'Dashboard',
+    name: 'Home',
     path: '/intern-dash',
     iconOutline: icons.IoHomeOutline,
     iconSolid: icons.IoHome,
     roles: [roles.INTERN]
   },
+
+
   supervisorDashboard: {
     id: 'supervisorDashboard',
-    name: 'Dashboard',
+    name: 'Home',
     path: '/supervisor-dash',
     iconOutline: icons.IoHomeOutline,
     iconSolid: icons.IoHome,
     roles: [roles.SUPERVISOR]
   },
-  profile: {
-    id: 'profile',
-    name: 'Profile',
-    path: '/profile',
-    iconOutline: icons.IoPersonOutline,
-    iconSolid: icons.IoPerson,
-    roles: [roles.ADMIN, roles.ATTACHEE, roles.HR, roles.SUPERVISOR, roles.INTERN]
-  },
+
+
+  
   users: {
     id: 'users',
     name: 'Users',
@@ -54,6 +55,9 @@ const sidebarConfig = {
     iconSolid: icons.IoPeople,
     roles: [roles.ADMIN, roles.HR]
   },
+
+
+
   absence: {
     id: 'absence',
     name: 'Absence',
@@ -62,6 +66,9 @@ const sidebarConfig = {
     iconSolid: icons.IoWalk,
     roles: [roles.ADMIN, roles.HR]
   },
+
+
+
   reports: {
     id: 'reports',
     name: 'Reports',
@@ -70,6 +77,8 @@ const sidebarConfig = {
     iconSolid: icons.IoBarChart,
     roles: [roles.ADMIN, roles.ATTACHEE, roles.HR, roles.INTERN, roles.SUPERVISOR]
   },
+
+
   notifications: {
     id: 'notifications',
     name: 'Notifications',
@@ -78,6 +87,17 @@ const sidebarConfig = {
     iconSolid: icons.IoNotifications,
     roles: [roles.ADMIN, roles.ATTACHEE, roles.HR, roles.INTERN, roles.SUPERVISOR]
   },
+
+  calendar: {
+    id: 'calendar',
+    name: 'Calendar',
+    path: '/calendar',
+    iconOutline: icons.IoCalendarOutline,
+    iconSolid: icons.IoCalendar,
+    roles: [roles.ADMIN, roles.ATTACHEE, roles.HR, roles.INTERN, roles.SUPERVISOR]
+
+  }
+
 };
 
 const getUserRole = () => {

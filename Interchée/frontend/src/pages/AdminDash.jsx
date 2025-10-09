@@ -4,6 +4,7 @@ import '../Styles/dashboards.css'
 import { motion } from 'framer-motion';
 import  Group from '../assets/Group.svg';
 import Sidebar from "../components/Layout/Sidebar";
+import { IoSearch } from "react-icons/io5";
 
 
 
@@ -16,7 +17,6 @@ function AdminDash() {
             exit={{ x: '-100%' }}
             transition={{ type : 'tween' , duration: 2.1  }}
             className="absolute inset-0"
-        
         >
 
         <div className="dash-body">
@@ -24,7 +24,16 @@ function AdminDash() {
 
           {/* STATUS BAR */}
           <div className="status-bar">
+            <div className="search-bar">
+              < IoSearch className="search-icon"></IoSearch>
+              <input 
+              className="search-input"
+              placeholder=" I'm looking for....."
 
+              >
+
+              </input>
+            </div>
           </div>
 
 
@@ -35,14 +44,15 @@ function AdminDash() {
               src={Group}
               />
             </div>
-       
-          
+             {/*  SIDEBAR */}
+            <Sidebar/>
 
           </div>
+            
+          
+
           
        
-        <Sidebar/>
-      
          
 
         </div>

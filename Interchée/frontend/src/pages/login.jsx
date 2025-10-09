@@ -3,6 +3,7 @@ import '../Styles/login.css';
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/auth";
 import { motion } from 'framer-motion';
+import  LoginGroup from '../assets/LoginGroup.svg';
 
 
 
@@ -15,6 +16,7 @@ function Login(){
       event.preventDefault();
       try
         {
+            console.log(event);
           const email = document.getElementById('email').value;
           const password = document.getElementById('password').value;
          
@@ -48,53 +50,69 @@ function Login(){
             className="absolute inset-0"
 
         >
-            <div className="body-login"    style={{ backgroundImage: "url('/src/assets/loginpage.png')"}}
->
-                <div className="login-container">
-                    <div className="login-header">
-                        <p style={{ color: 'white'}} >Sign in to your account</p>
+            <div className="body-login"    style={{ backgroundImage: "url('/src/assets/loginpage.png')"}}>
+                <div className="login-gradient">
+                    <div className="agile-logo">
+                        <img
+                        src={LoginGroup}
+                        />
                     </div>
-                    
-                    <form className="login-form" onSubmit={handleClick}>
-                        <div className="form-group">
-                            <label htmlFor="email" className="login-form-label">Email Address</label>
-                            <input
-                                type="email"
-                                id="email"
-                                className="form-input"
-                                placeholder="Enter your email"
-                                required
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="password" className="login-form-label">Password</label>
-                            <input
-                                type="password"
-                                id="password"
-                                className="form-input"
-                                placeholder="Enter your password"
-                                required
-                            />
-                        </div>
-
-                        {/* Login Button */}
-                        <button 
-                            type="submit" 
-                            className="login-button" 
-                            disabled={loading}
-                        >
-                            {loading ? 'Logging in...' : 'Log In'}
-                        </button>
-
-
-                        <div className="forgot-password">
-                            <a href="/forgot-password" className="forgot-link">
-                                Forgot your password?
-                            </a>
-                        </div>
-                    </form>
+                    <div className="aimis-name">
+                        Attaché Intern Management
+                        & Information System
+                    </div>
                 </div>
+                <div className="login-form">
+                    <div className="form-container">
+    <h2 className="form-title">Welcome to Agile AIMIS</h2>
+    
+    <div className="input-group">
+      <label className="input-label">Email Address </label>
+      <input 
+        type="email" 
+        className="form-input" 
+        placeholder="Enter your email"
+        id = "email"
+      />
+    </div>
+    
+    <div className="input-group">
+      <label className="input-label">Password</label>
+      <input 
+        type="password" 
+        className="form-input" 
+        placeholder="Enter your password"
+        id="password"
+      />
+    </div>
+    
+    <div className="form-options">
+      <div className="remember-me">
+        <input 
+          type="checkbox" 
+          id="remember" 
+          className="remember-checkbox"
+        />
+        <label htmlFor="remember" className="remember-label">
+          Remember me
+        </label>
+      </div>
+      
+      <a href="#" className="forgot-password">
+        Forgot password?
+      </a>
+    </div>
+    
+    <button 
+    onClick={handleClick}
+    className="login-button">
+      Log In
+    </button>
+    
+   
+  </div>
+                </div>
+                
             </div>
         </motion.div>
     );
