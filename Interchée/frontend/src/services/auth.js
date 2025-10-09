@@ -117,6 +117,9 @@ export const register = async (credentials) =>
    try 
    {
 
+    const {firstName, lastName, email, password, confirmPassword} = credentials;
+    
+
    }
    catch (error)
    {

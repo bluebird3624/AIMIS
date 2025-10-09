@@ -19,7 +19,7 @@
   left: 0;
   background-color: #ffff;
   width: 230px;
-  height: 90px;
+  height:86.8px;
   border-right: rgb(181, 181, 181)  solid  1.5px;
   border-bottom:rgb(181, 181, 181)  solid 1.5px;
   border-top: none;
@@ -43,7 +43,7 @@
   height: 100vh;
   border-right: rgb(181, 181, 181)  solid  1.5px;
   border-bottom:rgb(181, 181, 181)  solid 1.5px;
-  border-top: rgb(181, 181, 181)  solid 1.5px;
+  border-top: rgb(181, 181, 181)  solid 1.5px;;
   border-left: none; 
 
 }
@@ -60,27 +60,31 @@
 
 .options-container{
   background-color: transparent;
-  width: 85% ;
-  height: 80%;
+  width: 100% ;
   margin-left: 20px;
   margin-top: 20px;
 }
 .sidebar-options{
   background-color: #ffff;
-  color: #7f7f7f;
+  color: #968989;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 200;
-  width: 85%;
+  width: 75%;
   height: 45px;
   border: none;
   border-radius: 20px;
   margin-top: 20px;
-  margin-left: 10px;
+  margin-left: 20px;
   cursor: pointer;
   font-size: 20px;
   transform: scale(1) translateY(0);
   transition: transform 0.8s ease;
-  word-spacing: 0.6em;
+  /**/
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+
 }
 .sidebar-options:hover{
   color: rgba(1, 59, 98, 0.9);

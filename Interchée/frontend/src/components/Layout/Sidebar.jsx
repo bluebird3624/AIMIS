@@ -109,7 +109,7 @@ const SidebarItem = ({ item, isActive, onClick }) => {
 
   return (
     <button 
-      className={`sidebar-options ${isActive ? 'active' : ''} ${isHovered ? 'hovered' : ''}`}
+      className={`sidebar-options ${isActive ? ':active' : ''} ${isHovered ? ':hover' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onClick(item)}
@@ -117,6 +117,7 @@ const SidebarItem = ({ item, isActive, onClick }) => {
       {isHovered ? <IconSolid /> : <IconOutline />}
       {item.name}
     </button>
+   
   );
 };
 

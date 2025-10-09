@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+
 import '../Styles/dashboards.css'
-import { useNavigate } from "react-router-dom";
+
 import { motion } from 'framer-motion';
 import  Group from '../assets/Group.svg';
 import Sidebar from "../components/Layout/Sidebar";
@@ -8,13 +8,7 @@ import Sidebar from "../components/Layout/Sidebar";
 
 
 function AdminDash() {
-    const navigate = useNavigate();
-    const [isHovered, setIsHovered] = useState(false);
-    const [isActive, setIsActive] = useState(false);
-
-    const ProfileshowSolid = isHovered || isActive;
-    const UsersshowSolid = isHovered || isActive;
-
+   
     return(
       <motion.div
             initial={{ x: '100%' }}
@@ -41,16 +35,14 @@ function AdminDash() {
               src={Group}
               />
             </div>
-
-
-            {/*  SIDEBAR */}
-          
-           <Sidebar/>
+       
           
 
           </div>
           
        
+        <Sidebar/>
+      
          
 
         </div>
