@@ -1,8 +1,11 @@
+/* ONBOARDING PAGE*/
+
 .body-login{
  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   position: fixed;
+  display: flex;
   top: 0;
   left: 0;
   width: 100vw;
@@ -114,145 +117,172 @@ html, body {
 .error-message{
   color: red;
 }
+/* END OF ONBOARDING PAGE */
 
 
 
 
 
 /* FOR LOGIN PAGE*/
-.login-container {
-  width: 350px;
-  height: fit-content; 
-  background: rgba(200, 200, 200, 0.4);
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  
-  /* Position slightly to the right */
-  margin-left: 100px;
-  margin-right: 100px;
-  
-  /* Center vertically */
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+.login-gradient {
+  width: 450px;
+  height: 100vh ; 
+  background:  linear-gradient(to right, 
+    rgba(211, 211, 211, 0.2), 
+    rgba(211, 211, 211, 0.9)
+  );;
 }
+.agile-logo{
+  background-color: transparent;
+  height: 60px;
+  width: 300px;
+  margin-top: 20px;
+  margin-left: 10px;
+  background-attachment: fixed;
+}
+.aimis-name{
+  background-color: transparent;
+  width: 420px;
+  height: 240px;
 
-/* Form styling */
-.login-form {
+  font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 50px;
+  margin-top: 300px;
+  margin-left: 10px;
+  color: #167aa1;
+}
+.login-form{
+  background-color: rgba(180, 180, 180, 0.7);
+  height: 410px;
+  width: 470px;
+  margin-left: 220px;
+  margin-top: 150px;
+  border: rgba(190, 190, 190, 0.4) solid 1.5px;
+  border-radius: 10px;
+  align-items: center;
+
+}
+/* Form container */
+.form-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  height: 100%;
 }
 
-/* Form group styling */
-.form-group {
+/* Title */
+.form-title {
+  color: #167aa1;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 600;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Input groups */
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-label {
+  display: block;
+  color: white;
+  margin-bottom: 8px;
+  margin-left: 5px;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.form-input {
+  width: 450px;
+  padding: 12px 15px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: (255, 255, 255, 0.806);
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+  transition: all 0.3s ease;
+  margin-left: 9px;
+}
+
+.form-input::placeholder {
+  color: rgba(132, 132, 132, 0.7);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.806);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* Options row (Remember me + Forgot password) */
+.form-options {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+/* Remember me checkbox */
+.remember-me {
+  display: flex;
+  align-items: center;
   gap: 8px;
 }
 
-.login-form-label {
-  font-weight: 600;
-  color: #ffffff;
-  font-size: 14px;
-  font-family: Arial, Helvetica, sans-serif;
-  margin-bottom: 5px;
+.remember-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: white;
 }
 
-/* Input field styling */
-.login-form-input {
-  padding: 12px 16px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-  background: rgba(255, 255, 255, 0.9);
-  transition: all 0.3s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.login-form-input:focus {
-  outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-  background: rgba(255, 255, 255, 1);
-}
-
-.login-form-input::placeholder {
-  color: #999;
-}
-
-/* Password input specific styling */
-.password-input {
-  position: relative;
-}
-
-/* Login button styling */
-.login-button {
-  padding: 14px;
-  background: #3498db;
+.remember-label {
   color: white;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Forgot password link */
+.forgot-password {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.forgot-password:hover {
+  color: rgb(0, 0, 132);
+  text-decoration: underline;
+}
+
+/* Login button */
+.login-button {
+  width: 75%;
+  padding: 14px;
+  background: #1b85af;
+  color: #ffffff;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 25px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 10px;
-  width: 100%;
+  margin-top: auto;
+  margin-bottom: 30px;
+  margin-left: 55px;
 }
 
 .login-button:hover {
-  background: #094974;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  background: #093343;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .login-button:active {
   transform: translateY(0);
 }
-
-/* Forgot password link styling */
-.forgot-password {
-  text-align: center;
-  margin-top: 15px;
-}
-
-.forgot-link {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 20px;
-  transition: color 0.3s ease;
-}
-
-.forgot-link:hover {
-  color: #c7c7c7;
-  text-decoration: underline;
-}
-
-/* Header styling */
-.login-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.login-header h2 {
-  margin: 0 0 8px 0;
-  color: #333;
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.login-header p {
-  margin: 0;
-  color: #666;
-  font-size: 14px;
-}
-
-
-
-
-
-
-
