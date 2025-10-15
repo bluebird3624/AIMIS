@@ -6,6 +6,7 @@ import AdminDash from './pages/AdminDash'
 import {Navigate, Router, Routes, Route, BrowserRouter, useLocation} from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion';
 
+
 function AnimatedRoute({ children }) {
   const location = useLocation();
   return (
