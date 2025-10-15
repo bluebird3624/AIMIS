@@ -3,6 +3,9 @@ import React, {useState, useEffect} from 'react';
 import '../../Styles/dashboards.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {roles} from '../../utils/constants';
+import SearchBar from '../SearchBar';
+import UserProfile from '../UserProfile';
+import Group from '../../assets/Group.svg';
 
 
 const sidebarConfig = {
@@ -129,12 +132,12 @@ const SidebarItem = ({ item, isActive, onClick }) => {
 
   return (
     <button 
-      className={`sidebar-options ${isActive ? ':active' : ''} ${isHovered ? ':hover' : ''}`}
+      className={`sidebar-options ${isActive ? 'active' : ''} ${isHovered ? 'hover' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onClick(item)}
     > 
-      {isHovered ? <IconSolid /> : <IconOutline />}
+      {isHovered || isActive? <IconSolid /> : <IconOutline />}
       {item.name}
     </button>
    
@@ -144,12 +147,14 @@ const SidebarItem = ({ item, isActive, onClick }) => {
 function Sidebar() {
   const [activeItem, setActiveItem] = useState('dashboard');
   const [sidebarItems, setSidebarItems] = useState([]);
+  const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
  
   useEffect(() => {
     const userRole = getUserRole();
+    setUserRole(userRole);
     const filteredItems = getFilteredSidebarItems(userRole);
     setSidebarItems(filteredItems);
   }, []);
@@ -159,6 +164,7 @@ function Sidebar() {
     const currentItem = Object.values(sidebarConfig).find(
       item => item.path === location.pathname
     );
+  
     if (currentItem) {
       setActiveItem(currentItem.id);
     }
@@ -171,16 +177,44 @@ function Sidebar() {
   };
 
   return (
-    <div className="sidebar">
-      <div className="options-container">
-        {sidebarItems.map((item) => (
-          <SidebarItem
-            key={item.id}
-            item={item}
-            isActive={activeItem === item.id}
-            onClick={handleItemClick}
-          />
-        ))}
+    <div className="dashboard-layout">
+      {/* Header Section */}
+      <div className="dashboard-header">
+        {/* Logo Section */}
+         <div className="header-logo">
+          <img src={Group} alt="Company Logo" className="logo-image" />
+        </div>
+
+        {/* Search Section */}
+        <div className="header-search">
+          <SearchBar sidebarItems={sidebarItems} userRole={userRole} />
+        </div>
+
+        {/* User Profile Section */}
+        <div className="header-profile">
+          <UserProfile />
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="dashboard-main">
+        {/* Sidebar Navigation */}
+         
+        <div className="dashboard-sidebar">
+         
+          <div className="options-container">
+            {sidebarItems.map((item) => (
+              <SidebarItem
+                key={item.id}
+                item={item}
+                isActive={activeItem === item.id}
+                onClick={handleItemClick}
+              />
+            ))}
+          </div>
+        </div>
+
+       
       </div>
     </div>
     );

@@ -127,6 +127,47 @@ export const register = async (credentials) =>
    } 
 }
 
+export const logout = async () => {
+  try {
+    
+    const currentRefreshToken = getRefreshToken();
+    const accessToken = getToken();
+   
+    if (currentRefreshToken) {
+      try {
+       
+        await api.post('/auth/logout', {"refreshToken": currentRefreshToken}, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          },
+          
+        });
+        console.log('Server logout successful');
+      } catch (apiError) {
+       
+        console.warn('Server logout failed, proceeding with local cleanup:', apiError.message);
+      }
+    }
+
+    
+    removeTokens();
+    
+    return {
+      success: true,
+      message: 'Logout successful'
+    };
+
+  } catch (error) {
+   
+    console.error('Logout error:', error);
+    removeTokens();
+   
+    return {
+      success: true,
+      message: 'Logout completed (local cleanup)'
+    };
+  }
+};
 
 
 /**
