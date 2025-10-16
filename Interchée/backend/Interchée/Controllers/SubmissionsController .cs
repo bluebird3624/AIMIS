@@ -61,7 +61,7 @@ namespace Interchée.Controllers
             {
                 submission.RepoUrl = dto.RepoUrl;
                 submission.Branch = dto.Branch ?? submission.Branch;
-                submission.Status = "Submitted"; // AUTOMATIC STATUS ON RE-SUBMIT
+                submission.Status = "In-Progress"; // AUTOMATIC STATUS ON RE-SUBMIT
                 submission.SubmittedAt = DateTime.UtcNow;
             }
 
@@ -108,6 +108,33 @@ namespace Interchée.Controllers
 
             return submission != null ? Ok(submission) : NotFound();
         }
+
+        /// <summary>Get all submissions for current user (Intern/Attaché only)</summary>
+        [HttpGet("my-submissions")]
+        [Authorize(Roles = "Intern,Attache")]
+        [ProducesResponseType(typeof(IEnumerable<SubmissionReadDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<SubmissionReadDto>>> GetMySubmissions()
+        {
+            var userId = User.GetUserId();
+
+            var submissions = await _db.AssignmentSubmissions
+                .Where(s => s.UserId == userId)
+                .Include(s => s.Assignment)
+                .Include(s => s.Grade)
+                .Select(s => new SubmissionReadDto(
+                    s.Id, s.AssignmentId, s.UserId, s.RepoUrl, s.Branch, s.LatestCommitSha,
+                    s.SubmittedAt, s.Status, s.CreatedAt,
+                    s.Grade != null ? new GradeReadDto(
+                        s.Grade.Id, s.Grade.SubmissionId, s.Grade.Score, s.Grade.MaxScore,
+                        s.Grade.RubricJson, s.Grade.GradedByUserId, s.Grade.GradedAt, ""
+                    ) : null,
+                    s.Commits.Count, s.FeedbackComments.Count
+                ))
+                .ToListAsync();
+
+            return Ok(submissions);
+        }
+
 
         /// <summary>Add commit to submission (for webhooks or manual entry)</summary>
         [HttpPost("{submissionId:long}/commits")]

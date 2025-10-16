@@ -72,7 +72,7 @@ namespace Interchée.Controllers
                 DepartmentId = dto.DepartmentId,
                 CreatedByUserId = userId,
                 DueAt = dto.DueAt,
-                Status = "Assigned"
+                Status = "Created"
             };
 
             _db.Assignments.Add(assignment);
