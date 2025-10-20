@@ -41,7 +41,7 @@ namespace Interchée.Controllers
                 Days = days,
                 Reason = dto.Reason.Trim(),
                 Status = "Pending",
-                RequestedAt = DateTime.UtcNow
+                RequestedAt = DateTime.UtcNow,
             };
 
             _db.AbsenceRequests.Add(request);
