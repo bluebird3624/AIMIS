@@ -1,20 +1,40 @@
 import { useState } from "react";
 import '../Styles/login.css';
 import { useNavigate } from "react-router-dom";
+import * as icons from 'react-icons/io5';
 
-function Onboarding() {
-  const navigate = useNavigate();
+function OnboardingForm() {
   const [formData, setFormData] = useState({
-    firstname: '',
-    middlename: '',
-    surname: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    department: '',
     role: '',
-    idtype: '',
-    idnumber: '',
-    phonenumber: '',
-    email: ''
+    email: '',
+    password: '',
+    confirmPassword: ''
   });
+
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const departments = [
+    { value: '', label: 'Select Department' },
+    { value: 'bespoke', label: 'Bespoke Solutions' },
+    { value: 'corporate', label: 'Corporate Services' },
+    { value: 'microsoft', label: 'Microsoft Business' },
+    { value: 'hr', label: 'Human Resources' },
+    { value: 'infra', label: 'Infrastructure' },
+    { value: 'oracle', label: 'Oracle Business' },
+    { value: 'sap', label: 'SAP Business'}
+  ];
+
+  const roles = [
+    { value: '', label: 'Select Role' },
+    { value: 'intern', label: 'Intern' },
+    { value: 'Attache', label: 'Attaché' }
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,6 +43,7 @@ function Onboarding() {
       [name]: value
     }));
     
+    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -31,101 +52,206 @@ function Onboarding() {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!formData.department) newErrors.department = 'Department is required';
+    if (!formData.role) newErrors.role = 'Role is required';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } 
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    return newErrors;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const newErrors = validateForm();
     
-    const newErrors = {};
-    if (!formData.firstname.trim()) newErrors.firstname = 'First name is required';
-    if (!formData.surname.trim()) newErrors.surname = 'Surname is required';
-    if (!formData.email.trim()) newErrors.email = 'Email is required';
-
-    setErrors(newErrors);
-
     if (Object.keys(newErrors).length === 0) {
-      console.log('Form submitted successfully!');
-      window.location.href = 'https://self-onboarding.agilebiz.co.ke/home';
+      // Form is valid, submit data
+      console.log('Form submitted:', formData);
+      alert('Account created successfully!');
+      // Here you would typically send data to your backend
+    } else {
+      setErrors(newErrors);
     }
   };
 
   return (
-    <div className="body-login" style={{ backgroundImage: "url('/src/assets/formpage.png')"}}>
-      <div className="info-container">b
-        
-        <form onSubmit={handleSubmit}>
-          {/* Name Section - Horizontal Row */}
-          <div className="form-row-horizontal">
-            {/* First Name - Mandatory */}
+    <>
+      <div className="body-onboarding" style={{ backgroundImage: "url('/src/assets/formpage.png')"}}>
+        <div className="info-container">
+          <form onSubmit={handleSubmit}>
+            {/* Row 1: Names */}
             <div className="form-row">
-              <label htmlFor="firstname" className="form-label"> * First Name : </label>
-              <input
-                type="text" 
-                id="firstname"
-                name="firstname"
-                className={`form-input ${errors.firstname ? 'error' : ''}`}
-                placeholder="First name"
-                value={formData.firstname}
-                onChange={handleChange}
-              />
-              {errors.firstname && <span className="error-message">{errors.firstname}</span>}
+              <div className="form-group">
+                <label htmlFor="firstName">First Name *</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className={errors.firstName ? 'error' : ''}
+                  placeholder="Enter first name"
+                />
+                {errors.firstName && <span className="error-message">{errors.firstName}</span>}
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="middleName">Middle Name</label>
+                <input
+                  type="text"
+                  id="middleName"
+                  name="middleName"
+                  value={formData.middleName}
+                  onChange={handleChange}
+                  placeholder="Enter middle name"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="lastName">Last Name *</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className={errors.lastName ? 'error' : ''}
+                  placeholder="Enter last name"
+                />
+                {errors.lastName && <span className="error-message">{errors.lastName}</span>}
+              </div>
             </div>
 
-            {/* Middle Name - Optional */}
+            {/* Row 2: Department, Role, Email */}
             <div className="form-row">
-              <label htmlFor="middlename" className="form-label">Middle Name : </label>
-              <input
-                type="text" 
-                id="middlename"
-                name="middlename"
-                className="form-input"
-                placeholder="Middle name"
-                value={formData.middlename}
-                onChange={handleChange}
-              />
+              <div className="form-group">
+                <label htmlFor="department">Department *</label>
+                <select
+                  id="department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  className={errors.department ? 'error' : ''}
+                >
+                  {departments.map(dept => (
+                    <option key={dept.value} value={dept.value}>
+                      {dept.label}
+                    </option>
+                  ))}
+                </select>
+                {errors.department && <span className="error-message">{errors.department}</span>}
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="role">Role *</label>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className={errors.role ? 'error' : ''}
+                >
+                  {roles.map(role => (
+                    <option key={role.value} value={role.value}>
+                      {role.label}
+                    </option>
+                  ))}
+                </select>
+                {errors.role && <span className="error-message">{errors.role}</span>}
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="email">Email *</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={errors.email ? 'error' : ''}
+                  placeholder="Enter email address"
+                />
+                {errors.email && <span className="error-message">{errors.email}</span>}
+              </div>
             </div>
 
-            {/* Surname - Mandatory */}
+            {/* Row 3: Password Fields */}
             <div className="form-row">
-              <label htmlFor="surname" className="form-label"> * Surname : </label>
-              <input
-                type="text" 
-                id="surname"
-                name="surname"
-                className={`form-input ${errors.surname ? 'error' : ''}`}
-                placeholder="Surname"
-                value={formData.surname}
-                onChange={handleChange}
-              />
-              {errors.surname && <span className="error-message">{errors.surname}</span>}
+              <div className="form-group">
+                <label htmlFor="password">Password *</label>
+                <div className="password-input-container">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className={errors.password ? 'error' : ''}
+                    placeholder="Enter password"
+                  />
+                  <button 
+                    type="button" 
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <icons.IoEyeOutline/> : <icons.IoEyeOffOutline/>}
+                  </button>
+                </div>
+                {errors.password && <span className="error-message">{errors.password}</span>}
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="confirmPassword">Confirm Password *</label>
+                <div className="password-input-container">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className={errors.confirmPassword ? 'error' : ''}
+                    placeholder="Confirm your password"
+                  />
+                  <button 
+                    type="button" 
+                    className="password-toggle"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? <icons.IoEyeOutline/> : <icons.IoEyeOffOutline/>}
+                  </button>
+                </div>
+                {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
+              </div>
             </div>
-          </div>
-          
 
-          {/* Contact Section - Horizontal Row */}
-          <div className="form-row-horizontal">
-            {/* Email - Mandatory */}
-            <div className="form-row">
-              <label htmlFor="email" className="form-label"> * Email : </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className={`form-input ${errors.email ? 'error' : ''}`}
-                placeholder="your.email@example.com"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              {errors.email && <span className="error-message">{errors.email}</span>}
-            </div>
-      
-          </div>
-
-          <button type="submit" className="submit-button">Submit</button>
-        </form>
-
-        <p style={{ fontSize: '20px', fontFamily: 'serif'}}> * this enrollment is not conclusive for interns </p>
+            <button type="submit" className="submit-btn">
+              Submit
+            </button>
+          </form>
+          <p style={{ fontSize: "20px", fontFamily: "arial"}}>Already have an account? <a href="/login"> Sign in</a></p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
-export default Onboarding;
+export default OnboardingForm;
