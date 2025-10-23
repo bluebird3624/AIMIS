@@ -8,6 +8,7 @@ import {Navigate, Router, Routes, Route, BrowserRouter, useLocation} from 'react
 import { AnimatePresence, motion } from 'framer-motion';
 import { roles } from './utils/constants'
 
+
 function AnimatedRoute({ children }) {
   const location = useLocation();
   return (

@@ -7,6 +7,9 @@ import {roles} from '../utils/constants';
 import SearchBar from '../components/SearchBar';
 import UserProfile from '../components/UserProfile';
 import Group from '../assets/Group.svg';
+import Homebutton from '../components/homepage';
+import Userspage from '../components/Userspage';
+import Adminabsence from '../components/AdminAbsence';
 
 
 const sidebarConfig = {
@@ -79,16 +82,6 @@ const sidebarConfig = {
     path: '/reports',
     iconOutline: icons.IoBarChartOutline,
     iconSolid: icons.IoBarChart,
-    roles: [roles.ADMIN, roles.ATTACHEE, roles.HR, roles.INTERN, roles.SUPERVISOR]
-  },
-
-
-  notifications: {
-    id: 'notifications',
-    name: 'Notifications',
-    path: '/notifications',
-    iconOutline: icons.IoNotificationsOutline,
-    iconSolid: icons.IoNotifications,
     roles: [roles.ADMIN, roles.ATTACHEE, roles.HR, roles.INTERN, roles.SUPERVISOR]
   },
 
@@ -225,7 +218,8 @@ function AdminDash() {
         </div>
 
         <div className='main-content'>
-
+          <Userspage/>
+          
         </div>
 
        
