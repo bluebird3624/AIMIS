@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
      
-      const result =  authService.login;
+      const result = await authService.login(credentials);
      
       const token = result.accessToken;
       const user = result.user;

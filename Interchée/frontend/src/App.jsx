@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import { AuthProvider } from './services/authContext'
 import {Navigate, Router, Routes, Route, BrowserRouter, useLocation} from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion';
+import Calendar from './components/Calendar'
 import { roles } from './utils/constants'
 
 
@@ -39,7 +40,8 @@ function App() {
             {/**protected routes general access */}
             <Route element={<ProtectedRoute/>}>
               {/* <Route path= '/profile' element={<Profile/>}/> */}
-              {/* <Route path="/calendar" element={<Calendar/>}/> */}
+              {/* <Route path="/calendar" element={<Calendar/>}/> */}\
+              <Route path='/Calendar' element={<AnimatedRoute><Calendar/></AnimatedRoute>}/>
             </Route>
 
             {/**protected admin routes */}

@@ -10,7 +10,24 @@ import Group from '../assets/Group.svg';
 import Homebutton from '../components/homepage';
 import Userspage from '../components/Userspage';
 import Adminabsence from '../components/AdminAbsence';
+import Calendar from '../components/Calendar';
 
+
+const componentMap = {
+  
+  adminDashboard: Homebutton,
+  attacheeDashboard: Homebutton,
+  internDashboard: Homebutton,
+  supervisorDashboard: Homebutton,
+  
+
+  users: Userspage,
+  absence: Adminabsence,
+  calendar: Calendar,
+  
+
+  default: Homebutton
+};
 
 const sidebarConfig = {
   adminDashboard: {
@@ -19,7 +36,7 @@ const sidebarConfig = {
     path: '/admin-dash',
     iconOutline: icons.IoHomeOutline,
     iconSolid: icons.IoHome,
-    roles: [roles.ADMIN, roles.HR]
+    roles: [roles.ADMIN]
   },
 
 
@@ -138,6 +155,16 @@ const SidebarItem = ({ item, isActive, onClick }) => {
   );
 };
 
+const MainContentRenderer = ({ activeItemId }) => {
+  const ComponentToRender = componentMap[activeItemId] || componentMap.default;
+  
+  return (
+    <div className="main-content">
+      <ComponentToRender />
+    </div>
+  );
+};
+
 
 function AdminDash() {
   const [activeItem, setActiveItem] = useState('dashboard');
@@ -168,7 +195,7 @@ function AdminDash() {
 
   const handleItemClick = (item) => {
     setActiveItem(item.id);
-    navigate(item.path);
+    
   };
 
   return (
@@ -217,10 +244,7 @@ function AdminDash() {
           </div>
         </div>
 
-        <div className='main-content'>
-          <Userspage/>
-          
-        </div>
+        <MainContentRenderer activeItemId={activeItem}/>
 
        
       </div>
