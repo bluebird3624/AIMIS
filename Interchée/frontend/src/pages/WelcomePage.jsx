@@ -16,6 +16,10 @@ function WelcomePage() {
     window.location.href = 'https://self-onboarding.agilebiz.co.ke/home';
   };
 
+  const onboard = () => {
+    navigate('/Onboarding') ;
+  }
+
   return (
   <div className="body-welcome " style={{ backgroundImage : "url('/src/assets/RegistratioPage.png')" } }>
     <div className='welcome-container'>
@@ -26,6 +30,10 @@ function WelcomePage() {
     </div>
  
     <div className='button-container'>
+
+      <button className='enroll-button' onClick={onboard}>
+        Onboard
+    </button>
 
     <button className='enroll-button' onClick={handleClick}>
         Log in

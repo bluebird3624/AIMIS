@@ -1,6 +1,6 @@
 import * as icons from 'react-icons/io5';
 import React, { useState, useEffect } from 'react';
-import '../../Styles/dashboards.css';
+import '../Styles/dashboards.css'
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function Homebutton() {
@@ -93,48 +93,55 @@ function Homebutton() {
           </span>
         </h1>
       </div>
-      <div className="activity-container">
-        <div className="active-tasks">
+      <div className='stats-row'>
+        <div className="stats-container">
           <div className="icon-container">
-            <icons.IoPeopleOutline style={{ marginTop: "7px" }} />
+            <icons.IoPeopleOutline style={{ fontSize: "40px" }} />
           </div>
-          <div className="description-words">Total Students</div>
-          <span className='description-number'>9</span>
+          <div className="content-wrapper">
+            <div className="label">Students</div>
+            <div className="number">9</div>
+          </div>
         </div>
-        <div className="active-tasks">
+        <div className="stats-container">
           <div className="icon-container">
-            <icons.IoCheckmarkCircleOutline style={{ marginTop: "7px" }} />
+            <icons.IoClipboardOutline style={{ fontSize: "40px" }} />
           </div>
-          <div className="description-words">Complete Tasks</div>
-          <span className='description-number'>0</span>
+          <div className="content-wrapper">
+            <div className="label">Active tasks</div>
+            <div className="number">0</div>
+          </div>
         </div>
-        <div className="active-tasks">
+        <div className="stats-container">
           <div className="icon-container">
-            <icons.IoDocumentTextOutline style={{ marginTop: "7px" }} />
+            <icons.IoWalkOutline style={{ fontSize: "40px" }} />
           </div>
-          <div className="description-words">Reviews</div>
-          <span className='description-number'>0</span>
+          <div className="content-wrapper">
+            <div className="label">Absences</div>
+            <div className="number">0</div>
+          </div>
         </div>
-        <div className="active-tasks">
+        <div className="stats-container">
           <div className="icon-container">
-            <icons.IoWalkOutline style={{ marginTop: "7px" }} />
+            <icons.IoBookOutline style={{ fontSize: "40px" }} />
           </div>
-          <div className="description-words">Absences</div>
-          <span className='description-number'>0</span>
+          <div className="content-wrapper">
+            <div className="label">Reviews</div>
+            <div className="number">0</div>
+          </div>
         </div>
       </div>
-      <div className="firstrow-container">
-        <div className='smaller-container'>
-          <h1 style={{ fontFamily: "arial", margin: "5px 0 0 5px" }}>Ongoing Assignments</h1>
-          <p style={{ fontFamily: "arial", color: "#7f7f7f", margin: "5px 0 0 10px" }}>Requiring your attention:</p>
+      <div className='adminlarge-container'>
+        <div className='adminsmall-container'>
+          <h1 className='adminsmall-container-label'> Recent activities</h1>
+
         </div>
-        <div className='smaller-container'>
-          <h1 style={{ fontFamily: "arial", margin: "5px 0 0 5px" }}>Upcoming Reviews</h1>
-          <p style={{ fontFamily: "arial", color: "#7f7f7f", margin: "5px 0 0 10px" }}>Scheduled evaluation sessions:</p>
+        <div className='adminsmall-container'>
+          <h1 className='adminsmall-container-label'> Performance summaries</h1>
+
         </div>
-      </div>
-       <div className="secondrow-container">
-        
+
+
       </div>
     </>
   );

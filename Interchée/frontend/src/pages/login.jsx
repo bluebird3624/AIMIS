@@ -108,6 +108,7 @@ function Login(){
     className="login-button">
       Log In
     </button>
+    <p style={{ fontSize: "20px", fontFamily: "arial"}}>Don't have an account? <a href="/Onboarding"> Sign up</a></p>
     
    
   </div>
