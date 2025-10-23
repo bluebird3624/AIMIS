@@ -10,6 +10,7 @@ import Group from '../assets/Group.svg';
 import Homebutton from '../components/homepage';
 import Userspage from '../components/Userspage';
 import Adminabsence from '../components/AdminAbsence';
+import Calendar from '../components/Calendar';
 
 
 const sidebarConfig = {
@@ -218,7 +219,7 @@ function AdminDash() {
         </div>
 
         <div className='main-content'>
-          <Userspage/>
+          <Calendar/>
           
         </div>
 

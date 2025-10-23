@@ -5,6 +5,7 @@ import AdminDash from './pages/AdminDash'
 //useLocation is for framer-motion package
 import {Navigate, Router, Routes, Route, BrowserRouter, useLocation} from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion';
+import Calendar from './components/Calendar'
 
 
 function AnimatedRoute({ children }) {
@@ -31,7 +32,9 @@ function App() {
           <Route path='/welcome'  element={<WelcomePage/>}/>
           <Route path= '/login' element={<AnimatedRoute><Login/></AnimatedRoute>}/>
           <Route path= '/admin-dash' element={<AnimatedRoute><AdminDash/></AnimatedRoute>}/>
-           <Route path= '/Onboarding' element={<AnimatedRoute><Onboarding/></AnimatedRoute>}/>
+          <Route path= '/Onboarding' element={<AnimatedRoute><Onboarding/></AnimatedRoute>}/>
+          <Route path= '/Calendar' element={<AnimatedRoute><Calendar/></AnimatedRoute>}/>
+
         </Routes>
       </AnimatePresence>
     </BrowserRouter>
