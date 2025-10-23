@@ -1,6 +1,5 @@
 import api from './api';
 
-// Constants for sessionStorage keys
 const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 const USER_DATA_KEY = 'user_data';
@@ -178,7 +177,6 @@ export const logout = async () => {
  * 
  * 
  */
-// Get user data from JWT token
 
 export const decodeJWT = (token) => {
   try {
@@ -229,11 +227,11 @@ export const isAuthenticated = () => {
 
 export const getCurrentUser = () => {
   try {
-    // First try to get user data from sessionStorage (faster)
+   
     const storedUserData = sessionStorage.getItem(USER_DATA_KEY);
     if (storedUserData) {
       const userData = JSON.parse(storedUserData);
-      // Verify token is still valid
+   
       if (isAuthenticated()) {
         return userData;
       }
@@ -357,7 +355,7 @@ const isJWTValid = (token) => {
   try {
     if (!isValidJWTFormat(token)) return false;
     
-    // Check if JWT is expired
+   
     const expiry = getJWTExpiry(token);
     if (expiry && Date.now() >= expiry) {
       return false;
