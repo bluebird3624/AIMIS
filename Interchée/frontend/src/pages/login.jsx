@@ -1,29 +1,31 @@
 import { useState } from "react";
 import '../Styles/login.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { login } from "../services/auth";
 import { motion } from 'framer-motion';
 import  LoginGroup from '../assets/LoginGroup.svg';
+import * as authService from "../services/authContext";
 
 
 
 function Login(){
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const {login} = authService.useAuth();
     
 
     const handleClick = async(event) => {
       event.preventDefault();
       try
         {
-            console.log(event);
+           
           const email = document.getElementById('email').value;
           const password = document.getElementById('password').value;
          
           const response = await login({email, password});
-        // console.log('login page login response: ', response);
-        if(response.accessToken){
-            navigate('/admin-dash');
+        
+        if(response.accessToken || response.token){
+          navigate('/admin-dash')
         }
         else
         {

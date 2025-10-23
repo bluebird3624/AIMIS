@@ -530,7 +530,7 @@
 .sidebar-options.hovered {
   background: #f3f4f6;
   color: #374151;
-  transform: scaleX(1.08) ;
+  transform: scale(1.08)  ;
 }
 
 .sidebar-options.active {
@@ -617,6 +617,7 @@
   width: 80%;
   /* border:rgb(27, 166, 55) solid 5px; */
   overflow-y: auto;
+  overflow-x: hidden;
 
 }
 .greeting-message{
