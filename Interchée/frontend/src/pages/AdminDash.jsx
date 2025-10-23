@@ -132,7 +132,7 @@ const SidebarItem = ({ item, isActive, onClick }) => {
       onClick={() => onClick(item)}
     > 
       {isHovered || isActive? <IconSolid /> : <IconOutline />}
-      {item.name}
+      <span>{item.name}</span>
     </button>
    
   );

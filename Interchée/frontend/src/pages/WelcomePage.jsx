@@ -9,7 +9,7 @@ function WelcomePage() {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate('/login') ;
+    navigate('/Onboarding') ;
   }
 
   const redirect = () => {

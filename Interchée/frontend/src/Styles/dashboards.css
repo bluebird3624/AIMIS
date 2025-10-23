@@ -474,6 +474,7 @@
   padding: 8px 20px;
 }
 
+
 /* Content Area */
 .dashboard-content {
   flex: 1;
@@ -541,7 +542,7 @@
 
 .sidebar-item-text {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 100px;
 }
 
 /* Search Container Updates */
