@@ -5,5 +5,5 @@ export const roles =
     ATTACHEE: 'attachee',
     SUPERVISOR: 'supervisor',
     INTERN: 'intern',
-    HR: 'hr'
 }
+
