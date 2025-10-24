@@ -1,4 +1,6 @@
-﻿namespace Interchée.Services.Email
+﻿using Interchée.Services.Email.Entity;
+
+namespace Interchée.Services.Email
 {
     /// <summary>
     /// Development-only email sender: logs the email body.

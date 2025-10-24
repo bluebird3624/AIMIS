@@ -1,11 +1,12 @@
-﻿using Interchée.Auth;
-using Interchée.Config; // where Roles.Admin lives
+﻿using Interchée.Config; // where Roles.Admin lives
 using Interchée.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace InternAttache.Api.Auth
+namespace Interchée.Auth 
+{ 
+
     /// <summary>
     /// Checks if the current user holds RoleName in the provided departmentId (resource).
     /// Usage: await _auth.AuthorizeAsync(User, departmentId, new DepartmentRoleRequirement("Instructor"))

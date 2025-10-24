@@ -1,4 +1,4 @@
-﻿namespace Interchée.Services.Email
+﻿namespace Interchée.Services.Email.Entity
 {
     public interface IEmailSender
     {

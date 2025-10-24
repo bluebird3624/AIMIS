@@ -1,7 +1,7 @@
 ﻿using Interchée.Auth;
 using Interchée.Contracts.Auth;
 using Interchée.Entities;
-using Interchée.Services.Email;
+using Interchée.Services.Email.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -186,7 +186,7 @@ namespace Interchée.Controllers
                 var token = await _users.GeneratePasswordResetTokenAsync(user);
 
                 // URL-safe encode token for link
-                var encodedToken = WebUtility.UrlEncode(token);
+                var encodedToken = WebUtility.UrlEncode(token);//WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(rawToken));
 
                 // In a real app, craft a proper frontend URL
                 var resetLink = $"https://your-frontend/reset-password?email={WebUtility.UrlEncode(user.Email!)}&token={encodedToken}";
