@@ -253,15 +253,14 @@ export const setToken = (token) => {
       return false;
     }
 
-    // Validate JWT token format
+
     if (!isValidJWTFormat(token)) {
       throw new Error('Invalid JWT token format');
     }
 
-    // Store token in sessionStorage (cleared when browser/tab closes)
+    
     sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
 
-    // Store token metadata for debugging/tracking
     const tokenData = {
       storedAt: Date.now(),
       expiresAt: getJWTExpiry(token),
