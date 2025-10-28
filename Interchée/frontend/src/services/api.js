@@ -6,7 +6,7 @@ const env = import.meta.env.VITE_ENV;
 
 const BACKEND_API_URL = import.meta.env.VITE_APP_BACKEND_API_URL;
 const api = axios.create({
-    baseURL: BACKEND_API_URL,
+    baseURL: "http://172.20.2.140:5007/",
     timeout: 15000,
     headers: {
         'Accept':'application/json',
@@ -44,5 +44,34 @@ api.interceptors.response.use(
 );
 
 
+export const authAPI = {
+    login: (email, password) => 
+        api.post('/auth/login', {email, password}),
+}
+
+export const onboardAPI = {
+
+     createOnboardingRequest: (data) => 
+        api.post('/onboarding-requests', data),
+     approveOnboardingRequest: (id, data) => 
+        api.post(`/onboarding-requests/${id}/approve`, data),
+     getOnboardingRequests: () =>
+        api.get('/onboarding-requests'),
+
+}
+
+export const departmentAPI = {
+    getDepartments: () =>
+        api.get('/departments'),
+}
+
+export const usersAPI = {
+    getUsers: () => 
+        api.get('/users'),
+    createUser: (data) =>
+        api.post('/users', data),
+    assignDepartment: (data) =>
+        api.post('/department-roles/assign', data),
+}
 
 export default api;

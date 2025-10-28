@@ -11,7 +11,8 @@ import Homebutton from '../components/homepage';
 import Userspage from '../components/Userspage';
 import Adminabsence from '../components/AdminAbsence';
 import Calendar from '../components/Calendar';
-import Adminreports from '../components/Adminreports';
+import { getCurrentUser } from '../services/auth';
+
 
 const componentMap = {
   
@@ -38,41 +39,10 @@ const sidebarConfig = {
     path: '/admin-dash',
     iconOutline: icons.IoHomeOutline,
     iconSolid: icons.IoHome,
-    roles: [roles.ADMIN]
+    roles: [roles.ADMIN, roles.ATTACHEE, roles.INTERN, roles.SUPERVISOR]
   },
 
 
-  attacheeDashboard: {
-    id: 'attacheeDashboard',
-    name: 'Home',
-    path: '/attachee-dash',
-    iconOutline: icons.IoHomeOutline,
-    iconSolid: icons.IoHome,
-    roles: [roles.ATTACHEE]
-  },
-
-
-  internDashboard: {
-    id: 'internDashboard',
-    name: 'Home',
-    path: '/intern-dash',
-    iconOutline: icons.IoHomeOutline,
-    iconSolid: icons.IoHome,
-    roles: [roles.INTERN]
-  },
-
-
-  supervisorDashboard: {
-    id: 'supervisorDashboard',
-    name: 'Home',
-    path: '/supervisor-dash',
-    iconOutline: icons.IoHomeOutline,
-    iconSolid: icons.IoHome,
-    roles: [roles.SUPERVISOR]
-  },
-
-
-  
   users: {
     id: 'users',
     name: 'Users',
@@ -118,10 +88,11 @@ const sidebarConfig = {
 
 const getUserRole = () => {
   try {
-    const userData = sessionStorage.getItem('user_data');
+    const userData = getCurrentUser();
+   
     if (userData) {
-      const user = JSON.parse(userData);
-      return user.role || 'invalid'; 
+      
+      return userData.role || 'invalid'; 
     }
     return 'invalid';
   } catch (error) {
@@ -133,9 +104,11 @@ const getUserRole = () => {
 
 
 const getFilteredSidebarItems = (userRole) => {
-  return Object.values(sidebarConfig).filter(item => 
+  const filteredItems = Object.values(sidebarConfig).filter(item =>
     item.roles.includes(userRole)
   );
+ 
+ return filteredItems; 
 };
 
 const SidebarItem = ({ item, isActive, onClick }) => {
@@ -210,27 +183,26 @@ function AdminDash() {
     >
       
     <div className="dashboard-layout">
-      {/* Header Section */}
+    
       <div className="dashboard-header">
-        {/* Logo Section */}
+   
          <div className="header-logo">
           <img src={Group} alt="Company Logo" className="logo-image" />
         </div>
 
-        {/* Search Section */}
         <div className="header-search">
           <SearchBar sidebarItems={sidebarItems} userRole={userRole} />
         </div>
 
-        {/* User Profile Section */}
+   
         <div className="header-profile">
           <UserProfile />
         </div>
       </div>
 
-      {/* Main Content Area */}
+  
       <div className="dashboard-main">
-        {/* Sidebar Navigation */}
+
          
         <div className="dashboard-sidebar">
          

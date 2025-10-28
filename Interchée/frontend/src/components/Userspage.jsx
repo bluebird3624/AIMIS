@@ -1,13 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { departmentAPI, onboardAPI, usersAPI } from '../services/api';
 
 function Userspage() {
-  // Sample initial users data
-  const [users, setUsers] = useState([
-    { id: 1, name: 'john', dept: 'infra', role: 'Attaché', email: '@comjohnpany.com' },
-    { id: 2, name: ' james', dept: 'bespoke', role: 'Intern', email: 'jam@company.com' },
-    { id: 3, name: 'lisa', dept: 'Sales', role: 'Intern', email: 'liz@company.com' },
-    { id: 4, name: 'alex', dept: '', role: 'Intern', email: 'alex@company.com' } // Unverified user
-  ]);
+  
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -15,6 +10,9 @@ function Userspage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [onboardingRequests, setOnboardingRequests] = useState(null);
+  const [departments, setDepartments] = useState(null);
+  const [users, setUsers] = useState(null);
   const [newUser, setNewUser] = useState({
     name: '',
     dept: '',
@@ -22,18 +20,11 @@ function Userspage() {
     email: ''
   });
   const [selectedDept, setSelectedDept] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
 
-  // Department and Role options
-  const departments = [
-    { value: '', label: 'Select Department' },
-    { value: 'bespoke', label: 'Bespoke Solutions' },
-    { value: 'corp', label: 'Corporate Services' },
-    { value: 'microsoft', label: 'Microsoft Business' },
-    { value: 'infra', label: 'Infrastructure' },
-    { value: 'oracle', label: 'Oracle Business' },
-    { value: 'sap', label: 'SAP Business' },
-    { value: 'hr', label: 'Human Resource' }
-  ];
+
+  
+ 
 
   const roles = [
     { value: '', label: 'Select Role' },
@@ -42,7 +33,26 @@ function Userspage() {
     { value: 'Supervisor', label: 'Supervisor' }
   ];
 
-  // Create User Functionality
+
+  useEffect(() => {
+    fetchUsers();
+    fetchDepartments();
+   
+  },[]);
+
+  const fetchDepartments = async () =>{
+    const departments = await departmentAPI.getDepartments();
+    setDepartments(departments.data);
+  }
+
+  const fetchUsers = async () => {
+    const verifiedUsers = await usersAPI.getUsers();
+    setUsers(verifiedUsers.data);
+    const unverifiedUsers = await onboardAPI.getOnboardingRequests();
+    setOnboardingRequests(unverifiedUsers.data);
+
+  };
+ 
   const handleCreateUser = () => {
     if (newUser.name && newUser.dept && newUser.role && newUser.email) {
       const user = {
@@ -57,14 +67,34 @@ function Userspage() {
     }
   };
 
-  // Approve User Functionality
-  const handleApproveUser = () => {
+ 
+  const handleApproveUser = async () => {
     if (selectedDept) {
       const updatedUser = {
         ...currentUser,
-        dept: selectedDept
+        department: selectedDept
       };
+    const roleName = selectedRole;
+    const response  =await onboardAPI.approveOnboardingRequest(currentUser.id, {
+      roleName,
+      userName: currentUser.proposedUserName,
+      tempPassword: 'User@123',
+    });
+    console.log('approve onboarding response: ', response);
+    const userEmail = response.data.email;
+    const users = await usersAPI.getUsers();
+    const usersData = users.data;
+    const specificUser = usersData.find(user => user.email === userEmail);
+    const userId = specificUser.id;
+    
+    const assignResponse = await usersAPI.assignDepartment({
+      userId,
+      departmentId: parseInt(selectedDept, 10),
+      roleName,
       
+    }) ;
+    console.log('assign dept response: ', assignResponse);
+   
       setUsers(prevUsers => prevUsers.map(user => 
         user.id === currentUser.id ? updatedUser : user
       ));
@@ -79,7 +109,7 @@ function Userspage() {
     }
   };
 
-  // Delete User Functionality with Modal
+  
   const handleDeleteClick = (user) => {
     setUserToDelete(user);
     setIsDeleteModalOpen(true);
@@ -96,15 +126,15 @@ function Userspage() {
     setUserToDelete(null);
   };
 
-  // Edit User Functionality
+  
   const handleEditUser = (user) => {
     setCurrentUser(user);
     setIsEditModalOpen(true);
   };
 
-  // Assign dept functionality
-  const handleAssignDept = (user) => {
-    setCurrentUser(user);
+ 
+  const handleAssignDept = (onboardingRequest) => {
+    setCurrentUser(onboardingRequest);
     setisAssignDeptOpen(true);
   }
 
@@ -122,7 +152,7 @@ function Userspage() {
 
   return (
     <div className="user-management">
-      {/* Header with Create Button */}
+    
       <div className="header">
         <h1>User Management</h1>
         <button 
@@ -133,7 +163,7 @@ function Userspage() {
         </button>
       </div>
 
-      {/* Verified Users Table */}
+      
       <h2 style={{ fontFamily: "arial"}}>Verified Users</h2>
       <div className="table-container">
         <table className="users-table">
@@ -147,11 +177,11 @@ function Userspage() {
             </tr>
           </thead>
           <tbody>
-            {users.filter(user => user.dept && user.dept !== '').map(user => (
+            {users?.map(user => (
               <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.dept}</td>
-                <td>{user.role}</td>
+                <td>{user.userName}</td>
+                <td>{user.departmentName || ''}</td>
+                <td>{user.role || ''}</td>
                 <td>{user.email}</td>
                 <td className="actions">
                   <button 
@@ -173,7 +203,7 @@ function Userspage() {
         </table>
       </div>
 
-      {/* Unverified Users Table */}
+      
       <h2 style={{ fontFamily: "arial"}}>Unverified Users</h2>
       <div className="table-container">
         <table className="users-table">
@@ -186,17 +216,17 @@ function Userspage() {
             </tr>
           </thead>
           <tbody>
-            {users.filter(user => !user.dept || user.dept === '').map(user => (
-              <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.role}</td>
-                <td>{user.email}</td>
+            {onboardingRequests?.map(onboardingRequest => (
+              <tr key={onboardingRequest.id}>
+                <td>{onboardingRequest.proposedUserName}</td>
+                <td>{onboardingRequest.role || ''}</td>
+                <td>{onboardingRequest.email}</td>
                 <td className="actions">
                   <button 
                     className="assign-dept-button"
-                    onClick={() => handleAssignDept(user)}
+                    onClick={() => handleAssignDept(onboardingRequest)}
                   >
-                    Assign Dept
+                   Assign Dept
                   </button>
                 </td>
               </tr>
@@ -205,7 +235,7 @@ function Userspage() {
         </table>
       </div>
 
-      {/* Create User Modal */}
+    
       {isCreateModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
@@ -266,11 +296,11 @@ function Userspage() {
         </div>
       )}
 
-      {/* Assign Department Modal */}
+     
       {isAssignDeptOpen && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Assign User Department</h2>
+            <h2>Assign {currentUser.firstName + ' ' + currentUser.lastName} a department</h2>
             <div className="form-group">
               <label>Department:</label>
               <select
@@ -278,8 +308,20 @@ function Userspage() {
                 onChange={(e) => setSelectedDept(e.target.value)}
               >
                 {departments.map(dept => (
-                  <option key={dept.value} value={dept.value}>
-                    {dept.label}
+                  <option key={dept.id} value={dept.id}>
+                    {dept.name}
+                  </option>
+                ))}
+              </select>
+
+              <label>Role:</label>
+              <select
+                value={selectedRole}
+                onChange={(e) => setSelectedRole(e.target.value)}
+              >
+                {roles.map(role => (
+                  <option key={role.value} value={role.value}>
+                    {role.label}
                   </option>
                 ))}
               </select>

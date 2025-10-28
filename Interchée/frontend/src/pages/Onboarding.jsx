@@ -2,19 +2,22 @@ import { useState } from "react";
 import '../Styles/login.css';
 import { useNavigate } from "react-router-dom";
 import * as icons from 'react-icons/io5';
+import * as auth from '../services/auth';
+import { authAPI, departmentAPI, onboardAPI } from "../services/api";
 
 function OnboardingForm() {
   const [formData, setFormData] = useState({
     firstName: '',
     middleName: '',
     lastName: '',
-    department: '',
     role: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
 
+ 
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -58,37 +61,35 @@ function OnboardingForm() {
 
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
-    if (!formData.department) newErrors.department = 'Department is required';
-    if (!formData.role) newErrors.role = 'Role is required';
+    
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } 
     else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
+    
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
     
     if (Object.keys(newErrors).length === 0) {
-      // Form is valid, submit data
-      console.log('Form submitted:', formData);
-      alert('Account created successfully!');
-      // Here you would typically send data to your backend
+      
+      const response =  await onboardAPI.createOnboardingRequest({
+        email: formData.email,
+        firstName: formData.firstName, 
+        lastName: formData.lastName,
+        middleName: formData.middleName,
+        departmentId: 1
+        }
+      );
+      if(response.status == 200){
+        navigate('/login');
+
+      }          
     } else {
       setErrors(newErrors);
     }
@@ -146,23 +147,7 @@ function OnboardingForm() {
             <div className="form-row">
               
               
-              <div className="form-group">
-                <label htmlFor="role">Role *</label>
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className={errors.role ? 'error' : ''}
-                >
-                  {roles.map(role => (
-                    <option key={role.value} value={role.value}>
-                      {role.label}
-                    </option>
-                  ))}
-                </select>
-                {errors.role && <span className="error-message">{errors.role}</span>}
-              </div>
+             
               
               <div className="form-group">
                 <label htmlFor="email">Email *</label>
@@ -179,54 +164,6 @@ function OnboardingForm() {
               </div>
             </div>
 
-            {/* Row 3: Password Fields */}
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="password">Password *</label>
-                <div className="password-input-container">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={errors.password ? 'error' : ''}
-                    placeholder="Enter password"
-                  />
-                  <button 
-                    type="button" 
-                    className="password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <icons.IoEyeOutline/> : <icons.IoEyeOffOutline/>}
-                  </button>
-                </div>
-                {errors.password && <span className="error-message">{errors.password}</span>}
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="confirmPassword">Confirm Password *</label>
-                <div className="password-input-container">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className={errors.confirmPassword ? 'error' : ''}
-                    placeholder="Confirm your password"
-                  />
-                  <button 
-                    type="button" 
-                    className="password-toggle"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? <icons.IoEyeOutline/> : <icons.IoEyeOffOutline/>}
-                  </button>
-                </div>
-                {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
-              </div>
-            </div>
 
             <button type="submit" className="submit-btn">
               Submit

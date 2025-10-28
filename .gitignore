@@ -4,7 +4,9 @@
 
 /.vs
 /Interchée/.vs/Interchée
+.vs/
 
+<<<<<<< HEAD
 
 .fake
 workflows/
@@ -70,3 +72,22 @@ dist-ssr
 
 
 
+=======
+bin/
+
+obj/
+
+*.user
+
+**/project.assets.json
+
+**/*.cache
+
+**/*.dgspec.json
+
+**/*.nuget.g.props
+
+**/*.nuget.g.targets
+ 
+/Interchée/backend/Interchée
+>>>>>>> 5cf6103cdc6f6a81bb136b762b64591356d14900

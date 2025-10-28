@@ -40,14 +40,15 @@ function App() {
             {/**protected routes general access */}
             <Route element={<ProtectedRoute/>}>
               {/* <Route path= '/profile' element={<Profile/>}/> */}
-              {/* <Route path="/calendar" element={<Calendar/>}/> */}\
-         
+              {/* <Route path="/calendar" element={<Calendar/>}/> */}
+              <Route path="/admin-dash" element={<AdminDash/>}/>
+              <Route path='/Calendar' element={<AnimatedRoute><Calendar/></AnimatedRoute>}/>
             </Route>
 
             {/**protected admin routes */}
             <Route element={<ProtectedRoute allowedRoles={[roles.ADMIN]}/>}>
 
-              <Route path="/admin-dash" element={<AdminDash/>}/>
+              
               {/* <Route path="/users" element={<Users/>}/>
               <Route path="/absence-admin" element={<AdminAbsence/>}/> */}
              

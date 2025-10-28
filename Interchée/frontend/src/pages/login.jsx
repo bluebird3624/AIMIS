@@ -1,7 +1,6 @@
 import { useState } from "react";
 import '../Styles/login.css';
 import { useNavigate, Navigate } from "react-router-dom";
-import { login } from "../services/auth";
 import { motion } from 'framer-motion';
 import LoginGroup from '../assets/LoginGroup.svg';
 import * as authService from "../services/authContext";
@@ -11,53 +10,23 @@ function Login() {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
-    const { login } = authService.useAuth();
+    const {login} = authService.useAuth();
 
-    // Email validation regex
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    const validateLoginForm = (email, password) => {
-        const newErrors = {};
-
-        // Email validation
-        if (!email) {
-            newErrors.email = "Email is required";
-        } else if (!emailRegex.test(email)) {
-            newErrors.email = "Please enter a valid email address";
-        }
-
-        // Password validation
-        if (!password) {
-            newErrors.password = "Password is required";
-        }
-
-        return newErrors;
-    };
-
-    const validateForgotPasswordForm = (email) => {
-        const newErrors = {};
-
-        if (!email) {
-            newErrors.forgotEmail = "Email is required";
-        } else if (!emailRegex.test(email)) {
-            newErrors.forgotEmail = "Please enter a valid email address";
-        }
-
-        return newErrors;
-    };
-
-    const handleLoginClick = async (event) => {
-        event.preventDefault();
+    
+   
+    const handleClick = async(event) => {
+      event.preventDefault();
+      try
+        {
+           
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+         
+          const response = await login({email, password});
         
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        
-        // Validate form
-        const formErrors = validateLoginForm(email, password);
-        
-        if (Object.keys(formErrors).length > 0) {
-            setErrors(formErrors);
-            return;
+        if(response.accessToken || response.token){
+          
+          navigate('/admin-dash');
         }
 
         // Clear errors if validation passes
