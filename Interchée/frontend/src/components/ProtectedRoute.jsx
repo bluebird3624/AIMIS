@@ -13,7 +13,7 @@ const ProtectedRoute = ({ allowedRoles = null, children = null }) => {
   }
 
   if (allowedRoles && !hasAnyRole(allowedRoles)) {
-
+    console.log('rerouting to unauthorized, ', allowedRoles + ' ' + isAuthenticated);
     navigate('/unauthorized');
     
   }

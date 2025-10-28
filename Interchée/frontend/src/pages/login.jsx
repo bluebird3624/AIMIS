@@ -1,7 +1,6 @@
 import { useState } from "react";
 import '../Styles/login.css';
 import { useNavigate, Navigate } from "react-router-dom";
-import { login } from "../services/auth";
 import { motion } from 'framer-motion';
 import  LoginGroup from '../assets/LoginGroup.svg';
 import * as authService from "../services/authContext";
@@ -12,8 +11,9 @@ function Login(){
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const {login} = authService.useAuth();
-    
 
+    
+   
     const handleClick = async(event) => {
       event.preventDefault();
       try
@@ -25,7 +25,8 @@ function Login(){
           const response = await login({email, password});
         
         if(response.accessToken || response.token){
-          navigate('/admin-dash')
+          
+          navigate('/admin-dash');
         }
         else
         {

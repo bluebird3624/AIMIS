@@ -1,4 +1,5 @@
-import api from './api';
+import api, {authAPI} from './api';
+
 
 const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
@@ -54,13 +55,17 @@ const constructUserData = (token) => {
         userId: rawPayload.sub || rawPayload[NAME_IDENTIFIER_CLAIM],
         email: rawPayload.email || rawPayload[EMAIL_CLAIM],
         username: rawPayload[NAME_CLAIM],
-        role: 'admin' || rawPayload[ROLE_CLAIM] ,
+        role:    rawPayload[ROLE_CLAIM] ,
         
         expiryTime: rawPayload.exp ? rawPayload.exp * 1000 : null,
     };
+    console.log ('userData being stored: ', userData);
 
     return userData;
 };
+
+
+
 /**
  * 
  * 
@@ -72,24 +77,20 @@ const constructUserData = (token) => {
 */
 export const login = async (credentials) => {
   try {
-    // console.log(`login route called: ${credentials.email} + ${credentials.password}`);
-    // Validate input
+    
     if (!credentials.email || !credentials.password) {
       throw new Error('Email and password are required');
     }
     
-    // Make API call to .NET backend
-    const response = await api.post('/auth/login', {
-      email: credentials.email,
-      password: credentials.password
-    });
+    const email = credentials.email;
+    const password = credentials.password;
+    const response = await authAPI.login( email, password );
 
     console.log('login respose', response);
-    // Extract data from .NET response
+ 
     const { accessToken, refreshToken, expiresAtUtc } = response.data;
     const userData = constructUserData(accessToken);
 
-    // Store tokens using sessionStorage
     setToken(accessToken);
     if (refreshToken) {
       setRefreshToken(refreshToken);
@@ -98,7 +99,6 @@ export const login = async (credentials) => {
     
     sessionStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
 
-    // Return user data for Redux state
     return {
       user: userData,
       accessToken,
@@ -106,17 +106,22 @@ export const login = async (credentials) => {
     };
 
   } catch (error) {
-    // Transform and throw error for Redux to handle
+  
     throw transformAuthError(error);
   }
 };
 
-export const register = async (credentials) => 
+export const register = async (formData) => 
 {
    try 
    {
 
-    const {firstName, lastName, email, password, confirmPassword} = credentials;
+    const {firstName, lastName, middleName,  email, password} = formData;
+    const userName = firstName+lastName;
+    formData.userName= userName;
+    const response = await authAPI.register(formData);
+    console.log('onboarding response: ', response);
+
     
 
    }
