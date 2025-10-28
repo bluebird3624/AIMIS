@@ -1,9 +1,9 @@
 export const roles = 
 
 {
-    ADMIN: 'admin',
-    ATTACHEE: 'attachee',
-    SUPERVISOR: 'supervisor',
-    INTERN: 'intern',
+    ADMIN: 'Admin',
+    ATTACHEE: 'Attache',
+    SUPERVISOR: 'Supervisor',
+    INTERN: 'Intern',
 }
 

@@ -1,0 +1,9 @@
+.vs/
+bin/
+obj/
+*.user
+**/*.cache
+**/project.assets.json
+**/*.dgspec.json
+**/*.nuget.g.props
+**/*.nuget.g.targets
