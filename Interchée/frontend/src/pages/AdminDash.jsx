@@ -11,7 +11,7 @@ import Homebutton from '../components/homepage';
 import Userspage from '../components/Userspage';
 import Adminabsence from '../components/AdminAbsence';
 import Calendar from '../components/Calendar';
-
+import Adminreports from '../components/Adminreports';
 
 const componentMap = {
   
@@ -24,6 +24,8 @@ const componentMap = {
   users: Userspage,
   absence: Adminabsence,
   calendar: Calendar,
+  reports: Adminreports,
+
   
 
   default: Homebutton

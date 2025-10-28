@@ -33,7 +33,8 @@ function OnboardingForm() {
   const roles = [
     { value: '', label: 'Select Role' },
     { value: 'intern', label: 'Intern' },
-    { value: 'Attache', label: 'Attaché' }
+    { value: 'Attache', label: 'Attaché' },
+    { value: 'Supervisor', label: ' Supervisor'}
   ];
 
   const handleChange = (e) => {
@@ -143,23 +144,7 @@ function OnboardingForm() {
 
             {/* Row 2: Department, Role, Email */}
             <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="department">Department *</label>
-                <select
-                  id="department"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                  className={errors.department ? 'error' : ''}
-                >
-                  {departments.map(dept => (
-                    <option key={dept.value} value={dept.value}>
-                      {dept.label}
-                    </option>
-                  ))}
-                </select>
-                {errors.department && <span className="error-message">{errors.department}</span>}
-              </div>
+              
               
               <div className="form-group">
                 <label htmlFor="role">Role *</label>

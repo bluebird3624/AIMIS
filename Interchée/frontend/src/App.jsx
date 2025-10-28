@@ -41,7 +41,7 @@ function App() {
             <Route element={<ProtectedRoute/>}>
               {/* <Route path= '/profile' element={<Profile/>}/> */}
               {/* <Route path="/calendar" element={<Calendar/>}/> */}\
-              <Route path='/Calendar' element={<AnimatedRoute><Calendar/></AnimatedRoute>}/>
+         
             </Route>
 
             {/**protected admin routes */}

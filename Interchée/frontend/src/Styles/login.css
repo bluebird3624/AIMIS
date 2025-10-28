@@ -111,7 +111,7 @@
 
 .submit-btn {
   width: 300px;
-  background: #093343;
+  background: #136383;
   color: white;
   border: none;
   padding: 15px;
@@ -127,6 +127,7 @@
 .submit-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  background: #093343;
 }
 
 .submit-btn:active {
@@ -213,7 +214,8 @@
 }
 .login-form{
   background-color: rgba(180, 180, 180, 0.7);
-  height: 410px;
+  min-height: 410px;
+  height: fit-content;
   width: 500px;
   margin-left: 220px;
   margin-top: 150px;
@@ -344,4 +346,43 @@
 
 .login-button:active {
   transform: translateY(0);
+}
+/* Error Message Styles */
+.error-message {
+    color: #d32f2f;
+    font-size: 14px;
+    margin-top: 5px;
+    font-family: Arial, sans-serif;
+    padding: 5px 0;
+}
+
+.general-error {
+    background-color: #ffebee;
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 4px solid #d32f2f;
+    margin-bottom: 15px;
+}
+
+/* Error state for input fields */
+.form-input.error {
+    border-color: #d32f2f;
+    background-color: #ffebee;
+}
+
+.form-input.error:focus {
+    border-color: #d32f2f;
+    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
+}
+
+/* Disabled button state */
+.login-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.login-button:disabled:hover {
+    background-color: #cccccc;
+    transform: none;
 }

@@ -9,11 +9,12 @@
   padding: 24px;
   min-width: 700px;
   width: fit-content;
+  min-height: 600px;
+  height: fit-content;
   margin: 0 auto;
   border-radius: 15px;
   background: #ffffff;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  display: flex;
 }
 
 /* Header Section */
@@ -21,7 +22,7 @@
   text-align: center;
   margin-bottom: 16px;
   padding-bottom: 16px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid #3a007c;
 }
 
 /* Month and Year Text */
@@ -43,21 +44,13 @@
 
 /* Calendar Main Component */
 .calendar-main {
-  width: 500px;
   background-color: red;
+  overflow-y: auto;
+  
     
 }
 
-/* Optional: Customize the DateCalendar component further */
-.calendar-main .MuiPickersDay-root {
-  border-radius: 8px;
-  transition: all 0.2s ease-in-out;
-}
 
-.calendar-main .MuiPickersDay-root:hover {
-  background-color: rgba(25, 118, 210, 0.1);
-  transform: scale(1.05);
-}
 
 .calendar-main .MuiPickersDay-root.Mui-selected {
   background-color: #1976d2;
@@ -67,3 +60,4 @@
 .calendar-main .MuiPickersDay-root.Mui-selected:hover {
   background-color: #1565c0;
 }
+
