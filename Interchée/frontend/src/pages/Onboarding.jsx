@@ -36,7 +36,8 @@ function OnboardingForm() {
   const roles = [
     { value: '', label: 'Select Role' },
     { value: 'intern', label: 'Intern' },
-    { value: 'Attache', label: 'Attaché' }
+    { value: 'Attache', label: 'Attaché' },
+    { value: 'Supervisor', label: ' Supervisor'}
   ];
 
   const handleChange = (e) => {

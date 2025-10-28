@@ -25,6 +25,8 @@ const componentMap = {
   users: Userspage,
   absence: Adminabsence,
   calendar: Calendar,
+  reports: Adminreports,
+
   
 
   default: Homebutton
