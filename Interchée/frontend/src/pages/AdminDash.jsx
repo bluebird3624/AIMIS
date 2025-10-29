@@ -11,24 +11,19 @@ import Homebutton from '../components/homepage';
 import Userspage from '../components/Userspage';
 import Adminabsence from '../components/AdminAbsence';
 import Calendar from '../components/Calendar';
+import Adminreports from '../components/Adminreports'
 import { getCurrentUser } from '../services/auth';
+import SupervisorReports from '../components/SupervisorReports';
 
 
 const componentMap = {
   
   adminDashboard: Homebutton,
-  attacheeDashboard: Homebutton,
-  internDashboard: Homebutton,
-  supervisorDashboard: Homebutton,
-  
-
   users: Userspage,
-  absence: Adminabsence,
+  adminAbsence: Adminabsence,
   calendar: Calendar,
   reports: Adminreports,
-
-  
-
+  supervisorReports: SupervisorReports,
   default: Homebutton
 };
 
@@ -54,8 +49,8 @@ const sidebarConfig = {
 
 
 
-  absence: {
-    id: 'absence',
+  adminAbsence: {
+    id: 'adminAbsence',
     name: 'Absence',
     path: '/absence',
     iconOutline: icons.IoWalkOutline,
@@ -71,7 +66,7 @@ const sidebarConfig = {
     path: '/reports',
     iconOutline: icons.IoBarChartOutline,
     iconSolid: icons.IoBarChart,
-    roles: [roles.ADMIN, roles.ATTACHEE, roles.HR, roles.INTERN, roles.SUPERVISOR]
+    roles: [roles.ADMIN]
   },
 
   calendar: {
@@ -82,7 +77,19 @@ const sidebarConfig = {
     iconSolid: icons.IoCalendar,
     roles: [roles.ADMIN, roles.ATTACHEE, roles.HR, roles.INTERN, roles.SUPERVISOR]
 
-  }
+  },
+
+   supervisorReports: {
+    id: 'supervisorReports',
+    name: 'Reports',
+    path: '/supervisorReports',
+    iconOutline: icons.IoBarChartOutline,
+    iconSolid: icons.IoBarChart,
+    roles: [roles.SUPERVISOR]
+
+  },
+
+
 
 };
 
@@ -131,8 +138,10 @@ const SidebarItem = ({ item, isActive, onClick }) => {
 };
 
 const MainContentRenderer = ({ activeItemId }) => {
-  const ComponentToRender = componentMap[activeItemId] || componentMap.default;
+  console.log('active item id: ', activeItemId);
+  const ComponentToRender = componentMap[activeItemId] ;
   
+  console.log('compojnent to render: ', componentMap[activeItemId] );
   return (
     <div className="main-content">
       <ComponentToRender />
@@ -142,7 +151,7 @@ const MainContentRenderer = ({ activeItemId }) => {
 
 
 function AdminDash() {
-  const [activeItem, setActiveItem] = useState('dashboard');
+  const [activeItem, setActiveItem] = useState('adminDashboard');
   const [sidebarItems, setSidebarItems] = useState([]);
   const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
@@ -157,20 +166,11 @@ function AdminDash() {
   }, []);
 
  
-  useEffect(() => {
-    const currentItem = Object.values(sidebarConfig).find(
-      item => item.path === location.pathname
-    );
   
-    if (currentItem) {
-      setActiveItem(currentItem.id);
-    }
-  }, [location.pathname]);
-
 
   const handleItemClick = (item) => {
+    console.log('item clicked: ', item);
     setActiveItem(item.id);
-    
   };
 
   return (

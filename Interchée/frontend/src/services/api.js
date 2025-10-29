@@ -2,11 +2,11 @@ import axios from 'axios';
 
 const env = import.meta.env.VITE_ENV;
 
-
+4
 
 const BACKEND_API_URL = import.meta.env.VITE_APP_BACKEND_API_URL;
 const api = axios.create({
-    baseURL: "http://172.20.2.140:5007/",
+    baseURL: "http://localhost:5007/",
     timeout: 15000,
     headers: {
         'Accept':'application/json',
