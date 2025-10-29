@@ -691,9 +691,6 @@
     border-radius: 4px;
 }
 
-.criteria-preview {
-    space-y: 8px;
-}
 
 .preview-criterion {
     display: flex;
