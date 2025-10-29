@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import {logout} from '../services/auth';
 import { IoPersonOutline, IoLogOutOutline, IoChevronDown, IoSettingsOutline, IoLogoFacebook } from 'react-icons/io5';
 
-const UserProfile = () => {
+const UserProfile = ({setActiveItem}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userData, setUserData] = useState(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const profileComponentId = 'profilePage';
 
   // Get user data
   useEffect(() => {
@@ -39,7 +40,7 @@ const UserProfile = () => {
     getUserData();
   }, []);
 
-  // Close dropdown when clicking outside
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -53,7 +54,8 @@ const UserProfile = () => {
 
   const handleProfileClick = () => {
     setDropdownOpen(false);
-    navigate('/profile');
+    setActiveItem(profileComponentId);
+    
   };
 
 
@@ -77,8 +79,8 @@ const UserProfile = () => {
 
   if (!userData) return null;
 
-  const userInitials = `${userData.firstName?.[0] || 'U'}${userData.lastName?.[0] || ''}`;
-  const fullName = `${userData.firstName} ${userData.lastName}`.trim();
+  const userInitials = `${userData.username?.[0] || 'U'}`;
+  const fullName = `${userData.username}`.trim();
 
   return (
     <div className="user-profile-section" ref={dropdownRef}>
@@ -112,12 +114,7 @@ const UserProfile = () => {
               <IoPersonOutline className="dropdown-icon" />
               <span>View Profile</span>
             </div>
-            
-            <div className="dropdown-item" onClick>
-              <IoSettingsOutline className="dropdown-icon" />
-              <span>Settings</span>
-            </div>
-            
+                        
             <div className="dropdown-divider"></div>
             
             <div className="dropdown-item logout" onClick={handleLogout}>

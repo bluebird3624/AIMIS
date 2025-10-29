@@ -36,6 +36,7 @@ function App() {
             <Route path='/welcome'  element={<WelcomePage/>}/>
             <Route path= '/login' element={<AnimatedRoute><Login/></AnimatedRoute>}/>
             <Route path='/Onboarding' element={<AnimatedRoute><Onboarding/></AnimatedRoute>}/>
+            <Route path ='*' element={<WelcomePage/>}/>
 
             {/**protected routes general access */}
             <Route element={<ProtectedRoute/>}>

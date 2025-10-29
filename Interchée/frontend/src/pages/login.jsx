@@ -18,14 +18,9 @@ function Login() {
       event.preventDefault();
     
 
-        // Clear errors if validation passes
-        setErrors({});
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-        try {
-            const email = document.getElementById('email').value
-            const password = document.getElementById('password').value
-
-            
             setLoading(true);
             const response = await login({ email, password });
             
@@ -105,11 +100,11 @@ function Login() {
                 
                 <div className="login-form">
                     {!showForgotPassword ? (
-                        // LOGIN FORM
+                       
                         <div className="form-container">
                             <h2 className="form-title">Welcome to Agile AIMIS</h2>
                             
-                            {/* General error message */}
+                           
                             {errors.general && (
                                 <div className="error-message general-error">
                                     {errors.general}
