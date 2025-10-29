@@ -1,0 +1,165 @@
+/* ...existing code... */
+
+.mainProfileContainer {
+  padding: 20px;
+  background: transparent;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.profileHeader {
+  padding: 8px 0 16px;
+}
+
+.profileHeader h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #1f2937;
+}
+
+/* Body layout */
+.profileBody {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* Left column */
+.profileLeftBody {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profilePhoto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 160px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.profilePhoto img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Name & role */
+.profileNameRole {
+  text-align: center;
+}
+
+.profileNameRole h3 {
+  margin: 6px 0 2px;
+  font-size: 18px;
+  color: #0f172a;
+}
+
+.profileNameRole .role {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Summary box */
+.profileSummary {
+  background: #ffffff;
+  border: 1px solid #e6e9ef;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.profileSummary h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #334155;
+}
+
+/* Right column */
+.profileRightBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Sections */
+.profileSection {
+  background: #ffffff;
+  border: 1px solid #e6e9ef;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.profileSection h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.profileSection hr {
+  border: none;
+  height: 1px;
+  background: #eef2f6;
+  margin: 6px 0 10px;
+}
+
+/* Info list - responsive two columns when needed */
+.info-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 16px;
+}
+
+.info-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: left;
+  padding: 6px 0;
+  border-radius: 4px;
+}
+
+.info-list .label {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.info-list .value {
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: left;
+}
+
+
+@media (max-width: 800px) {
+  .profileBody {
+    flex-direction: column;
+  }
+  .profileLeftBody {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+  }
+  .profilePhoto {
+    height: 80px;
+    width: 80px;
+  }
+  .profilePhoto img {
+    width: 64px;
+    height: 64px;
+  }
+  .profileNameRole {
+    text-align: left;
+    padding-left: 12px;
+  }
+}

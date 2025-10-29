@@ -10,6 +10,8 @@ import Group from '../assets/Group.svg';
 import Homebutton from '../components/homepage';
 import Userspage from '../components/Userspage';
 import Adminabsence from '../components/AdminAbsence';
+import Adminreports from '../components/Adminreports';
+import ProfilePage from '../components/ProfilePage';
 import Calendar from '../components/Calendar';
 import { getCurrentUser } from '../services/auth';
 
@@ -26,6 +28,7 @@ const componentMap = {
   absence: Adminabsence,
   calendar: Calendar,
   reports: Adminreports,
+  profilePage: ProfilePage,
 
   
 
@@ -130,7 +133,8 @@ const SidebarItem = ({ item, isActive, onClick }) => {
   );
 };
 
-const MainContentRenderer = ({ activeItemId }) => {
+export const MainContentRenderer = ({ activeItemId }) => {
+  console.log('maincontent renderre called: for component id: ', activeItemId );
   const ComponentToRender = componentMap[activeItemId] || componentMap.default;
   
   return (
@@ -196,7 +200,8 @@ function AdminDash() {
 
    
         <div className="header-profile">
-          <UserProfile />
+          <UserProfile setActiveItem={setActiveItem}/>
+          
         </div>
       </div>
 

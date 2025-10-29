@@ -14,25 +14,14 @@ function Login() {
 
     
    
-    const handleClick = async(event) => {
-      event.preventDefault();
-      try
-        {
-           
-          const email = document.getElementById('email').value;
-          const password = document.getElementById('password').value;
-         
-          const response = await login({email, password});
-        
-        if(response.accessToken || response.token){
-          
-          navigate('/admin-dash');
-        }
-
-        // Clear errors if validation passes
-        setErrors({});
-
+    const handleClick = async(e) => {
+        e.preventDefault();
+      
         try {
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
             setLoading(true);
             const response = await login({ email, password });
             
@@ -112,11 +101,11 @@ function Login() {
                 
                 <div className="login-form">
                     {!showForgotPassword ? (
-                        // LOGIN FORM
+                       
                         <div className="form-container">
                             <h2 className="form-title">Welcome to Agile AIMIS</h2>
                             
-                            {/* General error message */}
+                           
                             {errors.general && (
                                 <div className="error-message general-error">
                                     {errors.general}
@@ -169,7 +158,7 @@ function Login() {
                             </div>
                             
                             <button 
-                                onClick={handleLoginClick} 
+                                onClick={handleClick} 
                                 className="login-button"
                                 disabled={loading}
                             >
@@ -221,6 +210,7 @@ function Login() {
             </div>
         </motion.div>
     );
+
 }
 
 export default Login;
