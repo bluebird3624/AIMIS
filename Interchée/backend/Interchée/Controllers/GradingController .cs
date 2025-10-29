@@ -5,6 +5,7 @@ using Interchée.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace Interchée.Controllers
 {
@@ -23,11 +24,56 @@ namespace Interchée.Controllers
         {
             var userId = User.GetUserId();
 
+            // Validate input
+            if (dto.MaxScore > 100)
+            {
+                return BadRequest("Maximum score cannot exceed 100.");
+            }
+
+            if (dto.Score > dto.MaxScore)
+            {
+                return BadRequest("Score cannot exceed maximum score.");
+            }
+
+            // Validate rubric if provided
+            if (dto.RubricId.HasValue)
+            {
+                var rubricExists = await _db.Rubrics.AnyAsync(r => r.Id == dto.RubricId.Value && r.IsActive);
+                if (!rubricExists)
+                {
+                    return BadRequest("Invalid rubric ID or rubric is not active.");
+                }
+
+                // Validate criteria scores match rubric
+                if (dto.CriteriaScores != null)
+                {
+                    var rubric = await _db.Rubrics
+                        .Include(r => r.Items)
+                        .FirstOrDefaultAsync(r => r.Id == dto.RubricId.Value);
+
+                    if (rubric != null)
+                    {
+                        foreach (var criteria in dto.CriteriaScores)
+                        {
+                            var rubricItem = rubric.Items.FirstOrDefault(i => i.Criteria == criteria.Key);
+                            if (rubricItem == null)
+                            {
+                                return BadRequest($"Invalid criteria: {criteria.Key}");
+                            }
+                            if (criteria.Value > rubricItem.MaxScore)
+                            {
+                                return BadRequest($"Score for {criteria.Key} cannot exceed {rubricItem.MaxScore}");
+                            }
+                        }
+                    }
+                }
+            }
+
             var submission = await _db.AssignmentSubmissions
                 .Include(s => s.Assignment)
                 .FirstOrDefaultAsync(s => s.Id == submissionId);
 
-            if (submission == null) return NotFound();
+            if (submission == null) return NotFound("Submission not found");
 
             // Verify grader has access to submission's department
             var hasAccess = submission.Assignment != null &&
@@ -39,6 +85,13 @@ namespace Interchée.Controllers
 
             var grade = await _db.Grades.FirstOrDefaultAsync(g => g.SubmissionId == submissionId);
 
+            // Serialize criteria scores to JSON
+            string? rubricScoresJson = null;
+            if (dto.CriteriaScores != null && dto.CriteriaScores.Any())
+            {
+                rubricScoresJson = JsonSerializer.Serialize(dto.CriteriaScores);
+            }
+
             if (grade == null)
             {
                 grade = new Grade
@@ -46,7 +99,8 @@ namespace Interchée.Controllers
                     SubmissionId = submissionId,
                     Score = dto.Score,
                     MaxScore = dto.MaxScore,
-                    RubricJson = dto.RubricJson,
+                    RubricId = dto.RubricId,
+                    RubricScoresJson = rubricScoresJson, // Use RubricScoresJson, NOT RubricJson
                     GradedByUserId = userId,
                     GradedAt = DateTime.UtcNow
                 };
@@ -56,13 +110,14 @@ namespace Interchée.Controllers
             {
                 grade.Score = dto.Score;
                 grade.MaxScore = dto.MaxScore;
-                grade.RubricJson = dto.RubricJson;
+                grade.RubricId = dto.RubricId;
+                grade.RubricScoresJson = rubricScoresJson; // Use RubricScoresJson, NOT RubricJson
                 grade.GradedByUserId = userId;
                 grade.GradedAt = DateTime.UtcNow;
             }
 
             // Update submission status to Reviewed when graded
-            submission.Status = "Reviewed"; // Keep as string
+            submission.Status = "Reviewed";
             await _db.SaveChangesAsync();
 
             var gradedByUserName = await _db.Users
@@ -70,9 +125,28 @@ namespace Interchée.Controllers
                 .Select(u => $"{u.FirstName} {u.LastName}")
                 .FirstOrDefaultAsync() ?? "Unknown";
 
+            // Get rubric name if rubric was used
+            string? rubricName = null;
+            if (grade.RubricId.HasValue)
+            {
+                rubricName = await _db.Rubrics
+                    .Where(r => r.Id == grade.RubricId.Value)
+                    .Select(r => r.Name)
+                    .FirstOrDefaultAsync();
+            }
+
+            // Use the UPDATED GradeReadDto constructor with ALL parameters
             var readDto = new GradeReadDto(
-                grade.Id, grade.SubmissionId, grade.Score, grade.MaxScore, grade.RubricJson,
-                grade.GradedByUserId, grade.GradedAt, gradedByUserName
+                grade.Id,
+                grade.SubmissionId,
+                grade.Score,
+                grade.MaxScore,
+                grade.RubricId,
+                rubricName,
+                grade.RubricScoresJson,
+                grade.GradedByUserId,
+                grade.GradedAt,
+                gradedByUserName
             );
 
             return Ok(readDto);
@@ -88,6 +162,7 @@ namespace Interchée.Controllers
 
             var gradedSubmissions = await _db.Grades
                 .Where(g => g.GradedByUserId == userId)
+                .OrderByDescending(g => g.GradedAt)
                 .Include(g => g.Submission)
                     .ThenInclude(s => s!.Assignment)
                 .Include(g => g.Submission)
@@ -101,15 +176,14 @@ namespace Interchée.Controllers
                     g.Score,
                     g.MaxScore,
                     g.GradedAt,
-                    g.Submission.Status // String status
+                    g.Submission.Status
                 ))
-                .OrderByDescending(g => g.GradedAt)
                 .ToListAsync();
 
             return Ok(gradedSubmissions);
         }
 
-        /// <summary>Get graded submission for current user (Intern/Attaché only)</summary>
+        /// <summary>Get graded submission for current user (Intern/Attaché only) - WITHOUT RUBRIC IDS</summary>
         [HttpGet("my-grades")]
         [Authorize(Roles = "Intern,Attache")]
         [ProducesResponseType(typeof(IEnumerable<StudentGradeReadDto>), StatusCodes.Status200OK)]
@@ -119,25 +193,160 @@ namespace Interchée.Controllers
 
             var grades = await _db.Grades
                 .Where(g => g.Submission!.UserId == userId)
+                .OrderByDescending(g => g.GradedAt)
                 .Include(g => g.Submission)
                     .ThenInclude(s => s!.Assignment)
                 .Include(g => g.GradedByUser)
-                .Select(g => new StudentGradeReadDto(
+                .Include(g => g.Rubric)
+                .Select(g => new
+                {
                     g.SubmissionId,
                     g.Submission!.AssignmentId,
-                    g.Submission.Assignment!.Title,
+                    AssignmentTitle = g.Submission.Assignment!.Title,
                     g.Score,
                     g.MaxScore,
-                    g.RubricJson,
+                    g.RubricId,
+                    g.RubricScoresJson,
+                    RubricName = g.Rubric != null ? g.Rubric.Name : null,
                     g.GradedByUserId,
-                    $"{g.GradedByUser!.FirstName} {g.GradedByUser.LastName}",
+                    GradedByUserName = $"{g.GradedByUser!.FirstName} {g.GradedByUser.LastName}",
                     g.GradedAt,
-                    g.Submission.Status // String status
-                ))
-                .OrderByDescending(g => g.GradedAt)
+                    g.Submission.Status
+                })
                 .ToListAsync();
 
-            return Ok(grades);
+            // Build the breakdown for students (without rubric IDs)
+            var result = grades.Select(g =>
+            {
+                List<CriteriaScoreDto>? breakdown = null;
+
+                // Build breakdown from rubric scores if available
+                if (!string.IsNullOrEmpty(g.RubricScoresJson) && g.RubricId.HasValue)
+                {
+                    var criteriaScores = JsonSerializer.Deserialize<Dictionary<string, decimal>>(g.RubricScoresJson);
+                    if (criteriaScores != null)
+                    {
+                        breakdown = criteriaScores.Select(cs => new CriteriaScoreDto(
+                            cs.Key,
+                            cs.Value
+                        )).ToList();
+                    }
+                }
+
+                return new StudentGradeReadDto(
+                    g.SubmissionId,
+                    g.AssignmentId,
+                    g.AssignmentTitle,
+                    g.Score,
+                    g.MaxScore,
+                    breakdown,
+                    g.GradedByUserId,
+                    g.GradedByUserName,
+                    g.GradedAt,
+                    g.Status
+                );
+            });
+
+            return Ok(result);
+        }
+
+        /// <summary>Update an existing grade (Supervisors only)</summary>
+        [HttpPut("submissions/{submissionId:long}/grade")]
+        [Authorize(Roles = "Admin,HR,Supervisor")]
+        [ProducesResponseType(typeof(GradeReadDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GradeReadDto>> UpdateGrade(long submissionId, [FromBody] GradeUpdateDto dto)
+        {
+            var userId = User.GetUserId();
+
+            // Validate input
+            if (dto.MaxScore > 100)
+            {
+                return BadRequest("Maximum score cannot exceed 100.");
+            }
+
+            if (dto.Score > dto.MaxScore)
+            {
+                return BadRequest("Score cannot exceed maximum score.");
+            }
+
+            // Validate rubric if provided
+            if (dto.RubricId.HasValue)
+            {
+                var rubricExists = await _db.Rubrics.AnyAsync(r => r.Id == dto.RubricId.Value && r.IsActive);
+                if (!rubricExists)
+                {
+                    return BadRequest("Invalid rubric ID or rubric is not active.");
+                }
+            }
+
+            var grade = await _db.Grades
+                .Include(g => g.Submission)
+                    .ThenInclude(s => s!.Assignment)
+                .Include(g => g.GradedByUser)
+                .FirstOrDefaultAsync(g => g.SubmissionId == submissionId);
+
+            if (grade == null) return NotFound("Grade not found");
+
+            // Verify user has access to update this grade's department
+            var hasAccess = grade.Submission?.Assignment != null &&
+                await _db.DepartmentRoleAssignments
+                    .AnyAsync(ra => ra.UserId == userId && ra.DepartmentId == grade.Submission.Assignment.DepartmentId &&
+                                   (ra.RoleName == "Admin" || ra.RoleName == "HR" || ra.RoleName == "Supervisor"));
+
+            if (!hasAccess) return Forbid();
+
+            // Serialize criteria scores to JSON
+            string? rubricScoresJson = null;
+            if (dto.CriteriaScores != null && dto.CriteriaScores.Any())
+            {
+                rubricScoresJson = JsonSerializer.Serialize(dto.CriteriaScores);
+            }
+
+            // Update grade properties
+            grade.Score = dto.Score;
+            grade.MaxScore = dto.MaxScore;
+            grade.RubricId = dto.RubricId;
+            grade.RubricScoresJson = rubricScoresJson; // Use RubricScoresJson, NOT RubricJson
+            grade.GradedByUserId = userId;
+            grade.GradedAt = DateTime.UtcNow;
+
+            // Update submission status to Reviewed when grade is updated
+            if (grade.Submission != null)
+            {
+                grade.Submission.Status = "Reviewed";
+            }
+
+            await _db.SaveChangesAsync();
+
+            var gradedByUserName = $"{grade.GradedByUser!.FirstName} {grade.GradedByUser.LastName}";
+
+            // Get rubric name if rubric was used
+            string? rubricName = null;
+            if (grade.RubricId.HasValue)
+            {
+                rubricName = await _db.Rubrics
+                    .Where(r => r.Id == grade.RubricId.Value)
+                    .Select(r => r.Name)
+                    .FirstOrDefaultAsync();
+            }
+
+            // Use the UPDATED GradeReadDto constructor with ALL parameters
+            var readDto = new GradeReadDto(
+                grade.Id,
+                grade.SubmissionId,
+                grade.Score,
+                grade.MaxScore,
+                grade.RubricId,
+                rubricName,
+                grade.RubricScoresJson,
+                grade.GradedByUserId,
+                grade.GradedAt,
+                gradedByUserName
+            );
+
+            return Ok(readDto);
         }
 
         /// <summary>Get grade for a specific submission</summary>
@@ -176,9 +385,28 @@ namespace Interchée.Controllers
 
             var gradedByUserName = $"{grade.GradedByUser!.FirstName} {grade.GradedByUser.LastName}";
 
+            // Get rubric name if rubric was used
+            string? rubricName = null;
+            if (grade.RubricId.HasValue)
+            {
+                rubricName = await _db.Rubrics
+                    .Where(r => r.Id == grade.RubricId.Value)
+                    .Select(r => r.Name)
+                    .FirstOrDefaultAsync();
+            }
+
+            // Use the UPDATED GradeReadDto constructor with ALL parameters
             var readDto = new GradeReadDto(
-                grade.Id, grade.SubmissionId, grade.Score, grade.MaxScore, grade.RubricJson,
-                grade.GradedByUserId, grade.GradedAt, gradedByUserName
+                grade.Id,
+                grade.SubmissionId,
+                grade.Score,
+                grade.MaxScore,
+                grade.RubricId,
+                rubricName,
+                grade.RubricScoresJson,
+                grade.GradedByUserId,
+                grade.GradedAt,
+                gradedByUserName
             );
 
             return Ok(readDto);

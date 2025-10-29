@@ -9,24 +9,19 @@ namespace Interchée.Services
     {
         private readonly AppDbContext _db = db;
 
-        /// <summary>Automatically update assignment status based on deadlines and submissions</summary>
+        /// <summary>Automatically update assignment status based on deadlines</summary>
         public async Task AutoUpdateAssignmentStatus(Assignment assignment)
         {
-            // Auto-close if deadline passed and all submissions are reviewed
+            // Auto-close immediately when deadline passes, regardless of submissions
             if (assignment.DueAt.HasValue &&
                 assignment.DueAt.Value < DateTime.UtcNow &&
                 assignment.Status == "Assigned")
             {
-                var totalSubmissions = await _db.AssignmentSubmissions
-                    .CountAsync(s => s.AssignmentId == assignment.Id);
-                var reviewedCount = await _db.AssignmentSubmissions
-                    .CountAsync(s => s.AssignmentId == assignment.Id && s.Status == "Reviewed");
-
-                // If all submissions are reviewed or no submissions exist, auto-close
-                if (totalSubmissions == 0 || reviewedCount >= totalSubmissions)
-                {
-                    assignment.Status = "Closed";
-                }
+                
+                //  CHANGED: Close assignment immediately when due date passes
+                assignment.Status = "Closed";
+                await _db.SaveChangesAsync();
+                return;
             }
 
             // Auto-archive if closed for more than 30 days
@@ -34,6 +29,7 @@ namespace Interchée.Services
                 assignment.CreatedAt.AddDays(30) < DateTime.UtcNow)
             {
                 assignment.Status = "Archived";
+                await _db.SaveChangesAsync();
             }
         }
 
@@ -48,7 +44,8 @@ namespace Interchée.Services
 
             foreach (var assignment in expiredAssignments)
             {
-                await AutoUpdateAssignmentStatus(assignment);
+                //  Close assignment immediately without checking submissions
+                assignment.Status = "Closed";
             }
 
             await _db.SaveChangesAsync();
@@ -81,7 +78,25 @@ namespace Interchée.Services
                 ReviewRate: (submittedCount + reviewedCount) > 0 ? (double)reviewedCount / (submittedCount + reviewedCount) * 100 : 0
             );
         }
-    }
 
-    
+        /// <summary>Check and close assignment if due date has passed</summary>
+        public async Task<bool> CheckAndCloseIfDueDatePassed(long assignmentId)
+        {
+            var assignment = await _db.Assignments
+                .FirstOrDefaultAsync(a => a.Id == assignmentId);
+
+            if (assignment == null) return false;
+
+            if (assignment.DueAt.HasValue &&
+                assignment.DueAt.Value < DateTime.UtcNow &&
+                assignment.Status == "Assigned")
+            {
+                assignment.Status = "Closed";
+                await _db.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+    }
 }

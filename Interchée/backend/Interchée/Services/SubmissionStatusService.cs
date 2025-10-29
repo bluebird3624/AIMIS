@@ -10,18 +10,34 @@ namespace Interchée.Services
 
         /// <summary>Automatically update submission status based on commit message</summary>
         public async Task UpdateSubmissionStatusFromCommit(AssignmentSubmission submission, string? commitMessage)
+
+
         {
             if (string.IsNullOrEmpty(commitMessage)) return;
 
             var message = commitMessage.ToLowerInvariant();
 
+            var assignment = await _db.Assignments
+       .FirstOrDefaultAsync(a => a.Id == submission.AssignmentId);
+
+            if (assignment?.Status == "Closed")
+            {
+                // Assignment is closed, maintain current status
+                return;
+            }
+
             // Automatic status detection from commit messages
             if (message.Contains("final") || message.Contains("submit") || message.Contains("complete"))
+
             {
-                submission.Status = "Submitted";
-                submission.SubmittedAt = DateTime.UtcNow;
+                if (submission.Status != "Reviewed")
+                {
+                    submission.Status = "Submitted";
+                    submission.SubmittedAt = DateTime.UtcNow;
+                }
+               
             }
-            else if (submission.Status == "InProgress" && HasSignificantActivity(message))
+            else if (submission.Status == "InProgress") //&& HasSignificantActivity(message)//
             {
                 // Keep as InProgress for normal development commits
                 submission.Status = "InProgress";
@@ -31,14 +47,14 @@ namespace Interchée.Services
         }
 
         /// <summary>Check if commit represents significant work</summary>
-        private static bool HasSignificantActivity(string message)
-        {
-            var insignificantKeywords = new[] { "merge", "update readme", "typo", "fix typo", "minor" };
-            return !insignificantKeywords.Any(keyword => message.Contains(keyword));
-        }
+        //  private static bool HasSignificantActivity(string message)
+        //  {
+        //      var insignificantKeywords = new[] { "merge", "update readme", "typo", "fix typo", "minor" };
+        //       return !insignificantKeywords.Any(keyword => message.Contains(keyword));//
+        //  }
 
         /// <summary>Auto-close assignment if all students have submitted</summary>
-        public async Task AutoCloseAssignmentIfAllSubmitted(long assignmentId)
+        /*public async Task AutoCloseAssignmentIfAllSubmitted(long assignmentId)
         {
             var assignment = await _db.Assignments
                 .Include(a => a.Assignees)
@@ -80,7 +96,7 @@ namespace Interchée.Services
         }
 
         /// <summary>Update submission status to Submitted automatically</summary>
-        public async Task MarkAsSubmitted(long submissionId)
+       /* public async Task MarkAsSubmitted(long submissionId)
         {
             var submission = await _db.AssignmentSubmissions
                 .FirstOrDefaultAsync(s => s.Id == submissionId);
@@ -92,18 +108,45 @@ namespace Interchée.Services
                 await _db.SaveChangesAsync();
             }
         }
-
+        */
         /// <summary>Update submission status to Reviewed automatically</summary>
-        public async Task MarkAsReviewed(long submissionId)
+        /// <summary>Update submission status to Reviewed (after grading)</summary>
+        public async Task<bool> MarkAsReviewed(long submissionId)
         {
             var submission = await _db.AssignmentSubmissions
                 .FirstOrDefaultAsync(s => s.Id == submissionId);
 
-            if (submission != null)
+            if (submission == null) return false;
+
+            // ✅ SIMPLIFIED: Check assignment status directly
+            var assignment = await _db.Assignments
+                .FirstOrDefaultAsync(a => a.Id == submission.AssignmentId);
+
+            if (assignment?.Status == "Closed" || assignment?.Status == "Archived")
+            {
+                // Cannot change status of submission in closed assignment
+                return false;
+            }
+
+            // Only allow marking as reviewed if currently submitted
+            if (submission.Status == "Submitted")
             {
                 submission.Status = "Reviewed";
                 await _db.SaveChangesAsync();
+                return true;
             }
+
+            return false;
+        }
+
+        /// <summary>Check if submission is allowed for the assignment</summary>
+        public async Task<bool> CanSubmitToAssignment(long assignmentId)
+        {
+            var assignment = await _db.Assignments
+                .FirstOrDefaultAsync(a => a.Id == assignmentId);
+
+            // Cannot submit if assignment is closed/archived or doesn't exist
+            return assignment != null && assignment.Status != "Closed" && assignment.Status != "Archived";
         }
     }
 }

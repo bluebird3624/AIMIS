@@ -41,6 +41,9 @@ namespace Interchée.Data
         public DbSet<AssignmentSubmission> AssignmentSubmissions => Set<AssignmentSubmission>();
         public DbSet<SubmissionCommit> SubmissionCommits => Set<SubmissionCommit>();
         public DbSet<Grade> Grades => Set<Grade>();
+
+        public DbSet<Rubric> Rubrics => Set<Rubric>();
+        public DbSet<RubricItem> RubricItems => Set<RubricItem>();
         public DbSet<FeedbackComment> FeedbackComments => Set<FeedbackComment>();
 
         protected override void OnModelCreating(ModelBuilder b)
@@ -347,28 +350,58 @@ namespace Interchée.Data
                     .WithMany()
                     .HasForeignKey(x => x.GradedByUserId)
                     .OnDelete(DeleteBehavior.Restrict); // Keep grade history if user is deleted
+
+                e.HasOne(x => x.Rubric)
+               .WithMany()
+               .HasForeignKey(x => x.RubricId)
+               .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // FeedbackComment
-            b.Entity<FeedbackComment>(e =>
             {
-                e.Property(x => x.Comment).IsRequired();
 
-                // Relationships
-                e.HasOne(x => x.Submission)
-                    .WithMany(s => s.FeedbackComments)
-                    .HasForeignKey(x => x.SubmissionId)
-                    .OnDelete(DeleteBehavior.Cascade); // Remove comments if submission deleted
+                // Rubric configuration
+                b.Entity<Rubric>(e =>
+                {
+                    e.Property(x => x.Name).HasMaxLength(100).IsRequired();
+                    e.Property(x => x.Description).HasMaxLength(500);
+                    e.HasIndex(x => x.Name).IsUnique();
+                });
 
-                e.HasOne(x => x.AuthorUser)
-                    .WithMany()
-                    .HasForeignKey(x => x.AuthorUserId)
-                    .OnDelete(DeleteBehavior.Restrict); // Keep comment history if user is deleted
-            });
+                // RubricItem configuration
+                b.Entity<RubricItem>(e =>
+                {
+                    e.Property(x => x.Criteria).HasMaxLength(200).IsRequired();
+                    e.Property(x => x.Description).HasMaxLength(500);
+                    e.Property(x => x.MaxScore).HasPrecision(5, 2);
+
+                    e.HasOne(x => x.Rubric)
+                        .WithMany(r => r.Items)
+                        .HasForeignKey(x => x.RubricId)
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+
+                // FeedbackComment
+                b.Entity<FeedbackComment>(e =>
+                {
+                    e.Property(x => x.Comment).IsRequired();
+
+                    // Relationships
+                    e.HasOne(x => x.Submission)
+                        .WithMany(s => s.FeedbackComments)
+                        .HasForeignKey(x => x.SubmissionId)
+                        .OnDelete(DeleteBehavior.Cascade); // Remove comments if submission deleted
+
+                    e.HasOne(x => x.AuthorUser)
+                        .WithMany()
+                        .HasForeignKey(x => x.AuthorUserId)
+                        .OnDelete(DeleteBehavior.Restrict); // Keep comment history if user is deleted
+                });
+
+            }
 
         }
 
     }
-
 }
 

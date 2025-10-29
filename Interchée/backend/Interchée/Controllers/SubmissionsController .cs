@@ -26,6 +26,12 @@ namespace Interchée.Controllers
         {
             var userId = User.GetUserId();
 
+            // CHECK IF ASSIGNMENT IS CLOSED - PREVENT SUBMISSION
+            if (!await _statusService.CanSubmitToAssignment(dto.AssignmentId))
+            {
+                return BadRequest("Cannot submit to a closed assignment.");
+            }
+
             // GIT VALIDATION
             if (!_gitService.ValidateRepoUrl(dto.RepoUrl))
                 return BadRequest("Invalid Git repository URL. Must be a valid GitHub or GitLab repository.");
@@ -39,6 +45,12 @@ namespace Interchée.Controllers
 
             var isAssigned = assignment.Assignees.Any(aa => aa.UserId == userId);
             if (!isAssigned) return Forbid("You are not assigned to this assignment");
+
+            // CHECK IF ASSIGNMENT IS PAST DUE
+            if (assignment.DueAt.HasValue && assignment.DueAt.Value < DateTime.UtcNow)
+            {
+                return BadRequest("Cannot submit after assignment due date.");
+            }
 
             var submission = await _db.AssignmentSubmissions
                 .FirstOrDefaultAsync(s => s.AssignmentId == dto.AssignmentId && s.UserId == userId);
@@ -61,14 +73,11 @@ namespace Interchée.Controllers
             {
                 submission.RepoUrl = dto.RepoUrl;
                 submission.Branch = dto.Branch ?? submission.Branch;
-                submission.Status = "In-Progress"; // AUTOMATIC STATUS ON RE-SUBMIT
+                submission.Status = "Submitted"; //  Keep as Submitted on re-submit
                 submission.SubmittedAt = DateTime.UtcNow;
             }
 
             await _db.SaveChangesAsync();
-
-            // AUTOMATICALLY CHECK IF ASSIGNMENT SHOULD BE CLOSED
-            await _statusService.AutoCloseAssignmentIfAllSubmitted(dto.AssignmentId);
 
             var commitCount = await _db.SubmissionCommits
                 .CountAsync(c => c.SubmissionId == submission.Id);
@@ -85,6 +94,7 @@ namespace Interchée.Controllers
         }
 
         /// <summary>Get user's submission for an assignment</summary>
+        /// <summary>Get user's submission for an assignment</summary>
         [HttpGet("assignment/{assignmentId:long}")]
         [Authorize(Roles = "Intern,Attache")]
         [ProducesResponseType(typeof(SubmissionReadDto), StatusCodes.Status200OK)]
@@ -94,13 +104,22 @@ namespace Interchée.Controllers
 
             var submission = await _db.AssignmentSubmissions
                 .Include(s => s.Grade)
+                .ThenInclude(g => g!.GradedByUser) // Add this to get grader name
                 .Where(s => s.AssignmentId == assignmentId && s.UserId == userId)
                 .Select(s => new SubmissionReadDto(
                     s.Id, s.AssignmentId, s.UserId, s.RepoUrl, s.Branch, s.LatestCommitSha,
                     s.SubmittedAt, s.Status, s.CreatedAt,
                     s.Grade != null ? new GradeReadDto(
-                        s.Grade.Id, s.Grade.SubmissionId, s.Grade.Score, s.Grade.MaxScore,
-                        s.Grade.RubricJson, s.Grade.GradedByUserId, s.Grade.GradedAt, ""
+                        s.Grade.Id,
+                        s.Grade.SubmissionId,
+                        s.Grade.Score,
+                        s.Grade.MaxScore,
+                        s.Grade.RubricId, // Add RubricId
+                        null, // RubricName (not needed here)
+                        s.Grade.RubricScoresJson,
+                        s.Grade.GradedByUserId,
+                        s.Grade.GradedAt,
+                        $"{s.Grade.GradedByUser!.FirstName} {s.Grade.GradedByUser.LastName}" // Add grader name
                     ) : null,
                     s.Commits.Count, s.FeedbackComments.Count
                 ))
@@ -121,12 +140,21 @@ namespace Interchée.Controllers
                 .Where(s => s.UserId == userId)
                 .Include(s => s.Assignment)
                 .Include(s => s.Grade)
+                .ThenInclude(g => g!.GradedByUser) // Add this
                 .Select(s => new SubmissionReadDto(
                     s.Id, s.AssignmentId, s.UserId, s.RepoUrl, s.Branch, s.LatestCommitSha,
                     s.SubmittedAt, s.Status, s.CreatedAt,
                     s.Grade != null ? new GradeReadDto(
-                        s.Grade.Id, s.Grade.SubmissionId, s.Grade.Score, s.Grade.MaxScore,
-                        s.Grade.RubricJson, s.Grade.GradedByUserId, s.Grade.GradedAt, ""
+                        s.Grade.Id,
+                        s.Grade.SubmissionId,
+                        s.Grade.Score,
+                        s.Grade.MaxScore,
+                        s.Grade.RubricId, // Add RubricId
+                        null, // RubricName (not needed here)
+                        s.Grade.RubricScoresJson,
+                        s.Grade.GradedByUserId,
+                        s.Grade.GradedAt,
+                        $"{s.Grade.GradedByUser!.FirstName} {s.Grade.GradedByUser.LastName}" // Add grader name
                     ) : null,
                     s.Commits.Count, s.FeedbackComments.Count
                 ))
@@ -135,7 +163,6 @@ namespace Interchée.Controllers
             return Ok(submissions);
         }
 
-
         /// <summary>Add commit to submission (for webhooks or manual entry)</summary>
         [HttpPost("{submissionId:long}/commits")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -143,9 +170,16 @@ namespace Interchée.Controllers
         public async Task<IActionResult> AddCommit(long submissionId, [FromBody] CommitCreateDto dto)
         {
             var submission = await _db.AssignmentSubmissions
+                .Include(s => s.Assignment)
                 .FirstOrDefaultAsync(s => s.Id == submissionId);
 
             if (submission == null) return NotFound("Submission not found");
+
+            // Check if assignment is closed
+            if (submission.Assignment?.Status == "Closed" || submission.Assignment?.Status == "Archived")
+            {
+                return BadRequest("Cannot add commits to a submission in a closed assignment.");
+            }
 
             // Check if commit already exists
             var commitExists = await _db.SubmissionCommits
@@ -192,6 +226,7 @@ namespace Interchée.Controllers
         }
 
         /// <summary>Get all submissions for an assignment (Supervisors only)</summary>
+        /// <summary>Get all submissions for an assignment (Supervisors only)</summary>
         [HttpGet("assignment/{assignmentId:long}/all")]
         [Authorize(Roles = "Admin,HR,Supervisor")]
         [ProducesResponseType(typeof(IEnumerable<SubmissionReadDto>), StatusCodes.Status200OK)]
@@ -201,12 +236,21 @@ namespace Interchée.Controllers
                 .Where(s => s.AssignmentId == assignmentId)
                 .Include(s => s.User)
                 .Include(s => s.Grade)
+                .ThenInclude(g => g!.GradedByUser) // Add this
                 .Select(s => new SubmissionReadDto(
                     s.Id, s.AssignmentId, s.UserId, s.RepoUrl, s.Branch, s.LatestCommitSha,
                     s.SubmittedAt, s.Status, s.CreatedAt,
                     s.Grade != null ? new GradeReadDto(
-                        s.Grade.Id, s.Grade.SubmissionId, s.Grade.Score, s.Grade.MaxScore,
-                        s.Grade.RubricJson, s.Grade.GradedByUserId, s.Grade.GradedAt, ""
+                        s.Grade.Id,
+                        s.Grade.SubmissionId,
+                        s.Grade.Score,
+                        s.Grade.MaxScore,
+                        s.Grade.RubricId, // Add RubricId
+                        null, // RubricName (can be null here)
+                        s.Grade.RubricScoresJson,
+                        s.Grade.GradedByUserId,
+                        s.Grade.GradedAt,
+                        $"{s.Grade.GradedByUser!.FirstName} {s.Grade.GradedByUser.LastName}" // Add grader name
                     ) : null,
                     s.Commits.Count, s.FeedbackComments.Count
                 ))
@@ -214,7 +258,6 @@ namespace Interchée.Controllers
 
             return Ok(submissions);
         }
-
         /// <summary>Update submission (change repo URL or branch)</summary>
         [HttpPut("{id:long}")]
         [Authorize(Roles = "Intern,Attache")]
@@ -224,9 +267,16 @@ namespace Interchée.Controllers
         {
             var userId = User.GetUserId();
             var submission = await _db.AssignmentSubmissions
+                .Include(s => s.Assignment)
                 .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
 
             if (submission == null) return NotFound();
+
+            // Check if assignment is closed
+            if (submission.Assignment?.Status == "Closed" || submission.Assignment?.Status == "Archived")
+            {
+                return BadRequest("Cannot update a submission in a closed assignment.");
+            }
 
             // Validate new repo URL if provided
             if (!string.IsNullOrEmpty(dto.RepoUrl) && !_gitService.ValidateRepoUrl(dto.RepoUrl))
@@ -266,11 +316,27 @@ namespace Interchée.Controllers
 
             if (submission == null) return NotFound();
 
-            submission.Status = dto.Status;
-            await _db.SaveChangesAsync();
+            // If changing to "Reviewed", use the service method for proper validation
+            if (dto.Status == "Reviewed")
+            {
+                var success = await _statusService.MarkAsReviewed(id);
+                if (!success)
+                {
+                    return BadRequest("Cannot mark submission as reviewed. Either assignment is closed or submission is not in Submitted status.");
+                }
+            }
+            else
+            {
+                // For other status changes, check if assignment is closed
 
-            // AUTOMATICALLY CHECK IF ASSIGNMENT SHOULD BE CLOSED
-            await _statusService.AutoCloseAssignmentIfAllReviewed(submission.AssignmentId);
+                if (submission.Assignment?.Status == "Closed" || submission.Assignment?.Status == "Archived")
+                {
+                    return BadRequest("Cannot update status of submission in closed assignment.");
+                }
+
+                submission.Status = dto.Status;
+                await _db.SaveChangesAsync();
+            }
 
             var commitCount = await _db.SubmissionCommits
                 .CountAsync(c => c.SubmissionId == submission.Id);
