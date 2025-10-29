@@ -14,10 +14,9 @@ function Login() {
 
     
    
-    const handleClick = async(e) => {
-        e.preventDefault();
-      
-        try {
+    const handleClick = async(event) => {
+      event.preventDefault();
+    
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -210,7 +209,6 @@ function Login() {
             </div>
         </motion.div>
     );
-
-}
+    }
 
 export default Login;
