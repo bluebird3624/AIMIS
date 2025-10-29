@@ -43,6 +43,8 @@ function Adminabsence() {
               </div>
               <h2 style={{ fontFamily:" arial" , marginLeft : "20px"}}> Absence Requests</h2>
               <div className='absence-request-section'>
+
+                
                 <div className='request-container'>
                   <div className='top-row'>
                     <div className="request-user-info">
@@ -99,6 +101,8 @@ function Adminabsence() {
                     </div>
 
                 </div>
+
+
 
               </div>
               <h2 style={{ fontFamily:" arial" , marginLeft : "20px"}}> Recent Decisions</h2>
