@@ -10,7 +10,6 @@ import Group from '../assets/Group.svg';
 import Homebutton from '../components/homepage';
 import Userspage from '../components/Userspage';
 import Adminabsence from '../components/AdminAbsence';
-import Adminreports from '../components/Adminreports';
 import ProfilePage from '../components/ProfilePage';
 import Calendar from '../components/Calendar';
 import Adminreports from '../components/Adminreports'

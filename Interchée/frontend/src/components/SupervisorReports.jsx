@@ -519,7 +519,7 @@ function SupervisorReports(){
                                                     <span>Criteria: {rubric.criteria.length}</span>
                                                     <span>Created: {rubric.createdAt}</span>
                                                 </div>
-                                                <div className="criteria-preview">
+                                                <div n>
                                                     {rubric.criteria.slice(0, 3).map((criterion, index) => (
                                                         <div key={criterion.id} className="preview-criterion">
                                                             <span className="preview-name">{criterion.name}</span>
