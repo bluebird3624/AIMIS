@@ -17,7 +17,7 @@ function Login() {
     const handleClick = async(event) => {
       event.preventDefault();
     
-
+        try{
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
