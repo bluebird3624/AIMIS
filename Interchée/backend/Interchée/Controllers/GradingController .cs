@@ -100,7 +100,7 @@ namespace Interchée.Controllers
                     Score = dto.Score,
                     MaxScore = dto.MaxScore,
                     RubricId = dto.RubricId,
-                    RubricScoresJson = rubricScoresJson, // Use RubricScoresJson, NOT RubricJson
+                    RubricScoresJson = rubricScoresJson, 
                     GradedByUserId = userId,
                     GradedAt = DateTime.UtcNow
                 };
@@ -111,7 +111,7 @@ namespace Interchée.Controllers
                 grade.Score = dto.Score;
                 grade.MaxScore = dto.MaxScore;
                 grade.RubricId = dto.RubricId;
-                grade.RubricScoresJson = rubricScoresJson; // Use RubricScoresJson, NOT RubricJson
+                grade.RubricScoresJson = rubricScoresJson;   
                 grade.GradedByUserId = userId;
                 grade.GradedAt = DateTime.UtcNow;
             }

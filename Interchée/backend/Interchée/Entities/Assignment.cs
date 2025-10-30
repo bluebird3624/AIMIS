@@ -16,5 +16,6 @@
         public AppUser? CreatedByUser { get; set; }
         public ICollection<AssignmentAssignee> Assignees { get; set; } = new List<AssignmentAssignee>();
         public ICollection<AssignmentSubmission> Submissions { get; set; } = new List<AssignmentSubmission>();
+        public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
     }
 }

@@ -40,6 +40,7 @@ namespace Interchée.Data
         public DbSet<AssignmentAssignee> AssignmentAssignees => Set<AssignmentAssignee>();
         public DbSet<AssignmentSubmission> AssignmentSubmissions => Set<AssignmentSubmission>();
         public DbSet<SubmissionCommit> SubmissionCommits => Set<SubmissionCommit>();
+        public DbSet<Attachment> Attachments => Set<Attachment>();
         public DbSet<Grade> Grades => Set<Grade>();
 
         public DbSet<Rubric> Rubrics => Set<Rubric>();
@@ -329,6 +330,25 @@ namespace Interchée.Data
                     .WithMany(s => s.Commits)
                     .HasForeignKey(x => x.SubmissionId)
                     .OnDelete(DeleteBehavior.Cascade); // Remove commits if submission deleted
+            });
+
+            // Attachment configuration
+            b.Entity<Attachment>(e =>
+            {
+                e.Property(x => x.FileName).HasMaxLength(255).IsRequired();
+                e.Property(x => x.StoredFileName).HasMaxLength(255).IsRequired();
+                e.Property(x => x.ContentType).HasMaxLength(100).IsRequired();
+                e.Property(x => x.FilePath).HasMaxLength(500).IsRequired();
+                e.Property(x => x.EntityType).HasMaxLength(50).IsRequired();
+
+                // Index for efficient queries
+                e.HasIndex(x => new { x.EntityType, x.EntityId });
+
+                // Relationship with uploader
+                e.HasOne(x => x.UploadedByUser)
+                    .WithMany()
+                    .HasForeignKey(x => x.UploadedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             // Grade

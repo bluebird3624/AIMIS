@@ -17,8 +17,9 @@ namespace Interchée.Controllers
         private readonly AppDbContext _db = db;
         private readonly AssignmentStatusService _statusService = statusService;
 
-        /// <summary>List assignments in user's departments</summary>
+        /// <summary>List assignments in user's departments (For Supervisors/Admins)</summary>
         [HttpGet]
+        [Authorize(Roles = "Admin,HR,Supervisor")]
         [ProducesResponseType(typeof(IEnumerable<AssignmentReadDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<AssignmentReadDto>>> GetUserAssignments()
         {
@@ -41,6 +42,61 @@ namespace Interchée.Controllers
                 .ToListAsync();
 
             return Ok(assignments);
+        }
+
+        /// <summary>Get assignments assigned to current user (Intern/Attaché only)</summary>
+        [HttpGet("my-assignments")]
+        [Authorize(Roles = "Intern,Attache")]
+        [ProducesResponseType(typeof(IEnumerable<StudentAssignmentReadDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<StudentAssignmentReadDto>>> GetMyAssignments()
+        {
+            var userId = User.GetUserId();
+
+            // First, get the assignments assigned to the user
+            var assignedAssignments = await _db.AssignmentAssignees
+                .Where(aa => aa.UserId == userId)
+                .Include(aa => aa.Assignment)
+                    .ThenInclude(a => a!.Department)
+                .Select(aa => new
+                {
+                    Assignment = aa.Assignment,
+                    AssignedAt = aa.AssignedAt
+                })
+                .ToListAsync();
+
+            // Then get the user's submissions for these assignments
+            var assignmentIds = assignedAssignments.Select(a => a.Assignment!.Id).ToList();
+            var userSubmissions = await _db.AssignmentSubmissions
+                .Where(s => s.UserId == userId && assignmentIds.Contains(s.AssignmentId))
+                .Include(s => s.Grade)
+                .ToListAsync();
+
+            // Build the result
+            var result = assignedAssignments.Select(aa =>
+            {
+                var assignment = aa.Assignment!;
+                var submission = userSubmissions.FirstOrDefault(s => s.AssignmentId == assignment.Id);
+
+                return new StudentAssignmentReadDto(
+                    assignment.Id,
+                    assignment.Title,
+                    assignment.Description,
+                    assignment.DepartmentId,
+                    assignment.Department!.Name,
+                    assignment.DueAt,
+                    assignment.Status,
+                    assignment.CreatedAt,
+                    aa.AssignedAt,
+                    submission != null, // Has submission
+                    submission?.Status ?? "NotStarted", // Submission status
+                    submission?.SubmittedAt, // Submission date
+                    submission?.Grade != null // Is graded
+                );
+            })
+            .OrderByDescending(a => a.DueAt)
+            .ToList();
+
+            return Ok(result);
         }
 
         /// <summary>Create new assignment</summary>
@@ -98,6 +154,12 @@ namespace Interchée.Controllers
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (assignment == null) return NotFound();
+
+            // Update assignment status to Assigned when users are assigned
+            if (assignment.Status == "Created" && dto.UserIds.Any())
+            {
+                assignment.Status = "Assigned";
+            }
 
             // Remove existing assignees not in new list
             var existingUserIds = assignment.Assignees.Select(aa => aa.UserId).ToHashSet();

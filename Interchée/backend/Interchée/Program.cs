@@ -111,6 +111,7 @@ builder.Services.AddScoped<IAuthorizationHandler, DepartmentRoleHandler>();
 builder.Services.AddHttpClient<SimpleGitService>();
 builder.Services.AddScoped<SubmissionStatusService>();     
 builder.Services.AddScoped<AssignmentStatusService>();
+builder.Services.AddScoped<FileService>();
 
 var app = builder.Build();
 
