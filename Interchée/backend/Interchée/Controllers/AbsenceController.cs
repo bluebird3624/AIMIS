@@ -20,6 +20,9 @@ namespace Interchée.Controllers
         [ProducesResponseType(typeof(AbsenceRequestReadDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<AbsenceRequestReadDto>> Create([FromBody] AbsenceRequestCreateDto dto)
         {
+
+            // A) Extract user from JWT token
+
             var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
             // Get user's department from role assignments
@@ -32,6 +35,7 @@ namespace Interchée.Controllers
 
             var days = (decimal)(dto.EndDate.DayNumber - dto.StartDate.DayNumber) + 1;
 
+            // B) Convert DTO → Entity
             var request = new AbsenceRequest
             {
                 UserId = userId,
@@ -43,10 +47,11 @@ namespace Interchée.Controllers
                 Status = "Pending",
                 RequestedAt = DateTime.UtcNow,
             };
-
+            // C) Use DbContext to save
             _db.AbsenceRequests.Add(request);
             await _db.SaveChangesAsync();
 
+            // D) Convert Entity → DTO for response
             var readDto = new AbsenceRequestReadDto(
                 request.Id, request.UserId, request.DepartmentId,
                 request.StartDate, request.EndDate, request.Days,
