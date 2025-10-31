@@ -17,7 +17,7 @@ function Login() {
     const handleClick = async(event) => {
       event.preventDefault();
     
-
+        try{
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -41,12 +41,12 @@ function Login() {
     const handleForgotPasswordClick = (event) => {
         event.preventDefault();
         setShowForgotPassword(true);
-        setErrors({}); // Clear errors when switching forms
+        setErrors({}); 
     }
 
     const handleBackToLogin = () => {
         setShowForgotPassword(false);
-        setErrors({}); // Clear errors when switching forms
+        setErrors({}); 
     }
 
     const handleForgotPasswordSubmit = (event) => {

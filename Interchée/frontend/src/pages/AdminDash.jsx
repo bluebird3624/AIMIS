@@ -10,11 +10,11 @@ import Group from '../assets/Group.svg';
 import Homebutton from '../components/homepage';
 import Userspage from '../components/Userspage';
 import Adminabsence from '../components/AdminAbsence';
-import Adminreports from '../components/Adminreports';
 import ProfilePage from '../components/ProfilePage';
 import Calendar from '../components/Calendar';
 import Adminreports from '../components/Adminreports'
 import { getCurrentUser } from '../services/auth';
+import StudentAssignment from '../components/StudentAssignment';
 import SupervisorReports from '../components/SupervisorReports';
 
 
@@ -26,9 +26,7 @@ const componentMap = {
   calendar: Calendar,
   reports: Adminreports,
   profilePage: ProfilePage,
-
-  
-
+  studentAssignment: StudentAssignment,
   supervisorReports: SupervisorReports,
   default: Homebutton
 };
@@ -94,6 +92,16 @@ const sidebarConfig = {
     roles: [roles.SUPERVISOR]
 
   },
+
+  studentAssignment: {
+    id: 'studentAssignment',
+    name: 'Reports',
+    iconOutline: icons.IoBarChartOutline,
+    iconSolid: icons.IoBarChart,
+    roles: [roles.ATTACHEE, roles.INTERN]
+
+  },
+
 
 
 
