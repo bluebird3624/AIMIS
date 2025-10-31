@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TextField } from '@mui/material';
-import { IoAlertCircleOutline, IoCheckmarkCircleOutline, IoClipboardOutline, IoAdd, IoClose, IoTrash } from "react-icons/io5";
+import { IoAlertCircleOutline, IoCheckmarkCircleOutline, IoClipboardOutline, IoAdd, IoClose, IoTrash, IoPersonAdd } from "react-icons/io5";
 
 function SupervisorReports(){
     const [isCreateAsssignmentOpen, setIsCreateAssignmentOpen] = useState(false);
@@ -15,29 +15,24 @@ function SupervisorReports(){
     const [criteria, setCriteria] = useState([]);
     const [totalMarks, setTotalMarks] = useState(0);
     const [rubricName, setRubricName] = useState('');
-    const [rubrics, setRubrics] = useState([]); // State to store created rubrics
-    const [selectedRubric, setSelectedRubric] = useState(''); // State for selected rubric in assignment
+    const [rubrics, setRubrics] = useState([]);
+    const [selectedRubric, setSelectedRubric] = useState('');
+    const [assignmentTitle, setAssignmentTitle] = useState('');
+    const [submissionType, setSubmissionType] = useState('git');
+    const [createdAssignments, setCreatedAssignments] = useState([]);
+    const [ongoingAssignments, setOngoingAssignments] = useState([]);
     const textareaRef = useRef(null);
     const [dueDate, setDueDate] = useState(null);
+    const [assignToInterns, setAssigntointerns] = useState(false);
+    const [currentAssignmentId, setCurrentAssignmentId] = useState(null);
 
     const interns = [
-        'gorb',
-        'rish', 
-        'lecter',
-        'ddddddd',
-        'eeeeee',
-        'fffffff'
-    ];
-
-    // Sample ongoing assignments data
-    const ongoingAssignments = [
-        {
-            id: 1,
-            title: "React Component Development",
-            assignedTo: ["gorb", "rish", "lecter"],
-            dueDate: "2024-02-15",
-            status: "In Progress"
-        },
+        'intern number',
+        'Attche 1', 
+        'Intern 2',
+        'Attache 2',
+        'Intern 3',
+        'Attache 3'
     ];
 
     // Auto-resize textarea when description changes
@@ -155,7 +150,6 @@ function SupervisorReports(){
     // Delete rubric
     const deleteRubric = (rubricId) => {
         setRubrics(prev => prev.filter(rubric => rubric.id !== rubricId));
-        // If the deleted rubric was selected in the assignment form, clear the selection
         if (selectedRubric === rubricId.toString()) {
             setSelectedRubric('');
         }
@@ -169,10 +163,71 @@ function SupervisorReports(){
         setTotalMarks(0);
     };
 
+    // Create new assignment
+    const createAssignment = () => {
+        if (assignmentTitle.trim() && dueDate) {
+            const newAssignment = {
+                id: Date.now(),
+                title: assignmentTitle,
+                description: assignmentDescription,
+                dueDate: dueDate,
+                submissionType: submissionType,
+                rubric: selectedRubric ? rubrics.find(r => r.id.toString() === selectedRubric) : null,
+                status: "Draft",
+                createdAt: new Date().toLocaleDateString(),
+                assignedTo: [] // Initially empty, will be assigned later
+            };
+            
+            setCreatedAssignments(prev => [...prev, newAssignment]);
+            
+            // Reset form and close modal
+            setAssignmentTitle('');
+            setAssignmentDescription('');
+            setDueDate(null);
+            setSelectedRubric('');
+            setSubmissionType('git');
+            setSelectedInterns([]);
+            setIsCreateAssignmentOpen(false);
+        }
+    };
+
+    // Open assign to modal
+    const openAssignToModal = (assignmentId) => {
+        setCurrentAssignmentId(assignmentId);
+        setAssigntointerns(true);
+        setSelectedInterns([]);
+    };
+
+    // Assign assignment to interns and move to ongoing
+    const assignToStudents = () => {
+        if (currentAssignmentId && selectedInterns.length > 0) {
+            // Update the assignment with assigned interns
+            const updatedAssignment = createdAssignments.find(assignment => assignment.id === currentAssignmentId);
+            if (updatedAssignment) {
+                const assignedAssignment = {
+                    ...updatedAssignment,
+                    assignedTo: [...selectedInterns],
+                    status: "In Progress"
+                };
+
+                // Remove from created assignments
+                setCreatedAssignments(prev => prev.filter(assignment => assignment.id !== currentAssignmentId));
+                
+                // Add to ongoing assignments
+                setOngoingAssignments(prev => [...prev, assignedAssignment]);
+            }
+
+            // Close modal and reset
+            setAssigntointerns(false);
+            setCurrentAssignmentId(null);
+            setSelectedInterns([]);
+        }
+    };
+
     return(
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <div>
-                <h1 style={{ fontFamily:"arial", fontSize: " 30px", marginLeft: "20px"}}> Assignments </h1>
+                <h1 style={{ fontFamily:"arial", fontSize: " 30px", marginLeft: "20px"}}> Assignments & Reports</h1>
                 <button 
                 className="create-assn-button"
                 onClick={ () => setIsCreateAssignmentOpen (true)}
@@ -225,17 +280,80 @@ function SupervisorReports(){
                             </div>
 
                 </div>
-
+                
+                <h1 style={{ fontFamily:"arial", fontSize: " 30px", marginLeft: "20px"}}> Created Assignments </h1>
+                <div className="created-assignments-section">
+                    {createdAssignments.length === 0 ? (
+                        <div className="empty-assignments">
+                            <p>No assignments created yet</p>
+                        </div>
+                    ) : (
+                        <div className="assignments-grid">
+                            {createdAssignments.map(assignment => (
+                                <div key={assignment.id} className="assignment-container">
+                                    <div className="assignment-header">
+                                        <h3 className="assignment-title">{assignment.title}</h3>
+                                        <span className={`assignment-status ${assignment.status.toLowerCase()}`}>
+                                            {assignment.status}
+                                        </span>
+                                    </div>
+                                    <div className="assignment-details">
+                                        <div className="assignment-description">
+                                            <strong>Description:</strong>
+                                            <p>{assignment.description || "No description provided"}</p>
+                                        </div>
+                                        <div className="assignment-meta">
+                                            <div className="meta-item">
+                                                <strong>Due Date:</strong>
+                                                <span>{assignment.dueDate ? new Date(assignment.dueDate).toLocaleDateString() : "Not set"}</span>
+                                            </div>
+                                            <div className="meta-item">
+                                                <strong>Submission:</strong>
+                                                <span>{assignment.submissionType}</span>
+                                            </div>
+                                            <div className="meta-item">
+                                                <strong>Rubric:</strong>
+                                                <span>{assignment.rubric ? assignment.rubric.name : "None"}</span>
+                                            </div>
+                                            <div className="meta-item">
+                                                <strong>Assigned to:</strong>
+                                                <span>
+                                                    {assignment.assignedTo.length > 0 
+                                                        ? assignment.assignedTo.join(', ') 
+                                                        : "Not assigned yet"
+                                                    }
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="assignment-actions">
+                                        <button 
+                                            className="assign-to-btn"
+                                            onClick={() => openAssignToModal(assignment.id)}
+                                            disabled={assignment.assignedTo.length > 0}
+                                        >
+                                            <IoPersonAdd style={{ marginRight: '5px' }} />
+                                            {assignment.assignedTo.length > 0 ? 'Assigned' : 'Assign to students'}
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
 
                 <h1 style={{ fontFamily:"arial", fontSize: " 30px", marginLeft: "20px"}}> Ongoing Assignments </h1>
                 <div className="ongoing-section">
-                        {ongoingAssignments.map(assignment => (
-                             <div   key={assignment.id} className="report-container">
+                    {ongoingAssignments.length === 0 ? (
+                        <div className="empty-assignments">
+                            <p>No ongoing assignments</p>
+                        </div>
+                    ) : (
+                        ongoingAssignments.map(assignment => (
+                            <div key={assignment.id} className="report-container">
+                                <h3 className="assignment-title">{assignment.title}</h3>
+                                <span className="assignment-status">{assignment.status}</span>
                             
-    
-                                    <h3 className="assignment-title">{assignment.title}</h3>
-                                    <span className="assignment-status">{assignment.status}</span>
-                                
                                 <div className="assignment-details">
                                     <div className="assigned-users">
                                         <strong>Assigned to: </strong>
@@ -250,17 +368,31 @@ function SupervisorReports(){
                                         <strong>Due: </strong>
                                         {new Date(assignment.dueDate).toLocaleDateString()}
                                     </div>
+                                    <div className="assignment-description">
+                                        <strong>Description: </strong>
+                                        {assignment.description || "No description provided"}
+                                    </div>
+                                    <div className="submission-type">
+                                        <strong>Submission: </strong>
+                                        {assignment.submissionType}
+                                    </div>
+                                    <div className="rubric-info">
+                                        <strong>Rubric: </strong>
+                                        {assignment.rubric ? assignment.rubric.name : "None"}
+                                    </div>
                                 </div>
-                           </div> 
-                        ))}
-                        
+                            </div> 
+                        ))
+                    )}
                 </div>
-                <h1 style={{ fontFamily:"arial", fontSize: " 30px", marginLeft: "20px"}}> Completed Assignments </h1>
+
+                <h1 style={{ fontFamily:"arial", fontSize: " 30px", marginLeft: "20px"}}> Submitted Assignments </h1>
                 <h2  style={{ fontFamily:"arial", fontSize: " 20px", marginLeft: "20px"}}> Ungraded</h2>
                 <div className="complete-sections">
-
                 </div>
-
+                <h2  style={{ fontFamily:"arial", fontSize: " 20px", marginLeft: "20px"}}> Graded</h2>
+                <div className="complete-sections">
+                </div>
 
                 {/* CREATE NEW ASSIGNMENT */}
                 { isCreateAsssignmentOpen && (
@@ -270,8 +402,10 @@ function SupervisorReports(){
                             <div className="form-group"> 
                                 <label> Assignment title</label>
                                 <input
-                                type="text"
-                                placeholder="Enter assignment title"
+                                    type="text"
+                                    placeholder="Enter assignment title"
+                                    value={assignmentTitle}
+                                    onChange={(e) => setAssignmentTitle(e.target.value)}
                                 /> 
                             </div>
                             <div className="form-group">
@@ -284,6 +418,7 @@ function SupervisorReports(){
                                     rows={1}
                                 />
                             </div>
+
                             <div className="form-group">
                                     <label>Due Date</label>
                                     <DatePicker
@@ -299,43 +434,15 @@ function SupervisorReports(){
                                         className="date-picker"
                                     />
                             </div>
-                            <div className="form-group">
-                                <label> Assign to :</label>
-                                <div className="checkbox-group-container">
-                                    <button 
-                                        type="button" 
-                                        className="select-all-btn"
-                                        onClick={handleSelectAll}
-                                    >
-                                        {selectedInterns.length === interns.length ? 'Deselect All' : 'Select All'}
-                                    </button>
-                                    <div className="checkbox-group">
-                                        {interns.map((intern, index) => (
-                                            <div key={index} className="checkbox-option">
-                                                <input
-                                                    type="checkbox"
-                                                    id={`intern-${index}`}
-                                                    checked={selectedInterns.includes(intern)}
-                                                    onChange={() => handleCheckboxChange(intern)}
-                                                    className="intern-checkbox"
-                                                />
-                                                <label htmlFor={`intern-${index}`} className="checkbox-label">
-                                                    {intern}
-                                                </label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="selected-interns">
-                                    <strong>Selected ({selectedInterns.length}): </strong>
-                                    {selectedInterns.length > 0 ? selectedInterns.join(', ') : 'None'}
-                                </div>
-                            </div>
+
                             <div className="form-group">
                                  <label> Submission:</label>
-                                <select>
-                                    <option > git </option>
-                                    <option>File upload</option>
+                                <select 
+                                    value={submissionType} 
+                                    onChange={(e) => setSubmissionType(e.target.value)}
+                                >
+                                    <option value="git">Git</option>
+                                    <option value="file">File upload</option>
                                 </select>
                             </div>
                             <div className="form-group">
@@ -367,23 +474,43 @@ function SupervisorReports(){
                                     </div>
                                 )}
                                 <div className="rubric-actions">
-                                    
-                                    
+                                    <button 
+                                        type="button"
+                                        className="create-rubric-btn"
+                                        onClick={() => {
+                                            setIsCreateAssignmentOpen(false);
+                                            setIsGradingRubricOpen(true);
+                                        }}
+                                    >
+                                        Create New Rubric
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        className="view-rubrics-btn"
+                                        onClick={() => {
+                                            setIsCreateAssignmentOpen(false);
+                                            setIsRubricListOpen(true);
+                                        }}
+                                    >
+                                        View All Rubrics
+                                    </button>
                                 </div>
                             </div>
                             <div className="modal-actions">
                                 <button className="cancel-btn" onClick={() => setIsCreateAssignmentOpen(false)}>
                                    Cancel
                                 </button>
-                                <button className="assign-btn">
-                                    Assign
+                                <button 
+                                    className="assign-btn"
+                                    onClick={createAssignment}
+                                    disabled={!assignmentTitle.trim() || !dueDate}
+                                >
+                                    Create
                                 </button>
                             </div>
                         </div>
                     </div>
                 )}
-
-
 
                 {/* CREATE NEW GRADING RUBRIC */}
                 {isGradingRubricOpen && (
@@ -519,7 +646,7 @@ function SupervisorReports(){
                                                     <span>Criteria: {rubric.criteria.length}</span>
                                                     <span>Created: {rubric.createdAt}</span>
                                                 </div>
-                                                <div n>
+                                                <div className="criteria-preview">
                                                     {rubric.criteria.slice(0, 3).map((criterion, index) => (
                                                         <div key={criterion.id} className="preview-criterion">
                                                             <span className="preview-name">{criterion.name}</span>
@@ -553,6 +680,62 @@ function SupervisorReports(){
                                     }}
                                 >
                                     Create New Rubric
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* LIST OF STUDENTS TO ASSIGN TO */}
+                { assignToInterns && (
+                    <div className="modal-overlay">
+                        <div className="assign-to-container">
+                            <h2 style={{ fontFamily: "arial", marginLeft: "20px" }}>Assign to Students</h2>
+                            <div className="form-group">
+                                <label> Select students to assign:</label>
+                                <div className="checkbox-group-container">
+                                    <button 
+                                        type="button" 
+                                        className="select-all-btn"
+                                        onClick={handleSelectAll}
+                                    >
+                                        {selectedInterns.length === interns.length ? 'Deselect All' : 'Select All'}
+                                    </button>
+                                    <div className="checkbox-group">
+                                        {interns.map((intern, index) => (
+                                            <div key={index} className="checkbox-option">
+                                                <input
+                                                    type="checkbox"
+                                                    id={`intern-${index}`}
+                                                    checked={selectedInterns.includes(intern)}
+                                                    onChange={() => handleCheckboxChange(intern)}
+                                                    className="intern-checkbox"
+                                                />
+                                                <label htmlFor={`intern-${index}`} className="checkbox-label">
+                                                    {intern}
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="selected-interns">
+                                    <strong style={{fontFamily: 'arial'}}>Selected ({selectedInterns.length}): </strong>
+                                    {selectedInterns.length > 0 ? selectedInterns.join(', ') : 'None'}
+                                </div>
+                            </div>
+                            <div className="modal-actions">
+                                <button 
+                                    className="cancel-btn"
+                                    onClick={() => setAssigntointerns(false)}
+                                > 
+                                    Cancel
+                                </button>
+                                <button 
+                                    className="assign-to-student-btn"
+                                    onClick={assignToStudents}
+                                    disabled={selectedInterns.length === 0}
+                                >
+                                    Assign to Students
                                 </button>
                             </div>
                         </div>
