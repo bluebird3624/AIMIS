@@ -23,3 +23,9 @@ obj/
 **/*.nuget.g.targets
  
 /Interchée/backend/Interchée
+/Interchée/backend/Interchée/Entities/Assignment.cs
+/Interchée/backend/Interchée/Entities/AssignmentAssignee.cs
+/Interchée/backend/Interchée/Entities/AssignmentSubmission.cs
+/Interchée/backend/Interchée/Controllers/AssignmentsController .cs
+/Interchée/backend/Interchée/Data/AppDbContext.cs
+/Interchée/backend/Interchée/Services/AssignmentStatusService.cs
