@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import * as icons from 'react-icons/io5';
+import '../Styles/Absence.css'
 
 
 function Adminabsence() {
@@ -88,12 +89,15 @@ function Adminabsence() {
                         </div>
 
                     </div>
+                    <div>
+                      
+                    </div>
                     <div className='button-row'>
-                        <button className='request-button' style={{ backgroundColor : "#1aff00 "}}>
+                        <button className='approve-button' >
                             <icons.IoCheckmarkCircleOutline/>
                             Approve
                         </button>
-                         <button className='request-button' style={{ backgroundColor : " #ff0000"}}>
+                         <button className='reject-button' >
                             <icons.IoCloseCircleOutline/>
                             Reject
                         </button>
