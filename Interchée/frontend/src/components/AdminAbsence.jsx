@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as icons from 'react-icons/io5';
-import '../Styles/Absence.css'
+import '../Styles/absence.css'
 
 
 function Adminabsence() {
@@ -89,9 +89,7 @@ function Adminabsence() {
                         </div>
 
                     </div>
-                    <div>
-                      
-                    </div>
+                  
                     <div className='button-row'>
                         <button className='approve-button' >
                             <icons.IoCheckmarkCircleOutline/>

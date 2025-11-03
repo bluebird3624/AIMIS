@@ -1,5 +1,5 @@
 
-/* ABSENCE PAGE */
+
 .absence-stats-container {
   display: flex;
   align-items: center;
@@ -192,8 +192,9 @@
   width: 85%;
   background-color:transparent;
   height: 60px;
-  margin-top: 5px;
+  margin-top: 20px;
   margin-left: 40px;
+  margin-bottom: 10px;
   display: flex;
   gap: 35px;
   display: flex;
@@ -262,8 +263,3 @@
   margin-top: 10px;
   border-radius: 8px;
 }
-
-
-
-
-/* END OF ABSENCE PAGE */
