@@ -14,7 +14,9 @@ import ProfilePage from '../components/ProfilePage';
 import Calendar from '../components/Calendar';
 import Adminreports from '../components/Adminreports'
 import { getCurrentUser } from '../services/auth';
+import StudentAssignment from '../components/StudentAssignment';
 import SupervisorReports from '../components/SupervisorReports';
+import StudentAbsence from '../components/StudentAbsence';
 
 
 const componentMap = {
@@ -25,11 +27,10 @@ const componentMap = {
   calendar: Calendar,
   reports: Adminreports,
   profilePage: ProfilePage,
-
-  
-
+  studentAssignment: StudentAssignment,
   supervisorReports: SupervisorReports,
-  default: Homebutton
+  default: Homebutton,
+  studentAbsence: StudentAbsence
 };
 
 const sidebarConfig = {
@@ -91,6 +92,23 @@ const sidebarConfig = {
     iconOutline: icons.IoBarChartOutline,
     iconSolid: icons.IoBarChart,
     roles: [roles.SUPERVISOR]
+
+  },
+
+  studentAssignment: {
+    id: 'studentAssignment',
+    name: 'Reports',
+    iconOutline: icons.IoBarChartOutline,
+    iconSolid: icons.IoBarChart,
+    roles: [roles.ATTACHEE, roles.INTERN]
+
+  },
+  studentAbsence: {
+    id: 'studentAbsence',
+    name: 'Absence',
+    iconOutline: icons.IoWalkOutline,
+    iconSolid: icons.IoWalk,
+    roles: [roles.ATTACHEE, roles.INTERN]
 
   },
 
