@@ -25,7 +25,7 @@ namespace Interchée.Controllers
 
             var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            // Prevent past dates
+            // Prevent past dates in controller
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
             if (dto.StartDate < today)
             {
