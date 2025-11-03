@@ -37,7 +37,11 @@ namespace Interchée.Data
         public DbSet<AssignmentAssignee> AssignmentAssignees => Set<AssignmentAssignee>();
         public DbSet<AssignmentSubmission> AssignmentSubmissions => Set<AssignmentSubmission>();
         public DbSet<SubmissionCommit> SubmissionCommits => Set<SubmissionCommit>();
+        public DbSet<Attachment> Attachments => Set<Attachment>();
         public DbSet<Grade> Grades => Set<Grade>();
+
+        public DbSet<Rubric> Rubrics => Set<Rubric>();
+        public DbSet<RubricItem> RubricItems => Set<RubricItem>();
         public DbSet<FeedbackComment> FeedbackComments => Set<FeedbackComment>();
 
         protected override void OnModelCreating(ModelBuilder b)
@@ -325,6 +329,25 @@ namespace Interchée.Data
                     .OnDelete(DeleteBehavior.Cascade); // Remove commits if submission deleted
             });
 
+            // Attachment configuration
+            b.Entity<Attachment>(e =>
+            {
+                e.Property(x => x.FileName).HasMaxLength(255).IsRequired();
+                e.Property(x => x.StoredFileName).HasMaxLength(255).IsRequired();
+                e.Property(x => x.ContentType).HasMaxLength(100).IsRequired();
+                e.Property(x => x.FilePath).HasMaxLength(500).IsRequired();
+                e.Property(x => x.EntityType).HasMaxLength(50).IsRequired();
+
+                // Index for efficient queries
+                e.HasIndex(x => new { x.EntityType, x.EntityId });
+
+                // Relationship with uploader
+                e.HasOne(x => x.UploadedByUser)
+                    .WithMany()
+                    .HasForeignKey(x => x.UploadedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
             // Grade
             b.Entity<Grade>(e =>
             {
@@ -344,28 +367,58 @@ namespace Interchée.Data
                     .WithMany()
                     .HasForeignKey(x => x.GradedByUserId)
                     .OnDelete(DeleteBehavior.Restrict); // Keep grade history if user is deleted
+
+                e.HasOne(x => x.Rubric)
+               .WithMany()
+               .HasForeignKey(x => x.RubricId)
+               .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // FeedbackComment
-            b.Entity<FeedbackComment>(e =>
             {
-                e.Property(x => x.Comment).IsRequired();
 
-                // Relationships
-                e.HasOne(x => x.Submission)
-                    .WithMany(s => s.FeedbackComments)
-                    .HasForeignKey(x => x.SubmissionId)
-                    .OnDelete(DeleteBehavior.Cascade); // Remove comments if submission deleted
+                // Rubric configuration
+                b.Entity<Rubric>(e =>
+                {
+                    e.Property(x => x.Name).HasMaxLength(100).IsRequired();
+                    e.Property(x => x.Description).HasMaxLength(500);
+                    e.HasIndex(x => x.Name).IsUnique();
+                });
 
-                e.HasOne(x => x.AuthorUser)
-                    .WithMany()
-                    .HasForeignKey(x => x.AuthorUserId)
-                    .OnDelete(DeleteBehavior.Restrict); // Keep comment history if user is deleted
-            });
+                // RubricItem configuration
+                b.Entity<RubricItem>(e =>
+                {
+                    e.Property(x => x.Criteria).HasMaxLength(200).IsRequired();
+                    e.Property(x => x.Description).HasMaxLength(500);
+                    e.Property(x => x.MaxScore).HasPrecision(5, 2);
+
+                    e.HasOne(x => x.Rubric)
+                        .WithMany(r => r.Items)
+                        .HasForeignKey(x => x.RubricId)
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+
+                // FeedbackComment
+                b.Entity<FeedbackComment>(e =>
+                {
+                    e.Property(x => x.Comment).IsRequired();
+
+                    // Relationships
+                    e.HasOne(x => x.Submission)
+                        .WithMany(s => s.FeedbackComments)
+                        .HasForeignKey(x => x.SubmissionId)
+                        .OnDelete(DeleteBehavior.Cascade); // Remove comments if submission deleted
+
+                    e.HasOne(x => x.AuthorUser)
+                        .WithMany()
+                        .HasForeignKey(x => x.AuthorUserId)
+                        .OnDelete(DeleteBehavior.Restrict); // Keep comment history if user is deleted
+                });
+
+            }
 
         }
 
     }
-
 }
 

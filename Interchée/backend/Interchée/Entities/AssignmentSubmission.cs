@@ -20,5 +20,7 @@ namespace Interchée.Entities
         public ICollection<SubmissionCommit> Commits { get; set; } = new List<SubmissionCommit>();
         public Grade? Grade { get; set; }
         public ICollection<FeedbackComment> FeedbackComments { get; set; } = new List<FeedbackComment>();
+
+        public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
     }
 }
