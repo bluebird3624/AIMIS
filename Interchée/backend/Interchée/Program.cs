@@ -100,6 +100,8 @@ builder.Services.AddOpenApi();
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>()!;
 builder.Services.AddSingleton(jwtOptions);
 
+builder.Services.AddHostedService<AssignmentAutoCloseService>();
+
 // Token services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<RefreshTokenService>();
