@@ -1,0 +1,20 @@
+.student-assignment-main-content{
+    background-color: aqua;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.student-assignment-header{
+    background-color: aquamarine;
+    height: 20%;
+}
+
+.assignment-status-filter{
+    background-color: azure;
+}
+
+.student-assignment-body{
+    background-color: bisque;
+    height: 80%;
+}

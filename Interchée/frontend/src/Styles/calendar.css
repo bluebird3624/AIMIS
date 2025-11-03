@@ -9,8 +9,6 @@
   padding: 24px;
   min-width: 700px;
   width: fit-content;
-  min-height: 600px;
-  height: fit-content;
   margin: 0 auto;
   border-radius: 15px;
   background: #ffffff;
@@ -42,22 +40,8 @@
   line-height: 1.5;
 }
 
-/* Calendar Main Component */
+/* Remove the red background and overflow */
 .calendar-main {
-  background-color: red;
-  overflow-y: auto;
-  
-    
+  /* Remove: background-color: red; */
+  /* Remove: overflow-y: auto; */
 }
-
-
-
-.calendar-main .MuiPickersDay-root.Mui-selected {
-  background-color: #1976d2;
-  color: white;
-}
-
-.calendar-main .MuiPickersDay-root.Mui-selected:hover {
-  background-color: #1565c0;
-}
-

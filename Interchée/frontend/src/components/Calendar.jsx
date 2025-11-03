@@ -8,9 +8,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 
 function Calendar() {
-
     const [selectedDate, setSelectedDate] = useState(new Date());
-
 
     return(
         <>
@@ -29,48 +27,73 @@ function Calendar() {
 
         {/* Calendar Component */}
       <DateCalendar 
-      style = {{minheight: '800px'}}
-  sx={{
-    // Weekday header row
+      value={selectedDate}
+      onChange={(newDate) => setSelectedDate(newDate)}
+      sx={{
+    // Calendar container
+    width: '100%',
+    height: 'auto',
+    minHeight: '500px',
+    
+    // Weekday header row - FIXED ALIGNMENT
     '& .MuiDayCalendar-header': {
-      display: 'flex',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(7, 1fr)',
       justifyContent: 'space-between',
-      padding: '10px 0',
-      marginBottom: '8px',
+      padding: '8px 0',
+      marginBottom: '4px',
       borderBottom: '1px solid #e0e0e0',
-      fontSize: '40px'
+      gap: '0px',
     },
     
-    // Individual weekday cells
+    // Individual weekday cells - PERFECT ALIGNMENT
     '& .MuiDayCalendar-weekDayLabel': {
-      width: '30px',
-      height: '30px',
-      fontSize: '30px',
+      width: '100%',
+      height: '40px',
+      fontSize: '16px',
       fontWeight: 700,
-      color: '#747474ff', // Change color
-      backgroundColor: '#f5f5f5', // Add background
+      color: '#747474',
+      backgroundColor: '#f5f5f5',
       borderRadius: '4px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      margin: '1px',
+      margin: '0',
+      boxSizing: 'border-box',
     },
     
-    // INDIVIDUAL DATES - LARGER SIZE
+    // Month grid container
+    '& .MuiDayCalendar-monthContainer': {
+      width: '100%',
+      height: 'auto',
+    },
+    
+    // Week rows
+    '& .MuiDayCalendar-weekContainer': {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(7, 1fr)',
+      justifyContent: 'space-between',
+      margin: '0',
+      gap: '0px',
+    },
+    
+    // INDIVIDUAL DATES - PERFECT ALIGNMENT
     '& .MuiPickersDay-root': {
-      width: '40px',      // Match weekday width
-      height: '40px',     // Match weekday height
-      fontSize: '20px',   // Large font size for dates
+      width: '100%',
+      height: '50px',
+      fontSize: '16px',
       fontWeight: 400,
       borderRadius: '4px',
-      margin: '20px',
+      margin: '2px',
+      minWidth: 'auto',
+      boxSizing: 'border-box',
     },
     
     // Selected date styling
     '& .MuiPickersDay-root.Mui-selected': {
       backgroundColor: '#1976d2',
       color: 'white',
-      fontSize: '26px',   // Slightly larger when selected
+      fontSize: '16px',
       fontWeight: 'bold',
     },
     
@@ -82,18 +105,19 @@ function Calendar() {
     
     // Hover effects
     '& .MuiPickersDay-root:hover': {
-      backgroundColor: 'rgba(25, 118, 210, 0.43)',
-      transform: 'scale(1.05)',
+      backgroundColor: 'rgba(25, 118, 210, 0.1)',
+      transform: 'scale(1.02)',
     },
     
-    // Ensure calendar container can fit the larger dates
-    '& .MuiDayCalendar-monthContainer': {
-      width: '100%',
+    // Remove any default margins/padding that might cause misalignment
+    '& .MuiPickersCalendarHeader-root': {
+      marginBottom: '16px',
     },
     
-    // Adjust the overall calendar size if needed
-    width: 500,
-    height: 450,
+    '& .MuiDayCalendar-slideTransition': {
+      minHeight: '400px',
+      height: 'auto',
+    }
   }}
 />
       </Paper>

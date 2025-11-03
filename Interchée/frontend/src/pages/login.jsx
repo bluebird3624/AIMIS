@@ -4,11 +4,14 @@ import { useNavigate, Navigate } from "react-router-dom";
 import { motion } from 'framer-motion';
 import LoginGroup from '../assets/LoginGroup.svg';
 import * as authService from "../services/authContext";
+import logindemo from '../assets/logindemo.mp4';
+import { IoEye, IoEyeOff, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 function Login() {
     const [loading, setLoading] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [errors, setErrors] = useState({});
+    const [showPassword, setShowPassword] = useState(false); // New state for password visibility
     const navigate = useNavigate();
     const {login} = authService.useAuth();
 
@@ -17,7 +20,7 @@ function Login() {
     const handleClick = async(event) => {
       event.preventDefault();
     
-           try{
+        try{
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -41,12 +44,12 @@ function Login() {
     const handleForgotPasswordClick = (event) => {
         event.preventDefault();
         setShowForgotPassword(true);
-        setErrors({}); // Clear errors when switching forms
+        setErrors({}); 
     }
 
     const handleBackToLogin = () => {
         setShowForgotPassword(false);
-        setErrors({}); // Clear errors when switching forms
+        setErrors({}); 
     }
 
     const handleForgotPasswordSubmit = (event) => {
@@ -79,6 +82,11 @@ function Login() {
         }));
     };
 
+    // Toggle password visibility
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
     return (
         <motion.div
             initial={{ x: '100%' }}
@@ -87,7 +95,18 @@ function Login() {
             transition={{ type: 'keyframes', duration: 2.1 }}
             className="absolute inset-0"
         >
-            <div className="body-login" style={{ backgroundImage: "url('/src/assets/loginpage.png')" }}>
+            {/* Video Background */}
+            <video 
+                className="video-background"
+                autoPlay 
+                muted 
+                loop 
+                playsInline
+            >
+                <source src={logindemo} type="video/mp4" />
+            </video>
+            
+            <div className="body-login">
                 <div className="login-gradient">
                     <div className="agile-logo">
                         <img src={LoginGroup} />
@@ -125,15 +144,24 @@ function Login() {
                                 )}
                             </div>
                             
-                            <div className="input-group">
+                            <div className="input-group password-input-group">
                                 <label className="input-label">Password</label>
-                                <input 
-                                    type="password" 
-                                    className={`form-input ${errors.password ? 'error' : ''}`}
-                                    placeholder="Enter your password"
-                                    id="password"
-                                    onChange={() => clearError('password')}
-                                />
+                                <div className="password-input-container">
+                                    <input 
+                                        type={showPassword ? "text" : "password"}
+                                        className={`form-input password-input ${errors.password ? 'error' : ''}`}
+                                        placeholder="Enter your password"
+                                        id="password"
+                                        onChange={() => clearError('password')}
+                                    />
+                                    <button 
+                                        type="button"
+                                        className="password-toggle-btn"
+                                        onClick={togglePasswordVisibility}
+                                    >
+                                        {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
+                                    </button>
+                                </div>
                                 {errors.password && (
                                     <div className="error-message">{errors.password}</div>
                                 )}
@@ -163,7 +191,7 @@ function Login() {
                             >
                                 {loading ? 'Logging in...' : 'Log In'}
                             </button>
-                            <p style={{ fontSize: "20px", fontFamily: "arial" }}>
+                            <p style={{ fontSize: "20px", fontFamily: "arial" , color: "white" }}>
                                 Don't have an account? <a href="/Onboarding"> Sign up</a>
                             </p>
                         </div>
