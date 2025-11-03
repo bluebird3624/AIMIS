@@ -156,11 +156,29 @@ namespace Interchée.Controllers
             }
             else
             {
+                //  DELETE OLD FILES BEFORE UPLOADING NEW ONE
+                var oldAttachments = await _db.Attachments
+                    .Where(a => a.EntityType == "Submission" && a.EntityId == submission.Id)
+                    .ToListAsync();
+
+                // Delete physical files and database records
+                foreach (var oldAttachment in oldAttachments)
+                {
+                    _fileService.DeleteFile(oldAttachment); // Delete from file system
+                    _db.Attachments.Remove(oldAttachment);  // Delete from database
+                }
+
                 // Update existing submission
                 submission.SubmissionType = "File";
                 submission.Status = "Submitted";
                 submission.SubmittedAt = DateTime.UtcNow;
-                await _db.SaveChangesAsync();
+
+                // Clear GitHub-specific fields if they exist
+                submission.RepoUrl = null;
+                submission.Branch = null;
+                submission.LatestCommitSha = null;
+
+                await _db.SaveChangesAsync(); // Save deletion and submission update
             }
 
             // Now upload the file and link it to this submission
