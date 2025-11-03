@@ -13,7 +13,6 @@ import Adminabsence from '../components/AdminAbsence';
 import Adminreports from '../components/Adminreports';
 import ProfilePage from '../components/ProfilePage';
 import Calendar from '../components/Calendar';
-import Adminreports from '../components/Adminreports'
 import { getCurrentUser } from '../services/auth';
 import SupervisorReports from '../components/SupervisorReports';
 
