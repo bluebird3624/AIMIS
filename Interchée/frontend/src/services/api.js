@@ -63,6 +63,7 @@ export const onboardAPI = {
 export const departmentAPI = {
     getDepartments: () =>
         api.get('/departments'),
+    
 }
 
 export const usersAPI = {
@@ -72,6 +73,19 @@ export const usersAPI = {
         api.post('/users', data),
     assignDepartment: (data) =>
         api.post('/department-roles/assign', data),
+    
 }
 
+export const absenceAPI = {
+    getAbsenceRequestsAll: () =>
+        api.get('/absence-requests'),
+    getMyAbsenceRequests: () =>
+        api.get(`/absence-requests/my`),
+    creatAbsenceRequest: (requestInfo) => 
+        api.post('/absence-requests', requestInfo),
+    approveRejectAbsenceRequest: (id, decisionInfo) =>
+        api.post(`/absence-requests/${id}/decision`, decisionInfo),
+    getRequestsByDepartment: (id) => 
+        api.get(`/absence-requests/department/${id}`)
+}
 export default api;

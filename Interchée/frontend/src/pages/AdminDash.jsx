@@ -16,6 +16,7 @@ import Adminreports from '../components/Adminreports'
 import { getCurrentUser } from '../services/auth';
 import StudentAssignment from '../components/StudentAssignment';
 import SupervisorReports from '../components/SupervisorReports';
+import StudentAbsence from '../components/StudentAbsence';
 
 
 const componentMap = {
@@ -28,7 +29,8 @@ const componentMap = {
   profilePage: ProfilePage,
   studentAssignment: StudentAssignment,
   supervisorReports: SupervisorReports,
-  default: Homebutton
+  default: Homebutton,
+  studentAbsence: StudentAbsence
 };
 
 const sidebarConfig = {
@@ -101,7 +103,14 @@ const sidebarConfig = {
     roles: [roles.ATTACHEE, roles.INTERN]
 
   },
+  studentAbsence: {
+    id: 'studentAbsence',
+    name: 'Absence',
+    iconOutline: icons.IoWalkOutline,
+    iconSolid: icons.IoWalk,
+    roles: [roles.ATTACHEE, roles.INTERN]
 
+  },
 
 
 
