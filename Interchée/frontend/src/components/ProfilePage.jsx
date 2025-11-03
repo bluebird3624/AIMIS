@@ -66,15 +66,7 @@ const ProfilePage = () => {
             </ul>
           </div>
 
-          <div className="profileSection">
-            <h4>Financial</h4>
-            <hr />
-            <ul className="info-list">
-              <li><span className="label">Bank</span><span className="value">Acme Bank</span></li>
-              <li><span className="label">Account No.</span><span className="value">****1234</span></li>
-              <li><span className="label">Salary</span><span className="value">$3,200</span></li>
-            </ul>
-          </div>
+         
         </section>
       </div>
     </div>

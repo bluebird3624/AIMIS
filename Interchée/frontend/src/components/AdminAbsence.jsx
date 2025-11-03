@@ -231,6 +231,67 @@ function Adminabsence() {
                   </div>
                 </div>
               </div>
+              <h2 style={{ fontFamily:" arial" , marginLeft : "20px"}}> Absence Requests</h2>
+              <div className='absence-request-section'>
+
+                
+                <div className='request-container'>
+                  <div className='top-row'>
+                    <div className="request-user-info">
+                        <div className="request-user-name">John Doe</div>
+                        <div className="absence-reason">Doctor's appointment</div>
+                    </div>
+                    <div className='absence-status-pending'>
+                        pending
+                    </div>
+                  </div>
+                    <div className='dates-row'>
+                        <div className='date-container'>
+                            <div className='icon-container'>
+                                <icons.IoCalendarNumberOutline style={{ fontSize: "40px" }}/>
+                            </div>
+                            <div className="content-wrapper">
+                               <div className="date-label">Start Date</div>
+                               <div className="date">2025-8-7</div>
+                            </div>
+
+                        </div>
+                         <div className='date-container'>
+                            <div className='icon-container'>
+                                <icons.IoCalendarNumberOutline style={{ fontSize: "40px" }}/>
+                            </div>
+                            <div className="content-wrapper">
+                               <div className="date-label">End Date</div>
+                               <div className="date">2025-8-9</div>
+                            </div>
+
+                        </div>
+                         <div className='date-container'>
+                            <div className='icon-container'>
+                                <icons.IoTimerOutline style={{ fontSize: "40px" }}/>
+                            </div>
+                            <div className="content-wrapper">
+                               <div className="date-label">Duration</div>
+                               <div className="date"> 2 Days</div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                  
+                    <div className='button-row'>
+                        <button className='approve-button' >
+                            <icons.IoCheckmarkCircleOutline/>
+                            Approve
+                        </button>
+                         <button className='reject-button' >
+                            <icons.IoCloseCircleOutline/>
+                            Reject
+                        </button>
+
+                    </div>
+
+                </div>
 
               <div className="actions">
                

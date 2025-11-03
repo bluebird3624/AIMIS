@@ -1,5 +1,5 @@
 
-/* ABSENCE PAGE */
+
 .absence-stats-container {
   display: flex;
   align-items: center;
@@ -193,8 +193,9 @@
   width: 85%;
   background-color:transparent;
   height: 60px;
-  margin-top: 5px;
+  margin-top: 20px;
   margin-left: 40px;
+  margin-bottom: 10px;
   display: flex;
   gap: 35px;
   display: flex;
@@ -263,141 +264,3 @@
   margin-top: 10px;
   border-radius: 8px;
 }
-
-/* STUDENT ABSENCE PAGE*/
-
-.absence-stats {
-  display: flex;
-  flex-direction: row;
-}
-
-.request-absence-heading h2 {
-  margin: 0 0 10px;
-  font-size: 20px;
-}
-
-.absence-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 12px;
-  align-items: start;
-}
-.absence-form .form-row { display: flex; flex-direction: column; gap: 6px; }
-.absence-form textarea { grid-column: 1 / -1; min-height: 90px; }
-
-
-.absence-form label { font-size: 13px; color: #374151; }
-.absence-form input[type="date"],
-.absence-form input[type="text"],
-
-
-.absence-form textarea {
-  resize: vertical;
-  min-height: 60px;
-  grid-column: 1 / -1;
-}
-
-.form-actions {
-  grid-column: 1 / -1;
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  margin-top: 8px;
-}
-
-.form-error {
-  color: #b91c1c;
-  font-size: 13px;
-  margin-top: 8px;
-  grid-column: 1 / -1;
-}
-
-/* request card tweaks */
-.request-container {
-  padding: 12px;
-  margin-bottom: 12px;
-  background: #fff;
-  border: 1px solid #eef2f6;
-  border-radius: 8px;
-}
-
-.request-user-name { font-weight: 600; }
-.absence-reason { color: #6b7280; font-size: 14px; margin-top: 6px; }
-
-.loading, .empty { padding: 18px; color: #6b7280; text-align: center; }
-
-.header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-}
-.header-left h1 { margin: 0; font-size: 20px; }
-.header-left p { margin: 4px 0 0; color: #6b7280; font-size: 13px; }
-
-/* button theme */
-.btn-primary {
-  background: #2563eb; /* blue */
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
-
-.btn-cancel {
-  background: #fee2e2; /* light red */
-  color: #b91c1c;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* modal overlay */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1200;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-/* modal content */
-.modal-content {
-  width: 620px;
-  max-width: 100%;
-  background: #fff;
-  border-radius: 10px;
-  padding: 18px;
-  box-shadow: 0 8px 30px rgba(2,6,23,0.18);
-}
-
-/* modal header */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.modal-close {
-  background: transparent;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-/* make layout responsive */
-@media (max-width: 880px) {
-  .absence-form { grid-template-columns: 1fr; }
-  .request-absence-header { flex-direction: column; gap: 12px; }
-  .absence-stats-container {margin-left: 0;}
-}
-
-/* END OF ABSENCE PAGE */
