@@ -12,11 +12,12 @@ namespace Interchée.Controllers
     [ApiController]
     [Route("submissions")]
     [Authorize]
-    public class SubmissionsController(AppDbContext db, SimpleGitService gitService, SubmissionStatusService statusService) : ControllerBase
+    public class SubmissionsController(AppDbContext db, SimpleGitService gitService, SubmissionStatusService statusService, FileService fileService) : ControllerBase
     {
         private readonly AppDbContext _db = db;
         private readonly SimpleGitService _gitService = gitService;
         private readonly SubmissionStatusService _statusService = statusService;
+        private readonly FileService _fileService = fileService;
 
         /// <summary>Submit assignment (Intern/Attaché only)</summary>
         [HttpPost]
@@ -61,6 +62,7 @@ namespace Interchée.Controllers
                 {
                     AssignmentId = dto.AssignmentId,
                     UserId = userId,
+                    SubmissionType = "GitHub",
                     RepoUrl = dto.RepoUrl,
                     Branch = dto.Branch ?? "main",
                     Status = "Submitted", // AUTOMATIC STATUS
@@ -73,6 +75,7 @@ namespace Interchée.Controllers
             {
                 submission.RepoUrl = dto.RepoUrl;
                 submission.Branch = dto.Branch ?? submission.Branch;
+                submission.SubmissionType = "GitHub";
                 submission.Status = "Submitted"; //  Keep as Submitted on re-submit
                 submission.SubmittedAt = DateTime.UtcNow;
             }
@@ -85,15 +88,141 @@ namespace Interchée.Controllers
                 .CountAsync(f => f.SubmissionId == submission.Id);
 
             var readDto = new SubmissionReadDto(
-                submission.Id, submission.AssignmentId, submission.UserId, submission.RepoUrl,
+                submission.Id, submission.AssignmentId, submission.UserId, "GitHub", submission.RepoUrl,
                 submission.Branch, submission.LatestCommitSha, submission.SubmittedAt,
-                submission.Status, submission.CreatedAt, null, commitCount, feedbackCount
+                submission.Status, submission.CreatedAt, null, commitCount, feedbackCount, new List<AttachmentReadDto>()
             );
 
             return Ok(readDto);
         }
 
-        /// <summary>Get user's submission for an assignment</summary>
+        /// <summary>Submit assignment via file upload (Intern/Attaché only)</summary>
+        /// <summary>Submit assignment via file upload (Intern/Attaché only)</summary>
+        [HttpPost("file")]
+        [Authorize(Roles = "Intern,Attache")]
+        [RequestSizeLimit(10_485_760)] // 10MB limit
+        [ProducesResponseType(typeof(SubmissionReadDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<SubmissionReadDto>> SubmitFile([FromForm] FileSubmissionCreateDto dto)
+        {
+            var userId = User.GetUserId();
+
+            // CHECK IF ASSIGNMENT IS CLOSED - PREVENT SUBMISSION
+            if (!await _statusService.CanSubmitToAssignment(dto.AssignmentId))
+            {
+                return BadRequest("Cannot submit to a closed assignment.");
+            }
+
+            // Verify user is assigned to the assignment
+            var assignment = await _db.Assignments
+                .Include(a => a.Assignees)
+                .FirstOrDefaultAsync(a => a.Id == dto.AssignmentId);
+
+            if (assignment == null) return NotFound("Assignment not found");
+
+            var isAssigned = assignment.Assignees.Any(aa => aa.UserId == userId);
+            if (!isAssigned) return Forbid("You are not assigned to this assignment");
+
+            // CHECK IF ASSIGNMENT IS PAST DUE
+            if (assignment.DueAt.HasValue && assignment.DueAt.Value < DateTime.UtcNow)
+            {
+                return BadRequest("Cannot submit after assignment due date.");
+            }
+
+            // Check if file exists
+            if (dto.File == null || dto.File.Length == 0)
+            {
+                return BadRequest("File is required for file submission.");
+            }
+
+            var submission = await _db.AssignmentSubmissions
+                .FirstOrDefaultAsync(s => s.AssignmentId == dto.AssignmentId && s.UserId == userId);
+
+            if (submission == null)
+            {
+                // Create a new submission record for file upload
+                submission = new AssignmentSubmission
+                {
+                    AssignmentId = dto.AssignmentId,
+                    UserId = userId,
+                    SubmissionType = "File",
+                    RepoUrl = null, // No GitHub URL for file submissions
+                    Branch = null,
+                    Status = "Submitted",
+                    SubmittedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.UtcNow
+                };
+                _db.AssignmentSubmissions.Add(submission);
+                await _db.SaveChangesAsync(); // Save to get the submission ID
+            }
+            else
+            {
+                // Update existing submission
+                submission.SubmissionType = "File";
+                submission.Status = "Submitted";
+                submission.SubmittedAt = DateTime.UtcNow;
+                await _db.SaveChangesAsync();
+            }
+
+            // Now upload the file and link it to this submission
+            try
+            {
+                var attachment = await _fileService.SaveFileAsync(dto.File, "Submission", submission.Id, userId);
+                _db.Attachments.Add(attachment);
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // If file upload fails, delete the submission record
+                if (submission.Id > 0)
+                {
+                    _db.AssignmentSubmissions.Remove(submission);
+                    await _db.SaveChangesAsync();
+                }
+                return BadRequest($"File upload failed: {ex.Message}");
+            }
+
+            // Get the uploaded file info for response
+            var attachments = await _db.Attachments
+                .Where(a => a.EntityType == "Submission" && a.EntityId == submission.Id)
+                .Include(a => a.UploadedByUser)
+                .Select(a => new AttachmentReadDto(
+                    a.Id,
+                    a.FileName,
+                    a.ContentType,
+                    a.FileSize,
+                    a.UploadedAt,
+                    a.UploadedByUserId,
+                    $"{a.UploadedByUser!.FirstName} {a.UploadedByUser.LastName}",
+                    a.EntityType,
+                    a.EntityId
+                ))
+                .ToListAsync();
+
+            var commitCount = await _db.SubmissionCommits
+                .CountAsync(c => c.SubmissionId == submission.Id);
+            var feedbackCount = await _db.FeedbackComments
+                .CountAsync(f => f.SubmissionId == submission.Id);
+
+            var readDto = new SubmissionReadDto(
+                submission.Id,
+                submission.AssignmentId,
+                submission.UserId,
+                "File", // SubmissionType = File
+                null, // No RepoUrl
+                null, // No Branch
+                null, // No LatestCommitSha
+                submission.SubmittedAt,
+                submission.Status,
+                submission.CreatedAt,
+                null, // No Grade
+                commitCount,
+                feedbackCount,
+                attachments
+            );
+
+            return Ok(readDto);
+        }
+
         /// <summary>Get user's submission for an assignment</summary>
         [HttpGet("assignment/{assignmentId:long}")]
         [Authorize(Roles = "Intern,Attache")]
@@ -102,30 +231,73 @@ namespace Interchée.Controllers
         {
             var userId = User.GetUserId();
 
+            // Get submission (could be GitHub or File type)
             var submission = await _db.AssignmentSubmissions
                 .Include(s => s.Grade)
-                .ThenInclude(g => g!.GradedByUser) // Add this to get grader name
+                .ThenInclude(g => g!.GradedByUser)
                 .Where(s => s.AssignmentId == assignmentId && s.UserId == userId)
-                .Select(s => new SubmissionReadDto(
-                    s.Id, s.AssignmentId, s.UserId, s.RepoUrl, s.Branch, s.LatestCommitSha,
-                    s.SubmittedAt, s.Status, s.CreatedAt,
-                    s.Grade != null ? new GradeReadDto(
-                        s.Grade.Id,
-                        s.Grade.SubmissionId,
-                        s.Grade.Score,
-                        s.Grade.MaxScore,
-                        s.Grade.RubricId, // Add RubricId
-                        null, // RubricName (not needed here)
-                        s.Grade.RubricScoresJson,
-                        s.Grade.GradedByUserId,
-                        s.Grade.GradedAt,
-                        $"{s.Grade.GradedByUser!.FirstName} {s.Grade.GradedByUser.LastName}" // Add grader name
-                    ) : null,
-                    s.Commits.Count, s.FeedbackComments.Count
-                ))
                 .FirstOrDefaultAsync();
 
-            return submission != null ? Ok(submission) : NotFound();
+            if (submission == null) return NotFound("No submission found for this assignment");
+
+            // Determine submission type
+            var submissionType = string.IsNullOrEmpty(submission.RepoUrl) ? "File" : "GitHub";
+
+            // Get attachments for file submissions
+            var attachments = new List<AttachmentReadDto>();
+            if (submissionType == "File")
+            {
+                attachments = await _db.Attachments
+                    .Where(a => a.EntityType == "Submission" && a.EntityId == submission.Id)
+                    .Include(a => a.UploadedByUser)
+                    .Select(a => new AttachmentReadDto(
+                        a.Id,
+                        a.FileName,
+                        a.ContentType,
+                        a.FileSize,
+                        a.UploadedAt,
+                        a.UploadedByUserId,
+                        $"{a.UploadedByUser!.FirstName} {a.UploadedByUser.LastName}",
+                        a.EntityType,
+                        a.EntityId
+                    ))
+                    .ToListAsync();
+            }
+
+            var commitCount = await _db.SubmissionCommits
+                .CountAsync(c => c.SubmissionId == submission.Id);
+            var feedbackCount = await _db.FeedbackComments
+                .CountAsync(f => f.SubmissionId == submission.Id);
+
+            var readDto = new SubmissionReadDto(
+                submission.Id,
+                submission.AssignmentId,
+                submission.UserId,
+                submissionType,
+                submission.RepoUrl,
+                submission.Branch,
+                submission.LatestCommitSha,
+                submission.SubmittedAt,
+                submission.Status,
+                submission.CreatedAt,
+                submission.Grade != null ? new GradeReadDto(
+                    submission.Grade.Id,
+                    submission.Grade.SubmissionId,
+                    submission.Grade.Score,
+                    submission.Grade.MaxScore,
+                    submission.Grade.RubricId,
+                    null,
+                    submission.Grade.RubricScoresJson,
+                    submission.Grade.GradedByUserId,
+                    submission.Grade.GradedAt,
+                    $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}"
+                ) : null,
+                commitCount,
+                feedbackCount,
+                attachments
+            );
+
+            return Ok(readDto);
         }
 
         /// <summary>Get all submissions for current user (Intern/Attaché only)</summary>
@@ -136,33 +308,80 @@ namespace Interchée.Controllers
         {
             var userId = User.GetUserId();
 
+            // Get all submissions (both GitHub and File)
             var submissions = await _db.AssignmentSubmissions
                 .Where(s => s.UserId == userId)
                 .Include(s => s.Assignment)
                 .Include(s => s.Grade)
-                .ThenInclude(g => g!.GradedByUser) // Add this
-                .Select(s => new SubmissionReadDto(
-                    s.Id, s.AssignmentId, s.UserId, s.RepoUrl, s.Branch, s.LatestCommitSha,
-                    s.SubmittedAt, s.Status, s.CreatedAt,
-                    s.Grade != null ? new GradeReadDto(
-                        s.Grade.Id,
-                        s.Grade.SubmissionId,
-                        s.Grade.Score,
-                        s.Grade.MaxScore,
-                        s.Grade.RubricId, // Add RubricId
-                        null, // RubricName (not needed here)
-                        s.Grade.RubricScoresJson,
-                        s.Grade.GradedByUserId,
-                        s.Grade.GradedAt,
-                        $"{s.Grade.GradedByUser!.FirstName} {s.Grade.GradedByUser.LastName}" // Add grader name
-                    ) : null,
-                    s.Commits.Count, s.FeedbackComments.Count
-                ))
+                .ThenInclude(g => g!.GradedByUser)
                 .ToListAsync();
 
-            return Ok(submissions);
-        }
+            var result = new List<SubmissionReadDto>();
 
+            foreach (var submission in submissions)
+            {
+                // Determine submission type
+                var submissionType = string.IsNullOrEmpty(submission.RepoUrl) ? "File" : "GitHub";
+
+                // Get attachments for file submissions
+                var attachments = new List<AttachmentReadDto>();
+                if (submissionType == "File")
+                {
+                    attachments = await _db.Attachments
+                        .Where(a => a.EntityType == "Submission" && a.EntityId == submission.Id)
+                        .Include(a => a.UploadedByUser)
+                        .Select(a => new AttachmentReadDto(
+                            a.Id,
+                            a.FileName,
+                            a.ContentType,
+                            a.FileSize,
+                            a.UploadedAt,
+                            a.UploadedByUserId,
+                            $"{a.UploadedByUser!.FirstName} {a.UploadedByUser.LastName}",
+                            a.EntityType,
+                            a.EntityId
+                        ))
+                        .ToListAsync();
+                }
+
+                var commitCount = await _db.SubmissionCommits
+                    .CountAsync(c => c.SubmissionId == submission.Id);
+                var feedbackCount = await _db.FeedbackComments
+                    .CountAsync(f => f.SubmissionId == submission.Id);
+
+                var readDto = new SubmissionReadDto(
+                    submission.Id,
+                    submission.AssignmentId,
+                    submission.UserId,
+                    submissionType,
+                    submission.RepoUrl,
+                    submission.Branch,
+                    submission.LatestCommitSha,
+                    submission.SubmittedAt,
+                    submission.Status,
+                    submission.CreatedAt,
+                    submission.Grade != null ? new GradeReadDto(
+                        submission.Grade.Id,
+                        submission.Grade.SubmissionId,
+                        submission.Grade.Score,
+                        submission.Grade.MaxScore,
+                        submission.Grade.RubricId,
+                        null,
+                        submission.Grade.RubricScoresJson,
+                        submission.Grade.GradedByUserId,
+                        submission.Grade.GradedAt,
+                        $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}"
+                    ) : null,
+                    commitCount,
+                    feedbackCount,
+                    attachments
+                );
+
+                result.Add(readDto);
+            }
+
+            return Ok(result);
+        }
         /// <summary>Add commit to submission (for webhooks or manual entry)</summary>
         [HttpPost("{submissionId:long}/commits")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -226,37 +445,84 @@ namespace Interchée.Controllers
         }
 
         /// <summary>Get all submissions for an assignment (Supervisors only)</summary>
-        /// <summary>Get all submissions for an assignment (Supervisors only)</summary>
         [HttpGet("assignment/{assignmentId:long}/all")]
         [Authorize(Roles = "Admin,HR,Supervisor")]
         [ProducesResponseType(typeof(IEnumerable<SubmissionReadDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SubmissionReadDto>>> GetAssignmentSubmissions(long assignmentId)
         {
+            // Get all submissions for this assignment
             var submissions = await _db.AssignmentSubmissions
                 .Where(s => s.AssignmentId == assignmentId)
                 .Include(s => s.User)
                 .Include(s => s.Grade)
-                .ThenInclude(g => g!.GradedByUser) // Add this
-                .Select(s => new SubmissionReadDto(
-                    s.Id, s.AssignmentId, s.UserId, s.RepoUrl, s.Branch, s.LatestCommitSha,
-                    s.SubmittedAt, s.Status, s.CreatedAt,
-                    s.Grade != null ? new GradeReadDto(
-                        s.Grade.Id,
-                        s.Grade.SubmissionId,
-                        s.Grade.Score,
-                        s.Grade.MaxScore,
-                        s.Grade.RubricId, // Add RubricId
-                        null, // RubricName (can be null here)
-                        s.Grade.RubricScoresJson,
-                        s.Grade.GradedByUserId,
-                        s.Grade.GradedAt,
-                        $"{s.Grade.GradedByUser!.FirstName} {s.Grade.GradedByUser.LastName}" // Add grader name
-                    ) : null,
-                    s.Commits.Count, s.FeedbackComments.Count
-                ))
+                .ThenInclude(g => g!.GradedByUser)
                 .ToListAsync();
 
-            return Ok(submissions);
+            var result = new List<SubmissionReadDto>();
+
+            foreach (var submission in submissions)
+            {
+                // Determine submission type
+                var submissionType = string.IsNullOrEmpty(submission.RepoUrl) ? "File" : "GitHub";
+
+                // Get attachments for file submissions
+                var attachments = new List<AttachmentReadDto>();
+                if (submissionType == "File")
+                {
+                    attachments = await _db.Attachments
+                        .Where(a => a.EntityType == "Submission" && a.EntityId == submission.Id)
+                        .Include(a => a.UploadedByUser)
+                        .Select(a => new AttachmentReadDto(
+                            a.Id,
+                            a.FileName,
+                            a.ContentType,
+                            a.FileSize,
+                            a.UploadedAt,
+                            a.UploadedByUserId,
+                            $"{a.UploadedByUser!.FirstName} {a.UploadedByUser.LastName}",
+                            a.EntityType,
+                            a.EntityId
+                        ))
+                        .ToListAsync();
+                }
+
+                var commitCount = await _db.SubmissionCommits
+                    .CountAsync(c => c.SubmissionId == submission.Id);
+                var feedbackCount = await _db.FeedbackComments
+                    .CountAsync(f => f.SubmissionId == submission.Id);
+
+                var readDto = new SubmissionReadDto(
+                    submission.Id,
+                    submission.AssignmentId,
+                    submission.UserId,
+                    submissionType,
+                    submission.RepoUrl,
+                    submission.Branch,
+                    submission.LatestCommitSha,
+                    submission.SubmittedAt,
+                    submission.Status,
+                    submission.CreatedAt,
+                    submission.Grade != null ? new GradeReadDto(
+                        submission.Grade.Id,
+                        submission.Grade.SubmissionId,
+                        submission.Grade.Score,
+                        submission.Grade.MaxScore,
+                        submission.Grade.RubricId,
+                        null,
+                        submission.Grade.RubricScoresJson,
+                        submission.Grade.GradedByUserId,
+                        submission.Grade.GradedAt,
+                        $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}"
+                    ) : null,
+                    commitCount,
+                    feedbackCount,
+                    attachments
+                );
+
+                result.Add(readDto);
+            }
+
+            return Ok(result);
         }
         /// <summary>Update submission (change repo URL or branch)</summary>
         [HttpPut("{id:long}")]
@@ -296,13 +562,15 @@ namespace Interchée.Controllers
                 .CountAsync(f => f.SubmissionId == submission.Id);
 
             var readDto = new SubmissionReadDto(
-                submission.Id, submission.AssignmentId, submission.UserId, submission.RepoUrl,
+                 submission.Id, submission.AssignmentId, submission.UserId, "GitHub", submission.RepoUrl,
                 submission.Branch, submission.LatestCommitSha, submission.SubmittedAt,
-                submission.Status, submission.CreatedAt, null, commitCount, feedbackCount
+                submission.Status, submission.CreatedAt, null, commitCount, feedbackCount, new List<AttachmentReadDto>()
             );
 
             return Ok(readDto);
         }
+
+
 
         /// <summary>Update submission status (Supervisors only - for grading)</summary>
         [HttpPut("{id:long}/status")]
@@ -344,9 +612,9 @@ namespace Interchée.Controllers
                 .CountAsync(f => f.SubmissionId == submission.Id);
 
             var readDto = new SubmissionReadDto(
-                submission.Id, submission.AssignmentId, submission.UserId, submission.RepoUrl,
+                  submission.Id, submission.AssignmentId, submission.UserId, "GitHub", submission.RepoUrl,
                 submission.Branch, submission.LatestCommitSha, submission.SubmittedAt,
-                submission.Status, submission.CreatedAt, null, commitCount, feedbackCount
+                submission.Status, submission.CreatedAt, null, commitCount, feedbackCount, new List<AttachmentReadDto>()
             );
 
             return Ok(readDto);

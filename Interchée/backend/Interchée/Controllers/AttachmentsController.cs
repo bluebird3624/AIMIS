@@ -17,7 +17,7 @@ namespace Interchée.Controllers
         private readonly FileService _fileService = fileService;
 
         /// <summary>Upload a file attachment (Auto-detects entity type based on user role)</summary>
-        [HttpPost]
+        [HttpPost("auto-detect")]
         [RequestSizeLimit(10_485_760)] // 10MB limit
         [ProducesResponseType(typeof(AttachmentReadDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<AttachmentReadDto>> Upload([FromForm] AttachmentCreateDto dto)
@@ -78,13 +78,13 @@ namespace Interchée.Controllers
                 return BadRequest($"File upload failed: {ex.Message}");
             }
         }
-        /*
+        
         /// <summary>Upload submission file (Intern/Attaché only - explicit endpoint)</summary>
         [HttpPost("submissions/{submissionId:long}")]
         [Authorize(Roles = "Intern,Attache")]
         [RequestSizeLimit(10_485_760)]
         [ProducesResponseType(typeof(AttachmentReadDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<AttachmentReadDto>> UploadToSubmission(long submissionId, [FromForm] IFormFile file)
+        public async Task<ActionResult<AttachmentReadDto>> UploadToSubmission(long submissionId,  [FromForm] AttachmentCreateDto dto)
         {
             var userId = User.GetUserId();
 
@@ -105,7 +105,7 @@ namespace Interchée.Controllers
                 }
 
                 // Save file as submission attachment
-                var attachment = await _fileService.SaveFileAsync(file, "Submission", submissionId, userId);
+                var attachment = await _fileService.SaveFileAsync(dto.File, "Submission", submissionId, userId);
                 _db.Attachments.Add(attachment);
                 await _db.SaveChangesAsync();
 
@@ -139,7 +139,7 @@ namespace Interchée.Controllers
         [Authorize(Roles = "Admin,HR,Supervisor")]
         [RequestSizeLimit(10_485_760)]
         [ProducesResponseType(typeof(AttachmentReadDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<AttachmentReadDto>> UploadToAssignment(long assignmentId, [FromForm] IFormFile file)
+        public async Task<ActionResult<AttachmentReadDto>> UploadToAssignment(long assignmentId,  [FromForm] AttachmentCreateDto dto)
         {
             var userId = User.GetUserId();
 
@@ -163,7 +163,7 @@ namespace Interchée.Controllers
                     return Forbid("No access to this assignment");
 
                 // Save file as assignment attachment
-                var attachment = await _fileService.SaveFileAsync(file, "Assignment", assignmentId, userId);
+                var attachment = await _fileService.SaveFileAsync(dto.File, "Assignment", assignmentId, userId);
                 _db.Attachments.Add(attachment);
                 await _db.SaveChangesAsync();
 
@@ -191,7 +191,7 @@ namespace Interchée.Controllers
                 return BadRequest($"File upload failed: {ex.Message}");
             }
         }
-        */
+
         /// <summary>Download a file attachment</summary>
         [HttpGet("{id:long}/download")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -230,7 +230,7 @@ namespace Interchée.Controllers
 
             // Validate entity exists and user has access
             var (hasAccess, error) = await ValidateEntityAccess(entityType, entityId, userId);
-            if (!hasAccess) return Forbid(error);
+            if (!hasAccess) return BadRequest(error);
 
             var attachments = await _db.Attachments
                 .Where(a => a.EntityType == entityType && a.EntityId == entityId)
