@@ -6,7 +6,7 @@ const env = import.meta.env.VITE_ENV;
 
 const BACKEND_API_URL = import.meta.env.VITE_APP_BACKEND_API_URL;
 const api = axios.create({
-    baseURL: "http://localhost:5007/",
+    baseURL: "http://172.20.2.140:5007/",
     timeout: 15000,
     headers: {
         'Accept':'application/json',
@@ -63,6 +63,7 @@ export const onboardAPI = {
 export const departmentAPI = {
     getDepartments: () =>
         api.get('/departments'),
+    
 }
 
 export const usersAPI = {
@@ -72,6 +73,19 @@ export const usersAPI = {
         api.post('/users', data),
     assignDepartment: (data) =>
         api.post('/department-roles/assign', data),
+    
 }
 
+export const absenceAPI = {
+    getAbsenceRequestsAll: () =>
+        api.get('/absence-requests'),
+    getMyAbsenceRequests: () =>
+        api.get(`/absence-requests/my`),
+    creatAbsenceRequest: (requestInfo) => 
+        api.post('/absence-requests', requestInfo),
+    approveRejectAbsenceRequest: (id, decisionInfo) =>
+        api.post(`/absence-requests/${id}/decision`, decisionInfo),
+    getRequestsByDepartment: (id) => 
+        api.get(`/absence-requests/department/${id}`)
+}
 export default api;

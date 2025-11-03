@@ -35,8 +35,8 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      const token = (authService.getToken) ;
-      const rawUser = (authService.getCurrentUser);
+      const token = (authService.getToken()) ;
+      const rawUser = (authService.getCurrentUser());
       dispatch({
         type: 'RESTORE',
         payload: {

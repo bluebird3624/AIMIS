@@ -41,12 +41,12 @@ function Login() {
     const handleForgotPasswordClick = (event) => {
         event.preventDefault();
         setShowForgotPassword(true);
-        setErrors({}); // Clear errors when switching forms
+        setErrors({}); 
     }
 
     const handleBackToLogin = () => {
         setShowForgotPassword(false);
-        setErrors({}); // Clear errors when switching forms
+        setErrors({}); 
     }
 
     const handleForgotPasswordSubmit = (event) => {
