@@ -25,6 +25,13 @@ namespace Interchée.Controllers
 
             var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
+            // Prevent past dates
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+            if (dto.StartDate < today)
+            {
+                return BadRequest("Start date cannot be in the past");
+            }
+
             // Get user's department from role assignments
             var userDept = await _db.DepartmentRoleAssignments
                 .Where(x => x.UserId == userId && (x.RoleName == "Intern" || x.RoleName == "Attache"))
