@@ -108,6 +108,11 @@ namespace Interchée.Controllers
         {
             var userId = User.GetUserId();
 
+            if (dto.DueAt.HasValue && dto.DueAt.Value < DateTime.UtcNow)
+            {
+                return BadRequest("Due date cannot be in the past. Please set a future due date.");
+            }
+
             // Verify user has role in target department
             var hasAccess = await _db.DepartmentRoleAssignments
                 .AnyAsync(ra => ra.UserId == userId && ra.DepartmentId == dto.DepartmentId &&
@@ -230,6 +235,11 @@ namespace Interchée.Controllers
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (assignment == null) return NotFound();
+
+            if (dto.DueAt.HasValue && dto.DueAt.Value < DateTime.UtcNow)
+            {
+                return BadRequest("Due date cannot be in the past. Please set a future due date.");
+            }
 
             // Verify user has access to update this assignment's department
             var hasAccess = await _db.DepartmentRoleAssignments
