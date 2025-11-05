@@ -1,7 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import {absenceAPI} from '../services/api'; 
-import '../Styles/absence.css';
+import '../Styles/Absence.css';
+import  * as icons from 'react-icons/io5';
 
 const StudentAbsence = () => {
   const [requests, setRequests] = useState([]);
@@ -95,7 +95,7 @@ const StudentAbsence = () => {
       setForm({ startDate: '', endDate: '', reason: '', comments: '' });
     } catch (err) {
       console.error('Submit failed', err);
-      setError('Failed to submit request');
+      setError('Start date cannot be  in the past.');
     } finally {
       setSubmitting(false);
     }
@@ -112,90 +112,159 @@ const StudentAbsence = () => {
     setError(null);
   }
 
+  // Filter requests by status
+  const pendingRequests = requests.filter(request => request.status === 'Pending');
+  const pastRequests = requests.filter(request => request.status !== 'Pending');
+
+const renderRequestCard = (r) => (
+  <div key={r.id} className="request-container">
+    <div className="top-row">
+      <div className="request-user-info">
+        <div className="request-user-name">{r.requestedByName || r.userName || 'You'}</div>
+        <div className="absence-reason">{r.reason}</div>
+      </div>
+      <div 
+        className={`absence-status ${
+          r.status.toLowerCase() === 'pending' ? 'absence-status-pending' :
+          r.status.toLowerCase() === 'approved' ? 'absence-status-approved' :
+          'absence-status-rejected'
+        }`}
+        style={{ marginLeft: 'auto' }}
+      >
+        {r.status}
+      </div>
+    </div>
+
+    <div className="dates-row">
+      <div className="date-container">
+        <div className="icon-container">
+            <icons.IoCalendarNumberOutline style={{ fontSize: '40px' }} />
+        </div>
+        <div className='content-wrapper'>
+        <div className="date-label">From</div>
+        <div className="date">{r.startDate?.slice(0,10) || '-'}</div>
+        </div>
+      </div>
+
+      <div className="date-container">
+        <div className="icon-container">
+            <icons.IoCalendarNumberOutline style={{ fontSize: '40px' }} />
+        </div>
+        <div className='content-wrapper'>
+        <div className="date-label">To</div>
+        <div className="date">{r.endDate?.slice(0,10) || '-'}</div>
+        </div>
+      </div>
+
+      <div className="date-container">
+        <div className="icon-container">
+            <icons.IoTimerOutline style={{ fontSize: '40px' }} />
+        </div>
+        <div className='content-wrapper'>
+        <div className="date-label">Duration</div>
+        </div>
+        <div className="date">{r.days != null ? `${r.days} day(s)` : '-'}</div>
+      </div>
+    </div>
+    <div className='absence-form-row'>
+        <label> Comments </label>
+        <textarea style={{ marginTop: 8 }}>{r.comments || '—'}</textarea>
+    </div>
+    </div>
+
+);
+
   return (
-    <div className='student-absence-main-content'>
-      <div className='request-absence-header'>
-        <div className="header-row">
-          <div className="header-left">
+    <>
+    <div className='title'>
             <h1>Absence Management</h1>
-            <p>Request and manage leave requests</p>
-          </div>
+            <p>Request for leave</p>
+     </div>   
 
-          <div className="header-right">
-            <button className="btn-primary" onClick={handleCreateRequest} type="button">Request Absence</button>
-          </div>
-        </div>
+          
+        <button className="request-button" onClick={handleCreateRequest} type="button"> < icons.IoWalkOutline/>Request Absence</button> 
 
-        <div className='request-absence-heading'>
-          {/* summary remains here */}
-        </div>
-      </div>
+                {/** stats section */}
+                      <div className="stats-row" style={{ display: 'flex', gap: 12, alignItems: 'center', margin: '16px 0' }}>
+                        <div className="absence-stats-container">
+                          <div className="pending-icon-container">
+                            <icons.IoHourglassOutline style={{ fontSize: '40px' }} />
+                          </div>
+                          <div className="content-wrapper">
+                            <div className="label">Pending</div>
+                            <div className="number">{summary.pending}</div>
+                          </div>
+                        </div>
+                
+                        <div className="absence-stats-container">
+                          <div className="approved-icon-container">
+                            <icons.IoCheckmarkCircleOutline style={{ fontSize: '40px' }} />
+                          </div>
+                          <div className="content-wrapper">
+                            <div className="label">Approved</div>
+                            <div className="number">{summary.approved}</div>
+                          </div>
+                        </div>
+                
+                        <div className="absence-stats-container">
+                          <div className="rejected-icon-container">
+                            <icons.IoCloseCircleOutline style={{ fontSize: '40px' }} />
+                          </div>
+                          <div className="content-wrapper">
+                            <div className="label">Rejected</div>
+                            <div className="number">{summary.rejected}</div>
+                          </div>
+                        </div>
+                      </div>  
 
-      <div className='request-absence-summary'>
-        <div className="absence-stats">
-          <div className="absence-stats-container">
-            <div>
-              <div className="pending-icon-container"><svg width="18" height="18" /></div>
-            </div>
-            <div>
-              <div className="stat-label">Pending</div>
-              <div className="stat-value">{summary.pending}</div>
-            </div>
-          </div>
+              <h1 style={{ fontFamily: 'arial', fontSize: '30px', marginLeft:'20px'}}> Pending requests</h1>
+              <div className='section'>
+                <div className='requests-container'>
+                  {loading && <div className="loading">Loading requests…</div>}
+                  {!loading && pendingRequests.length === 0 && <div className="empty">No pending requests</div>}
+                  {pendingRequests.map(renderRequestCard)}
+                </div>
+              </div>
 
-          <div className="absence-stats-container">
-            <div>
-              <div className="approved-icon-container"><svg width="18" height="18" /></div>
-            </div>
-            <div>
-              <div className="stat-label">Approved</div>
-              <div className="stat-value">{summary.approved}</div>
-            </div>
-          </div>
-
-          <div className="absence-stats-container">
-            <div>
-              <div className="rejected-icon-container"><svg width="18" height="18" /></div>
-            </div>
-            <div>
-              <div className="stat-label">Rejected</div>
-              <div className="stat-value">{summary.rejected}</div>
-            </div>
-          </div>
-        </div>
-      </div>
+              <h1 style={{ fontFamily: 'arial', fontSize: '30px', marginLeft:'20px'}}> Past requests</h1>
+              <div className='section'>
+                <div className='requests-container'>
+                  {loading && <div className="loading">Loading requests…</div>}
+                  {!loading && pastRequests.length === 0 && <div className="empty">No past requests</div>}
+                  {pastRequests.map(renderRequestCard)}
+                </div>
+              </div>     
 
       {/* modal for request form */}
       {absenceModal && (
-        <div className="modal-overlay" onClick={closeModal}>
+        <div className="absence-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>New Absence Request</h3>
-              <button className="modal-close" onClick={closeModal} aria-label="Close" type="button">×</button>
             </div>
 
             <form className="absence-form" onSubmit={submitRequest}>
-              <div className="form-row">
-                <label>Start</label>
+              <div className="absence-form-row">
+                <label>Start date</label>
                 <input name="startDate" type="date" value={form.startDate} onChange={handleChange} required />
               </div>
 
-              <div className="form-row">
-                <label>End</label>
+              <div className="absence-form-row">
+                <label>End date</label>
                 <input name="endDate" type="date" value={form.endDate} onChange={handleChange} required />
               </div>
 
-              <div className="form-row">
+              <div className="absence-form-row">
                 <label>Reason</label>
                 <input name="reason" type="text" value={form.reason} onChange={handleChange} placeholder="e.g. Medical" required />
               </div>
 
-              <div className="form-row">
+              <div className="absence-form-row">
                 <label>Comments</label>
                 <textarea name="comments" value={form.comments} onChange={handleChange} placeholder="Optional details" />
               </div>
 
-              <div className="form-actions">
+              <div className="absence-form-actions">
                 <button type="submit" className="btn-primary" disabled={submitting}>
                   {submitting ? 'Sending...' : 'Send Request'}
                 </button>
@@ -208,46 +277,8 @@ const StudentAbsence = () => {
         </div>
       )}
 
-      <div className='request-absence-body'>
-        <div className='requests-container'>
-          {loading && <div className="loading">Loading requests…</div>}
-          {!loading && requests.length === 0 && <div className="empty">No requests yet</div>}
-
-          {requests.map((r) => (
-            <div key={r.id} className="request-container">
-              <div className="top-row">
-                <div className="request-user-info">
-                  <div className="request-user-name">{r.requestedByName || r.userName || 'You'}</div>
-                  <div className="absence-reason">{r.reason}</div>
-                </div>
-                <div className={`absence-status-${r.status}`} style={{ marginLeft: 'auto' }}>
-                  {r.status}
-                </div>
-              </div>
-
-              <div className="dates-row">
-                <div className="date-container">
-                  <div className="date-label">From</div>
-                  <div className="date">{r.startDate?.slice(0,10) || '-'}</div>
-                </div>
-
-                <div className="date-container">
-                  <div className="date-label">To</div>
-                  <div className="date">{r.endDate?.slice(0,10) || '-'}</div>
-                </div>
-              </div>
-
-              <div className="recent-decision-container">
-                <div className="comment-block" style={{ padding: 12 }}>
-                  <strong>Comments</strong>
-                  <p style={{ marginTop: 8 }}>{r.comments || '—'}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+          
+    </>
   );
 };
 

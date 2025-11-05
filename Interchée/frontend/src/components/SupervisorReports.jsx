@@ -4,7 +4,388 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TextField } from '@mui/material';
-import { IoAlertCircleOutline, IoCheckmarkCircleOutline, IoClipboardOutline, IoAdd, IoClose, IoTrash, IoPersonAdd } from "react-icons/io5";
+import { IoAlertCircleOutline, IoCheckmarkCircleOutline, IoClipboardOutline, IoAdd, IoClose, IoTrash, IoPersonAdd, IoChevronDown, IoChevronUp, IoDownloadOutline, IoOpenOutline } from "react-icons/io5";
+
+// Ungraded Submission Card Component - Moved outside
+const UngradedSubmissionCard = ({ submission, onMarksUpdate, onCommentUpdate, onSubmitGrade }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [comment, setComment] = useState(submission.supervisorComment || '');
+    const commentTextareaRef = useRef(null);
+
+    // Calculate total marks for a submission
+    const calculateTotalMarks = (submission) => {
+        return submission.rubric.criteria.reduce((total, criterion) => total + criterion.awardedMarks, 0);
+    };
+
+    // Calculate maximum possible marks for a submission
+    const calculateMaxMarks = (submission) => {
+        return submission.rubric.criteria.reduce((total, criterion) => total + criterion.maxMarks, 0);
+    };
+
+    const totalMarks = calculateTotalMarks(submission);
+    const maxMarks = calculateMaxMarks(submission);
+
+    const toggleExpand = () => {
+        setIsExpanded(!isExpanded);
+    };
+
+    // Auto-resize comment textarea
+    useEffect(() => {
+        const textarea = commentTextareaRef.current;
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }
+    }, [comment]);
+
+    const handleCommentChange = (e) => {
+        const newComment = e.target.value;
+        setComment(newComment);
+        onCommentUpdate(submission.id, newComment);
+    };
+
+    // Handle opening Git URL in new tab
+    const openGitUrl = (url) => {
+        window.open(url, '_blank');
+    };
+
+    // Handle file download
+    const handleDownload = (fileName) => {
+        // Simulate file download
+        alert(`Downloading file: ${fileName}`);
+        // In a real app, you would fetch the file from your server
+    };
+
+    const handleSubmitGrade = () => {
+        onSubmitGrade(submission.id);
+    };
+
+    return (
+        <div className={`sup-submission-card ${isExpanded ? 'sup-expanded' : ''}`}>
+            <div className="sup-submission-header">
+                <div className="sup-submission-title-section">
+                    <h3 className="sup-submission-title">{submission.assignmentTitle}</h3>
+                    <div className="sup-submission-meta">
+                        <div className="sup-student-info">
+                            <span>Submitted by: {submission.studentName}</span>
+                        </div>
+                        <div className="sup-submission-date">
+                            <span>Submitted: {submission.submittedDate}</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="sup-submission-status">
+                    <span className={`sup-status sup-${submission.status.toLowerCase()}`}>
+                        {submission.status}
+                    </span>
+                </div>
+                <button 
+                    className="sup-view-details-btn"
+                    onClick={toggleExpand}
+                >
+                    {isExpanded ? 'View Less' : 'View Details'}
+                    {isExpanded ? <IoChevronUp /> : <IoChevronDown />}
+                </button>
+            </div>
+            
+            {isExpanded && (
+                <div className="sup-submission-expanded-content">
+                    {/* Git Repository Submission */}
+                    {submission.submissionType === 'git' && (
+                        <div className="sup-git-submission-details">
+                            <div className="sup-submission-info">
+                                <strong>Git Repository URL:</strong>
+                                <div className="sup-url-container">
+                                    <span className="sup-git-url">{submission.gitUrl}</span>
+                                    <button 
+                                        className="sup-open-url-btn"
+                                        onClick={() => openGitUrl(submission.gitUrl)}
+                                    >
+                                        <IoOpenOutline />
+                                        Open Repository
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* File Upload Submission */}
+                    {submission.submissionType === 'file' && (
+                        <div className="sup-file-submission-details">
+                            <div className="sup-submission-info">
+                                <strong>Submitted File:</strong>
+                                <div className="sup-file-container">
+                                    <div className="sup-file-info">
+                                        <span className="sup-file-name">{submission.fileName}</span>
+                                        <span className="sup-file-size">{submission.fileSize}</span>
+                                    </div>
+                                    <button 
+                                        className="sup-download-file-btn"
+                                        onClick={() => handleDownload(submission.fileName)}
+                                    >
+                                        <IoDownloadOutline />
+                                        Download File
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Grading Rubric Section */}
+                    <div className="sup-grading-rubric-section">
+                        <h4 className="sup-rubric-title">{submission.rubric.name}</h4>
+                        
+                        <div className="sup-criteria-list">
+                            {submission.rubric.criteria.map((criterion) => (
+                                <div key={criterion.id} className="sup-criterion-item">
+                                    <div className="sup-criterion-info">
+                                        <div className="sup-criterion-header">
+                                            <h5 className="sup-criterion-name">{criterion.name}</h5>
+                                            <div className="sup-criterion-marks-display">
+                                                <span className="sup-awarded-marks">{criterion.awardedMarks}</span>
+                                                <span className="sup-marks-separator">/</span>
+                                                <span className="sup-max-marks">{criterion.maxMarks}</span>
+                                            </div>
+                                        </div>
+                                        <p className="sup-criterion-description">{criterion.description}</p>
+                                    </div>
+                                    <div className="sup-marks-input-container">
+                                        <label className="sup-marks-label">Marks Awarded:</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max={criterion.maxMarks}
+                                            value={criterion.awardedMarks}
+                                            onChange={(e) => onMarksUpdate(submission.id, criterion.id, e.target.value)}
+                                            className="sup-marks-input"
+                                        />
+                                        {criterion.awardedMarks > criterion.maxMarks && (
+                                            <div className="marks-error">
+                                                Cannot exceed {criterion.maxMarks} marks
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="sup-total-marks-section">
+                            <div className="sup-total-marks-display">
+                                <span className="sup-total-label">Total Marks:</span>
+                                <span className={`sup-total-score ${totalMarks > maxMarks ? 'sup-total-error' : ''}`}>
+                                    {totalMarks}/{maxMarks}
+                                </span>
+                            </div>
+                            <div className="sup-percentage-display">
+                                <span className="sup-percentage-label">Percentage:</span>
+                                <span className="sup-percentage-value">
+                                    {maxMarks > 0 ? Math.round((totalMarks / maxMarks) * 100) : 0}%
+                                </span>
+                            </div>
+                            {totalMarks > maxMarks && (
+                                <div className="total-marks-error">
+                                    Total marks cannot exceed {maxMarks}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Supervisor Comments Section */}
+                        <div className="sup-comments-section">
+                            <h5 className="sup-comments-title">Supervisor Comments</h5>
+                            <div className="sup-comments-container">
+                                <textarea
+                                    ref={commentTextareaRef}
+                                    value={comment}
+                                    onChange={handleCommentChange}
+                                    placeholder="Provide feedback and comments for the student..."
+                                    className="sup-comments-textarea"
+                                    rows={3}
+                                />
+                                <div className="sup-comments-help">
+                                    <span>Provide constructive feedback about the student's work, strengths, and areas for improvement.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="sup-submission-actions">
+                        <button 
+                            className="sup-submit-grade-btn"
+                            onClick={handleSubmitGrade}
+                            disabled={totalMarks > maxMarks}
+                        >
+                            Submit Grade
+                        </button>
+                        {totalMarks > maxMarks && (
+                            <div className="submit-error">
+                                Please adjust marks to not exceed maximum available marks
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+// Graded Submission Card Component
+const GradedSubmissionCard = ({ submission }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    // Calculate total marks for a submission
+    const calculateTotalMarks = (submission) => {
+        return submission.rubric.criteria.reduce((total, criterion) => total + criterion.awardedMarks, 0);
+    };
+
+    // Calculate maximum possible marks for a submission
+    const calculateMaxMarks = (submission) => {
+        return submission.rubric.criteria.reduce((total, criterion) => total + criterion.maxMarks, 0);
+    };
+
+    const totalMarks = calculateTotalMarks(submission);
+    const maxMarks = calculateMaxMarks(submission);
+    const percentage = maxMarks > 0 ? Math.round((totalMarks / maxMarks) * 100) : 0;
+
+    const toggleExpand = () => {
+        setIsExpanded(!isExpanded);
+    };
+
+    // Handle opening Git URL in new tab
+    const openGitUrl = (url) => {
+        window.open(url, '_blank');
+    };
+
+    // Handle file download
+    const handleDownload = (fileName) => {
+        alert(`Downloading file: ${fileName}`);
+    };
+
+    return (
+        <div className={`sup-submission-card ${isExpanded ? 'sup-expanded' : ''}`}>
+            <div className="sup-submission-header">
+                <div className="sup-submission-title-section">
+                    <h3 className="sup-submission-title">{submission.assignmentTitle}</h3>
+                    <div className="sup-submission-meta">
+                        <div className="sup-student-info">
+                            <span>Submitted by: {submission.studentName}</span>
+                        </div>
+                        <div className="sup-submission-date">
+                            <span>Submitted: {submission.submittedDate}</span>
+                        </div>
+                        <div className="sup-grade-info">
+                            <span className="sup-total-grade">Grade: {totalMarks}/{maxMarks} ({percentage}%)</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="sup-submission-status">
+                    <span className="sup-status sup-graded">
+                        Graded
+                    </span>
+                </div>
+                <button 
+                    className="sup-view-details-btn"
+                    onClick={toggleExpand}
+                >
+                    {isExpanded ? 'View Less' : 'View Details'}
+                    {isExpanded ? <IoChevronUp /> : <IoChevronDown />}
+                </button>
+            </div>
+            
+            {isExpanded && (
+                <div className="sup-submission-expanded-content">
+                    {/* Git Repository Submission */}
+                    {submission.submissionType === 'git' && (
+                        <div className="sup-git-submission-details">
+                            <div className="sup-submission-info">
+                                <strong>Git Repository URL:</strong>
+                                <div className="sup-url-container">
+                                    <span className="sup-git-url">{submission.gitUrl}</span>
+                                    <button 
+                                        className="sup-open-url-btn"
+                                        onClick={() => openGitUrl(submission.gitUrl)}
+                                    >
+                                        <IoOpenOutline />
+                                        Open Repository
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* File Upload Submission */}
+                    {submission.submissionType === 'file' && (
+                        <div className="sup-file-submission-details">
+                            <div className="sup-submission-info">
+                                <strong>Submitted File:</strong>
+                                <div className="sup-file-container">
+                                    <div className="sup-file-info">
+                                        <span className="sup-file-name">{submission.fileName}</span>
+                                        <span className="sup-file-size">{submission.fileSize}</span>
+                                    </div>
+                                    <button 
+                                        className="sup-download-file-btn"
+                                        onClick={() => handleDownload(submission.fileName)}
+                                    >
+                                        <IoDownloadOutline />
+                                        Download File
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Grading Rubric Section */}
+                    <div className="sup-grading-rubric-section">
+                        <h4 className="sup-rubric-title">{submission.rubric.name}</h4>
+                        
+                        <div className="sup-criteria-list">
+                            {submission.rubric.criteria.map((criterion) => (
+                                <div key={criterion.id} className="sup-criterion-item">
+                                    <div className="sup-criterion-info">
+                                        <div className="sup-criterion-header">
+                                            <h5 className="sup-criterion-name">{criterion.name}</h5>
+                                            <div className="sup-criterion-marks-display">
+                                                <span className="sup-awarded-marks">{criterion.awardedMarks}</span>
+                                                <span className="sup-marks-separator">/</span>
+                                                <span className="sup-max-marks">{criterion.maxMarks}</span>
+                                            </div>
+                                        </div>
+                                        <p className="sup-criterion-description">{criterion.description}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="sup-total-marks-section">
+                            <div className="sup-total-marks-display">
+                                <span className="sup-total-label">Total Marks:</span>
+                                <span className="sup-total-score">{totalMarks}/{maxMarks}</span>
+                            </div>
+                            <div className="sup-percentage-display">
+                                <span className="sup-percentage-label">Percentage:</span>
+                                <span className="sup-percentage-value">
+                                    {percentage}%
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Supervisor Comments Section */}
+                        {submission.supervisorComment && (
+                            <div className="sup-comments-section">
+                                <h5 className="sup-comments-title">Supervisor Comments</h5>
+                                <div className="sup-comments-container">
+                                    <div className="sup-comments-text">
+                                        {submission.supervisorComment}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
 
 function SupervisorReports(){
     const [isCreateAsssignmentOpen, setIsCreateAssignmentOpen] = useState(false);
@@ -25,6 +406,164 @@ function SupervisorReports(){
     const [dueDate, setDueDate] = useState(null);
     const [assignToInterns, setAssigntointerns] = useState(false);
     const [currentAssignmentId, setCurrentAssignmentId] = useState(null);
+
+    // Sample ungraded submissions data with rubrics
+    const [ungradedSubmissions, setUngradedSubmissions] = useState([
+        {
+            id: 1,
+            assignmentTitle: 'React Component Development',
+            studentName: 'John Doe',
+            submissionType: 'git',
+            gitUrl: 'https://github.com/johndoe/react-project.git',
+            submittedDate: '2024-01-12',
+            status: 'Submitted',
+            rubric: {
+                name: 'React Development Rubric',
+                criteria: [
+                    {
+                        id: 1,
+                        name: 'Component Structure',
+                        description: 'Proper component organization and separation of concerns',
+                        maxMarks: 25,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 2,
+                        name: 'State Management',
+                        description: 'Effective use of React state and props',
+                        maxMarks: 25,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 3,
+                        name: 'Code Quality',
+                        description: 'Clean code, proper naming conventions and documentation',
+                        maxMarks: 20,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 4,
+                        name: 'Functionality',
+                        description: 'All features working as specified',
+                        maxMarks: 20,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 5,
+                        name: 'UI/UX Design',
+                        description: 'User interface design and user experience',
+                        maxMarks: 10,
+                        awardedMarks: 0
+                    }
+                ]
+            },
+            supervisorComment: ''
+        },
+        {
+            id: 2,
+            assignmentTitle: 'API Integration Project',
+            studentName: 'Jane Smith',
+            submissionType: 'file',
+            fileName: 'api-integration-report.pdf',
+            fileSize: '2.4 MB',
+            submittedDate: '2024-01-14',
+            status: 'Submitted',
+            rubric: {
+                name: 'API Integration Rubric',
+                criteria: [
+                    {
+                        id: 1,
+                        name: 'API Implementation',
+                        description: 'Proper API integration and error handling',
+                        maxMarks: 30,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 2,
+                        name: 'Data Processing',
+                        description: 'Effective data transformation and validation',
+                        maxMarks: 25,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 3,
+                        name: 'Error Handling',
+                        description: 'Comprehensive error handling and user feedback',
+                        maxMarks: 20,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 4,
+                        name: 'Code Organization',
+                        description: 'Clean and maintainable code structure',
+                        maxMarks: 15,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 5,
+                        name: 'Documentation',
+                        description: 'Clear documentation and comments',
+                        maxMarks: 10,
+                        awardedMarks: 0
+                    }
+                ]
+            },
+            supervisorComment: ''
+        },
+        {
+            id: 3,
+            assignmentTitle: 'Database Design Assignment',
+            studentName: 'Mike Johnson',
+            submissionType: 'git',
+            gitUrl: 'https://github.com/mikej/database-design.git',
+            submittedDate: '2024-01-10',
+            status: 'Submitted',
+            rubric: {
+                name: 'Database Design Rubric',
+                criteria: [
+                    {
+                        id: 1,
+                        name: 'Normalization',
+                        description: 'Proper database normalization up to 3NF',
+                        maxMarks: 30,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 2,
+                        name: 'Relationships',
+                        description: 'Appropriate primary and foreign key relationships',
+                        maxMarks: 25,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 3,
+                        name: 'Constraints',
+                        description: 'Proper use of constraints and data types',
+                        maxMarks: 20,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 4,
+                        name: 'Documentation',
+                        description: 'Clear documentation and ER diagrams',
+                        maxMarks: 15,
+                        awardedMarks: 0
+                    },
+                    {
+                        id: 5,
+                        name: 'Best Practices',
+                        description: 'Following database design best practices',
+                        maxMarks: 10,
+                        awardedMarks: 0
+                    }
+                ]
+            },
+            supervisorComment: ''
+        }
+    ]);
+
+    // Graded submissions start empty
+    const [gradedSubmissions, setGradedSubmissions] = useState([]);
 
     const interns = [
         'intern number',
@@ -224,6 +763,75 @@ function SupervisorReports(){
         }
     };
 
+    // Handle marks update for criteria with constraints
+    const handleMarksUpdate = (submissionId, criterionId, marks) => {
+        const numericMarks = parseInt(marks) || 0;
+        
+        setUngradedSubmissions(prev => prev.map(submission => {
+            if (submission.id === submissionId) {
+                const criterion = submission.rubric.criteria.find(c => c.id === criterionId);
+                if (criterion) {
+                    // Ensure marks don't exceed maximum allowed for this criterion
+                    const finalMarks = Math.min(numericMarks, criterion.maxMarks);
+                    
+                    const updatedRubric = {
+                        ...submission.rubric,
+                        criteria: submission.rubric.criteria.map(criterion => 
+                            criterion.id === criterionId 
+                                ? { ...criterion, awardedMarks: finalMarks }
+                                : criterion
+                        )
+                    };
+                    return { ...submission, rubric: updatedRubric };
+                }
+            }
+            return submission;
+        }));
+    };
+
+    // Handle supervisor comment update
+    const handleCommentUpdate = (submissionId, comment) => {
+        setUngradedSubmissions(prev => prev.map(submission => 
+            submission.id === submissionId 
+                ? { ...submission, supervisorComment: comment }
+                : submission
+        ));
+    };
+
+    // Handle grade submission
+    const handleSubmitGrade = (submissionId) => {
+        // Find the submission in ungraded submissions
+        const submissionToGrade = ungradedSubmissions.find(sub => sub.id === submissionId);
+        
+        if (submissionToGrade) {
+            // Check if any criterion has marks exceeding maximum
+            const hasExceededMarks = submissionToGrade.rubric.criteria.some(
+                criterion => criterion.awardedMarks > criterion.maxMarks
+            );
+            
+            if (hasExceededMarks) {
+                alert('Cannot submit grade: Some criteria have marks exceeding maximum allowed values.');
+                return;
+            }
+
+            // Create a graded version of the submission
+            const gradedSubmission = {
+                ...submissionToGrade,
+                id: Date.now(), // New ID for the graded version
+                status: 'Graded',
+                gradedDate: new Date().toLocaleDateString()
+            };
+
+            // Add to graded submissions
+            setGradedSubmissions(prev => [...prev, gradedSubmission]);
+            
+            // Remove from ungraded submissions
+            setUngradedSubmissions(prev => prev.filter(sub => sub.id !== submissionId));
+            
+            alert(`Grade submitted for ${submissionToGrade.assignmentTitle} by ${submissionToGrade.studentName}`);
+        }
+    };
+
     return(
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <div>
@@ -265,7 +873,7 @@ function SupervisorReports(){
                               </div>
                               <div className="content-wrapper">
                                 <div className="label">Complete graded</div>
-                                <div className="number">0 </div>
+                                <div className="number">{gradedSubmissions.length}</div>
                               </div>
                             </div>
 
@@ -275,7 +883,7 @@ function SupervisorReports(){
                               </div>
                               <div className="content-wrapper">
                                 <div className="label">Complete ungraded</div>
-                                <div className="number">0 </div>
+                                <div className="number">{ungradedSubmissions.length}</div>
                               </div>
                             </div>
 
@@ -388,11 +996,47 @@ function SupervisorReports(){
 
                 <h1 style={{ fontFamily:"arial", fontSize: " 30px", marginLeft: "20px"}}> Submitted Assignments </h1>
                 <h2  style={{ fontFamily:"arial", fontSize: " 20px", marginLeft: "20px"}}> Ungraded</h2>
-                <div className="complete-sections">
+                <div className="sup-ungraded-submissions-section">
+                    {ungradedSubmissions.length === 0 ? (
+                        <div className="sup-empty-submissions">
+                            <p>No ungraded submissions</p>
+                        </div>
+                    ) : (
+                        <div className="sup-submissions-list">
+                            {ungradedSubmissions.map(submission => (
+                                <UngradedSubmissionCard 
+                                    key={submission.id}
+                                    submission={submission}
+                                    onMarksUpdate={handleMarksUpdate}
+                                    onCommentUpdate={handleCommentUpdate}
+                                    onSubmitGrade={handleSubmitGrade}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
+                
                 <h2  style={{ fontFamily:"arial", fontSize: " 20px", marginLeft: "20px"}}> Graded</h2>
-                <div className="complete-sections">
+                <div className="sup-ungraded-submissions-section">
+                    {gradedSubmissions.length === 0 ? (
+                        <div className="sup-empty-submissions">
+                            <p>No graded submissions</p>
+                        </div>
+                    ) : (
+                        <div className="sup-submissions-list">
+                            {gradedSubmissions.map(submission => (
+                                <GradedSubmissionCard 
+                                    key={submission.id}
+                                    submission={submission}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
+
+
+
+                {/* MODALS */}
 
                 {/* CREATE NEW ASSIGNMENT */}
                 { isCreateAsssignmentOpen && (

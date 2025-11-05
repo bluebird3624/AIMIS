@@ -1,20 +1,926 @@
-.student-assignment-main-content{
-    background-color: aqua;
-    height: 100vh;
+.category-row{
+  min-width: 500px;
+  width: fit-content;
+  height: 50px;
+  background-color: #bebebe74;
+  border-radius: 10px;
+  margin-left: 20px;
+  display: flex;
+  gap: 5px;
+}
+.category-row button{
+   background-color: transparent;
+   margin: 5px 3px 5px 3px;
+   color: #000000;
+   border-radius: 9px;
+   border: none ;
+   outline: none ;
+   font-size: 22px;
+   transition: all 0.8s ease;
+}
+.category-row button:hover{
+  background-color: #ffffff;
+  color: #167aa1;
+  cursor: pointer;
+  transform: scale(1.04);
+}
+.category-row button:active{
+  background-color: #ffffff;
+  color: #167aa1;
+  transform: scale(1.04);
+}
+.content-area{
+  margin-top: 20px;
+  width: 940px;
+  min-height: 500px;
+  height: fit-content;
+  background-color: transparent;
+  padding-bottom: 30px;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; 
+}
+.assignment-container{
+  border: 1.5px solid #e0e0e0; 
+  background: #ffffff;
+  width: 950px;
+  min-height: 400px;
+  height: fit-content;  
+  margin-top: 10px;
+  border-radius: 8px;
+}
+/* studentAssignment.css */
+
+
+
+/* Assignment Card Styles */
+.assignment-card {
+  border: 1.5px solid #d5d5d5;
+  border-radius: 12px;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.assignment-card.expanded {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.assignment-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.assignment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
+.assignment-title {
+  flex: 1;
+  min-width: 0;
+  font-family:  poppins,Arial, Helvetica, sans-serif;
+}
+
+.assignment-title h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333539;
+  line-height: 1.4;
+}
+
+.status-containers {
+    margin-right: auto;
+    margin-left: 3px;
+    display: flex;
+    margin-right: 250px;
+    gap: 10px;
+}
+
+.status {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.status.submitted {
+  background-color: #167aa1;
+  color: #ffffff;
+  border: none;
+  font-family: Arial, Helvetica, sans-serif;
+  height: fit-content;
+}
+
+.status.pending {
+  background-color: #ffc400;
+  color: #ffffff;
+  border: none;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.status.late {
+  background-color: #ffebee;
+  color: #c53030;
+  border: none;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.status.graded {
+  background-color: #0aed38;
+  color: #000000;
+  border: none;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.empty-container {
+  width: 60px;
+  height: 25px;
+  border: 1px solid #9c9c9c;
+  border-radius: 10px;
+  background-color: #f9fafb;
+}
+
+.view-details-btn {
+  background: #ffffff;
+  color: rgb(0, 0, 0);
+  border: 1.5px solid #c7c7c7;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 120px;
+  gap: 5px;
+}
+
+.view-details-btn:hover {
+  background: #167aa16d;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.view-details-btn:active {
+  transform: translateY(0);
+}
+
+.assignment-description {
+  margin: 20px 0;
+  padding: 20px;
+  background: #d5d7da;
+  border-radius: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+.assignment-description p {
+  margin: 0;
+  color: #5b6474;
+  line-height: 1.6;
+  font-size: 18px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.assignment-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.due-date {
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #484d56;
+  font-weight: 500;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-right: auto;
+}
+
+/* No assignments message */
+.no-assignments {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+  font-size: 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 2px dashed #d1d5db;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .category-row {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px;
+  }
+  
+  .category-row button {
+    flex: 1;
+    min-width: calc(50% - 8px);
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .assignment-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .status-containers {
+    flex-direction: row;
+    justify-content: flex-start;
+    margin: 0;
+    order: 2;
+  }
+
+  .view-details-btn {
+    align-self: stretch;
+    order: 3;
+    min-width: auto;
+  }
+
+  .assignment-title {
+    order: 1;
+  }
+
+  .content-area {
+    padding: 0 16px 32px 16px;
+    gap: 12px;
+  }
+
+  .assignment-card {
+    padding: 16px;
+  }
+
+  .assignment-title h3 {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-row button {
+    min-width: 100%;
+  }
+  
+  .status-containers {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .empty-container {
+    width: 100%;
+  }
+}
+
+/* Loading state (optional) */
+.assignment-card.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.assignment-card.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+.git-status {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #7e7e7e;
+}
+.file-status {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #7e7e7e;
+}
+
+
+.assignment-meta {
     display: flex;
     flex-direction: column;
+    gap: 6px;
 }
 
-.student-assignment-header{
-    background-color: aquamarine;
-    height: 20%;
+.supervisor-info,
+.assigned-date-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 17px;
+    color: #6b7280;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.assignment-status-filter{
-    background-color: azure;
+.meta-icon {
+    font-size: 14px;
+    color: #9ca3af;
 }
 
-.student-assignment-body{
-    background-color: bisque;
-    height: 80%;
+/* Responsive design */
+@media (max-width: 768px) {
+    .assignment-meta {
+        gap: 4px;
+    }
+    
+    .supervisor-info,
+    .assigned-date-info {
+        font-size: 12px;
+    }
+    
+    .assignment-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .assignment-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+.make-submission-btn,
+.make-resubmission-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.make-submission-btn {
+    background: #10b981;
+    color: white;
+}
+
+.make-submission-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.make-resubmission-btn {
+    background: #f59e0b;
+    color: white;
+}
+
+.make-resubmission-btn:hover {
+    background: #d97706;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.make-submission-btn:active,
+.make-resubmission-btn:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design for Action Buttons */
+@media (max-width: 768px) {
+    .assignment-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .due-date {
+        align-self: flex-start;
+    }
+    
+    .action-buttons {
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .action-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .make-submission-btn,
+    .make-resubmission-btn {
+        justify-content: center;
+        width: 100%;
+    }
+}
+/* Submission Form Styles */
+.submission-form {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 16px;
+    border: 1px solid #e5e7eb;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.submission-title {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.assn-input-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.label-icon {
+    font-size: 16px;
+    color: #6b7280;
+}
+
+/* Git Submission Styles */
+.git-submission-section {
+    margin-bottom: 20px;
+}
+
+.git-url-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.git-url-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-help {
+    margin: 8px 0 0 0;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* File Upload Styles */
+.file-submission-section {
+    margin-bottom: 20px;
+}
+
+.file-drop-zone {
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: white;
+}
+
+.file-drop-zone:hover {
+    border-color: #3b82f6;
+    background: #f0f9ff;
+}
+
+.file-drop-zone.drag-over {
+    border-color: #3b82f6;
+    background: #e0f2fe;
+    transform: scale(1.02);
+}
+
+.file-drop-zone.has-files {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+.drop-zone-content {
+    pointer-events: none;
+}
+
+.upload-icon {
+    font-size: 48px;
+    color: #6b7280;
+    margin-bottom: 12px;
+}
+
+.file-drop-zone:hover .upload-icon,
+.file-drop-zone.drag-over .upload-icon {
+    color: #3b82f6;
+}
+
+.drop-zone-text {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Uploaded Files Styles */
+.uploaded-files {
+    margin-top: 16px;
+}
+
+.files-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    margin-bottom: 6px;
+}
+
+.file-icon {
+    font-size: 16px;
+    color: #6b7280;
+}
+
+.file-name {
+    flex: 1;
+    font-size: 14px;
+    color: #374151;
+}
+
+.file-size {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.remove-file-btn {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.remove-file-btn:hover {
+    background: #fef2f2;
+}
+
+/* Submit Button */
+.submit-button-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.submit-assignment-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-assignment-btn:hover:not(:disabled) {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.submit-assignment-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .submission-form {
+        padding: 16px;
+    }
+    
+    .file-drop-zone {
+        padding: 30px 16px;
+    }
+    
+    .upload-icon {
+        font-size: 36px;
+    }
+    
+    .submit-button-container {
+        justify-content: stretch;
+    }
+    
+    .submit-assignment-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+/* Rubric Section Styles */
+.rubric-section {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 16px;
+    border: 1px solid #e5e7eb;
+}
+
+.rubric-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.rubric-icon {
+    font-size: 18px;
+    color: #6b7280;
+}
+
+.rubric-summary {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.total-marks {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+}
+
+.total-label {
+    font-size: 14px;
+    color: #6b7280;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.total-score {
+    font-size: 18px;
+    font-weight: 600;
+    color: #10b981;
+    background: #d1fae5;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Criteria List Styles */
+.criteria-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.criterion-item {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    transition: all 0.2s ease;
+}
+
+.criterion-item:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.criterion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.criterion-info {
+    flex: 1;
+}
+
+.criterion-name {
+    margin: 0 0 4px 0;
+    font-size:20px;
+    font-weight: 600;
+    color: #374151;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.criterion-marks {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+}
+
+.marks-awarded {
+    font-size: 16px;
+    color: #10b981;
+}
+
+.marks-separator {
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+.marks-out-of {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Marks Bar Styles */
+.marks-bar {
+    width: 100%;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.marks-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Excellent progress (90-100%) */
+.marks-progress[style*="width: 9"]:not([style*="width: 100"]),
+.marks-progress[style*="width: 100"] {
+    background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+/* Good progress (70-89%) */
+.marks-progress[style*="width: 7"]:not([style*="width: 8"]):not([style*="width: 9"]),
+.marks-progress[style*="width: 8"]:not([style*="width: 9"]) {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+/* Average progress (50-69%) */
+.marks-progress[style*="width: 5"]:not([style*="width: 6"]):not([style*="width: 7"]):not([style*="width: 8"]):not([style*="width: 9"]),
+.marks-progress[style*="width: 6"]:not([style*="width: 7"]):not([style*="width: 8"]):not([style*="width: 9"]) {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+/* Poor progress (0-49%) */
+.marks-progress[style*="width: 0"]:not([style*="width: 1"]):not([style*="width: 2"]):not([style*="width: 3"]):not([style*="width: 4"]):not([style*="width: 5"]):not([style*="width: 6"]):not([style*="width: 7"]):not([style*="width: 8"]):not([style*="width: 9"]),
+.marks-progress[style*="width: 1"],
+.marks-progress[style*="width: 2"],
+.marks-progress[style*="width: 3"],
+.marks-progress[style*="width: 4"] {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+/* Rubric Footer */
+.rubric-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.marks-breakdown {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.breakdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.breakdown-label {
+    font-size: 16px;
+    color: #6b7280;
+    margin-bottom: 4px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.breakdown-value {
+    font-size: 20px;
+    font-weight: 600;
+    color: #374151;
+    font-family: Arial, Helvetica, sans-serif ;
+}
+
+.breakdown-value.percentage {
+    color: #10b981;
+    background: #d1fae5;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .rubric-section {
+        padding: 16px;
+    }
+    
+    .criterion-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .criterion-marks {
+        align-self: flex-end;
+    }
+    
+    .marks-breakdown {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .breakdown-item {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+/* Supervisor Comments - Simple version */
+.supervisor-comments {
+    margin-top: 20px;
+    padding: 16px;
+    background: #167aa148 ;
+    border-radius: 6px;
+    border-left: none;
+}
+
+.supervisor-comments p {
+    margin: 0;
+    color: #374151;
+    line-height: 1.6;
+    font-size: 17px;
+    font-family: Arial, Helvetica, sans-serif;
 }

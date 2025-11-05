@@ -10,13 +10,15 @@ import Group from '../assets/Group.svg';
 import Homebutton from '../components/homepage';
 import Userspage from '../components/Userspage';
 import Adminabsence from '../components/AdminAbsence';
+import Adminreports from '../components/AdminReports';
 import ProfilePage from '../components/ProfilePage';
 import Calendar from '../components/Calendar';
-import Adminreports from '../components/Adminreports'
 import { getCurrentUser } from '../services/auth';
 import StudentAssignment from '../components/StudentAssignment';
 import SupervisorReports from '../components/SupervisorReports';
 import StudentAbsence from '../components/StudentAbsence';
+import Adminreviews from '../components/AdminReviews';
+
 
 
 const componentMap = {
@@ -30,7 +32,8 @@ const componentMap = {
   studentAssignment: StudentAssignment,
   supervisorReports: SupervisorReports,
   default: Homebutton,
-  studentAbsence: StudentAbsence
+  studentAbsence: StudentAbsence,
+  adminReviews: Adminreviews
 };
 
 const sidebarConfig = {
@@ -103,6 +106,8 @@ const sidebarConfig = {
     roles: [roles.ATTACHEE, roles.INTERN]
 
   },
+
+
   studentAbsence: {
     id: 'studentAbsence',
     name: 'Absence',
@@ -111,6 +116,16 @@ const sidebarConfig = {
     roles: [roles.ATTACHEE, roles.INTERN]
 
   },
+
+  adminReviews: {
+    id : 'adminReviews',
+    name : 'Reviews',
+    iconOutline : icons.IoBookOutline,
+    iconSolid : icons.IoBook,
+    roles : [roles.ADMIN]
+  }
+
+
 
 
 

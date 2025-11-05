@@ -356,7 +356,7 @@
     line-height: 1.5;
 }
 .complete-sections{
-   width: 900px;
+   width: 950px;
   min-height: 400px;
   height: fit-content;
   background-color: #007bff;
@@ -888,4 +888,598 @@
 }
 .assign-to-students:hover{
     background-color: #002b58;
+}
+
+/* Ungraded Submissions Styles */
+.sup-ungraded-submissions-section {
+    padding: 0 20px;
+    margin-bottom: 30px;
+}
+
+.sup-empty-submissions {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+    font-style: italic;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.sup-submissions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sup-submission-card {
+    border: 1.5px solid #c8c8c8;
+    border-radius: 12px;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.sup-submission-card.sup-expanded {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.sup-submission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.sup-submission-title-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.sup-submission-title {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2d3748;
+    line-height: 1.4;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.sup-submission-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sup-student-info,
+.sup-submission-date {
+    font-size: 14px;
+    color: #6b7280;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.sup-submission-status {
+    margin: 0 20px;
+}
+
+.sup-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.sup-status.sup-submitted {
+    background-color: #167aa1;
+    color: #ffffff;
+    border: none;
+}
+.sup-status.sup-graded{
+    background-color: #0bde00;
+    color: #000000;
+    border: none;
+}
+
+.sup-view-details-btn {
+    background: #ffffff;
+    color: rgb(0, 0, 0);
+    border: 1px solid #000000;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sup-view-details-btn:hover {
+    background: #fbfcff;
+    transform: translateY(-1px);
+}
+
+/* Expanded Content */
+.sup-submission-expanded-content {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+    animation: sup-fadeIn 0.3s ease;
+}
+
+.sup-submission-info {
+    margin-bottom: 20px;
+}
+
+.sup-submission-info strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #374151;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Git Submission Styles */
+.sup-url-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+}
+
+.sup-git-url {
+    flex: 1;
+    font-family: monospace;
+    font-size: 14px;
+    color: #374151;
+    word-break: break-all;
+}
+
+.sup-open-url-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.sup-open-url-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+/* File Submission Styles */
+.sup-file-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+}
+
+.sup-file-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sup-file-name {
+    font-weight: 500;
+    color: #374151;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.sup-file-size {
+    font-size: 12px;
+    color: #6b7280;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.sup-download-file-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.sup-download-file-btn:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* Submission Actions */
+.sup-submission-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.sup-grade-btn {
+    padding: 12px 24px;
+    background: #f59e0b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sup-grade-btn:hover {
+    background: #d97706;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+/* Animations */
+@keyframes sup-fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sup-submission-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .sup-submission-status {
+        margin: 0;
+        align-self: flex-start;
+    }
+    
+    .sup-view-details-btn {
+        align-self: stretch;
+        justify-content: center;
+    }
+    
+    .sup-url-container,
+    .sup-file-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .sup-open-url-btn,
+    .sup-download-file-btn {
+        align-self: flex-start;
+    }
+}
+/* Grading Rubric Section Styles */
+.sup-grading-rubric-section {
+    margin-top: 24px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-rubric-title {
+    font-family: 'arial', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0 0 20px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.sup-criteria-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.sup-criterion-item {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    transition: all 0.2s ease;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-criterion-item:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sup-criterion-info {
+    margin-bottom: 12px;
+}
+
+.sup-criterion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-criterion-name {
+    font-family: 'arial', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+    flex: 1;
+}
+
+.sup-criterion-marks-display {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-awarded-marks {
+    font-size: 16px;
+    color: #10b981;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-marks-separator {
+    font-size: 14px;
+    color: #9ca3af;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-max-marks {
+    font-size: 14px;
+    color: #6b7280;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-criterion-description {
+    font-family: 'arial', sans-serif;
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.sup-marks-input-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-marks-label {
+    font-family: 'arial', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    white-space: nowrap;
+}
+
+.sup-marks-input {
+    font-family: 'arial', sans-serif;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 80px;
+    transition: all 0.2s ease;
+}
+
+.sup-marks-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.sup-total-marks-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-total-marks-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-total-label {
+    font-family: 'arial', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.sup-total-score {
+    font-family: 'arial', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #10b981;
+    background: #d1fae5;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+.sup-percentage-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-percentage-label {
+    font-family: 'arial', sans-serif;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.sup-percentage-value {
+    font-family: 'arial', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #3b82f6;
+    background: #dbeafe;
+    padding: 6px 12px;
+    border-radius: 16px;
+}
+
+.sup-submit-grade-btn {
+    padding: 12px 24px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: 'arial', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sup-submit-grade-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sup-criterion-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .sup-criterion-marks-display {
+        align-self: flex-end;
+    }
+    
+    .sup-marks-input-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .sup-marks-input {
+        width: 100%;
+    }
+    
+    .sup-total-marks-section {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    
+    .sup-total-marks-display,
+    .sup-percentage-display {
+        justify-content: space-between;
+    }
+}
+/* Supervisor Comments Section Styles */
+.sup-comments-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.sup-comments-title {
+    font-family: 'arial', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 12px 0;
+}
+
+.sup-comments-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    transition: all 0.2s ease;
+}
+
+.sup-comments-container:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.sup-comments-textarea {
+    font-family: 'arial', sans-serif;
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #374151;
+    background: transparent;
+    min-height: 80px;
+}
+
+.sup-comments-textarea::placeholder {
+    color: #9ca3af;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-comments-help {
+    margin-top: 8px;
+    font-family: 'arial', sans-serif;
+}
+
+.sup-comments-help span {
+    font-size: 12px;
+    color: #6b7280;
+    font-style: italic;
+    font-family: 'arial', sans-serif;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sup-comments-container {
+        padding: 12px;
+    }
+    
+    .sup-comments-textarea {
+        font-size: 13px;
+    }
 }

@@ -9,6 +9,19 @@ import { format } from 'date-fns';
 
 function Calendar() {
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [isDateClicked, setIsDateClicked] = useState(false);
+    const [clickedDate, setClickedDate] = useState(null);
+
+    const handleDateClick = (date) => {
+        setSelectedDate(date);
+        setClickedDate(date);
+        setIsDateClicked(true);
+    };
+
+    const closeOverlay = () => {
+        setIsDateClicked(false);
+        setClickedDate(null);
+    };
 
     return(
         <>
@@ -28,7 +41,7 @@ function Calendar() {
         {/* Calendar Component */}
       <DateCalendar 
       value={selectedDate}
-      onChange={(newDate) => setSelectedDate(newDate)}
+      onChange={handleDateClick}
       sx={{
     // Calendar container
     width: '100%',
@@ -87,6 +100,7 @@ function Calendar() {
       margin: '2px',
       minWidth: 'auto',
       boxSizing: 'border-box',
+      cursor: 'pointer',
     },
     
     // Selected date styling
@@ -121,6 +135,38 @@ function Calendar() {
   }}
 />
       </Paper>
+
+      {/* Overlay when date is clicked */}
+      {isDateClicked && (
+        <div className="date-overlay">
+          <div className="date-details-container">
+            <div className="date-details-header">
+              <h2>Date Details</h2>
+              <button className="close-btn" onClick={closeOverlay}>×</button>
+            </div>
+            <div className="date-details-content">
+              <div className="selected-date-info">
+                <h3>{format(clickedDate, 'EEEE, MMMM d, yyyy')}</h3>
+              </div>
+              
+              <div className="date-actions">
+                <h4>Actions</h4>
+                <div className="action-buttons">
+                  <button className="action-btn primary">Schedule review</button>
+                </div>
+              </div>
+
+              <div className="events-list">
+                <h4>Events on this day</h4>
+                <div className="no-events">
+                  <p>No events scheduled for this date</p>
+                </div>
+                {/* You can add actual events here later */}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </LocalizationProvider>
     </>
     );
