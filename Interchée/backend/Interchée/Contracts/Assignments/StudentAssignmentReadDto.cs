@@ -1,4 +1,6 @@
-﻿namespace Interchée.Contracts.Assignments
+﻿using Interchée.Entities.Enums;
+
+namespace Interchée.Contracts.Assignments
 {
     public record StudentAssignmentReadDto(
         long Id,
@@ -7,11 +9,11 @@
         int DepartmentId,
         string DepartmentName,
         DateTime? DueAt,
-        string Status,
+        AssignmentStatus Status,
         DateTime CreatedAt,
         DateTime AssignedAt,
         bool HasSubmission,
-        string SubmissionStatus, //  "InProgress", "Submitted", "Reviewed"
+        SubmissionStatus SubmissionStatus, //  , "Submitted", "Reviewed"
         DateTime? SubmittedAt,
         bool IsGraded
     );

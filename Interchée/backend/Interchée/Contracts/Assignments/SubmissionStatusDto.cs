@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Interchée.Entities.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Interchée.Contracts.Assignments
 {
     // Update submission status
-    public record SubmissionStatusDto([Required] string Status);
+    public record SubmissionStatusDto([Required] SubmissionStatus SubmissionStatus);
 }

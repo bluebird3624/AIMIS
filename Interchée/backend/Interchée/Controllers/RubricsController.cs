@@ -78,5 +78,43 @@ namespace Interchée.Controllers
 
             return Ok(readDto);
         }
+
+        /// <summary>Delete a rubric (soft delete)</summary>
+        [HttpDelete("{id:long}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var rubric = await _db.Rubrics
+                .Include(r => r.Items)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (rubric == null) return NotFound();
+
+            // Check if rubric is being used by any grades
+            var isUsed = await _db.Grades.AnyAsync(g => g.RubricId == id);
+            if (isUsed)
+            {
+                return Conflict(new
+                {
+                    message = "Cannot delete rubric that is being used by existing grades. Archive it instead.",
+                    suggestion = "Set IsActive to false to hide it from new assignments."
+                });
+            }
+
+            // Soft delete by setting IsActive to false
+            rubric.IsActive = false;
+
+            // Optional: Also soft delete rubric items if needed
+            foreach (var item in rubric.Items)
+            {
+                // If you have IsActive on RubricItem, set it to false here
+                // item.IsActive = false;
+            }
+
+            await _db.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

@@ -1,16 +1,18 @@
-﻿namespace Interchée.Contracts.Assignments
+﻿using Interchée.Entities.Enums;
+
+namespace Interchée.Contracts.Assignments
 {
     // Read submission
     public record SubmissionReadDto(
         long Id,
         long AssignmentId,
         Guid UserId,
-        string SubmissionType, // "GitHub" or "File"
+        SubmissionType SubmissionType, // "GitHub" or "File"
         string? RepoUrl,
         string? Branch,
         string? LatestCommitSha,
         DateTime? SubmittedAt,
-        string Status,
+        SubmissionStatus SubmissionStatus,
         DateTime CreatedAt,
         GradeReadDto? Grade,
         int CommitCount,

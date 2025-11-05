@@ -6,7 +6,7 @@ namespace Interchée.Services
     public class FileService
     {
         private readonly string _uploadsPath;
-        private readonly IContentTypeProvider _contentTypeProvider;
+        private readonly FileExtensionContentTypeProvider _contentTypeProvider;
 
         public FileService(IConfiguration configuration)
         {

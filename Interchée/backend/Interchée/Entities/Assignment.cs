@@ -1,4 +1,6 @@
-﻿namespace Interchée.Entities
+﻿using Interchée.Entities.Enums;
+
+namespace Interchée.Entities
 {
     public class Assignment
     {
@@ -8,7 +10,7 @@
         public string? Description { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTime? DueAt { get; set; }
-        public string Status { get; set; } = "Created"; // Created|Assigned|Closed|
+        public AssignmentStatus Status { get; set; } = AssignmentStatus.Created; // Created|Assigned|Closed|
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties

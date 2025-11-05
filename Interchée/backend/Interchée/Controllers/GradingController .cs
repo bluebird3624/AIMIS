@@ -1,10 +1,12 @@
 ﻿using Interchée.Contracts.Assignments;
 using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Entities.Enums;
 using Interchée.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Text.Json;
 
 namespace Interchée.Controllers
@@ -87,7 +89,7 @@ namespace Interchée.Controllers
 
             // Serialize criteria scores to JSON
             string? rubricScoresJson = null;
-            if (dto.CriteriaScores != null && dto.CriteriaScores.Any())
+            if (dto.CriteriaScores != null && dto.CriteriaScores.Count != 0)
             {
                 rubricScoresJson = JsonSerializer.Serialize(dto.CriteriaScores);
             }
@@ -117,7 +119,7 @@ namespace Interchée.Controllers
             }
 
             // Update submission status to Reviewed when graded
-            submission.Status = "Reviewed";
+            submission.Status = SubmissionStatus.Reviewed;
             await _db.SaveChangesAsync();
 
             var gradedByUserName = await _db.Users
@@ -299,7 +301,7 @@ namespace Interchée.Controllers
 
             // Serialize criteria scores to JSON
             string? rubricScoresJson = null;
-            if (dto.CriteriaScores != null && dto.CriteriaScores.Any())
+            if (dto.CriteriaScores != null && dto.CriteriaScores.Count != 0)
             {
                 rubricScoresJson = JsonSerializer.Serialize(dto.CriteriaScores);
             }
@@ -315,7 +317,7 @@ namespace Interchée.Controllers
             // Update submission status to Reviewed when grade is updated
             if (grade.Submission != null)
             {
-                grade.Submission.Status = "Reviewed";
+                grade.Submission.Status = SubmissionStatus.Reviewed;
             }
 
             await _db.SaveChangesAsync();

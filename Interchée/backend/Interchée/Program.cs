@@ -11,6 +11,7 @@ using Scalar.AspNetCore;
 using Serilog;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowedOrigins = "_myAllowOrigins";
@@ -92,7 +93,11 @@ builder.Services
 builder.Services.AddAuthorization();
 
 // --- MVC + API docs (Swagger) + Scalar explorer
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    }); 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 

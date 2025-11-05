@@ -7,19 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Interchée.Services
 {
-    public class AssignmentAutoCloseService : BackgroundService
+    public class AssignmentAutoCloseService(
+        ILogger<AssignmentAutoCloseService> logger,
+        IServiceProvider serviceProvider) : BackgroundService
     {
-        private readonly ILogger<AssignmentAutoCloseService> _logger;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly TimeSpan _checkInterval = TimeSpan.FromMinutes(5); // Check every 5 minutes
-
-        public AssignmentAutoCloseService(
-            ILogger<AssignmentAutoCloseService> logger,
-            IServiceProvider serviceProvider)
-        {
-            _logger = logger;
-            _serviceProvider = serviceProvider;
-        }
+        private readonly ILogger<AssignmentAutoCloseService> _logger = logger;
+        private readonly IServiceProvider _serviceProvider = serviceProvider;
+        private readonly TimeSpan _checkInterval = TimeSpan.FromMinutes(60); // Check every 5 minutes
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -29,15 +23,13 @@ namespace Interchée.Services
             {
                 try
                 {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                        var statusService = scope.ServiceProvider.GetRequiredService<AssignmentStatusService>();
+                    using var scope = _serviceProvider.CreateScope();
+                    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    var statusService = scope.ServiceProvider.GetRequiredService<AssignmentStatusService>();
 
-                        await statusService.AutoUpdateExpiredAssignments();
+                    await statusService.AutoUpdateExpiredAssignments();
 
-                        _logger.LogInformation("Checked and updated expired assignments.");
-                    }
+                    _logger.LogInformation("Checked and updated expired assignments.");
                 }
                 catch (Exception ex)
                 {
