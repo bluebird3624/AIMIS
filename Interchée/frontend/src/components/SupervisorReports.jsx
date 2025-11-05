@@ -705,13 +705,16 @@ function SupervisorReports(){
     // Create new assignment
     const createAssignment = () => {
         if (assignmentTitle.trim() && dueDate) {
+            // Find the selected rubric
+            const selectedRubricObj = rubrics.find(r => r.id.toString() === selectedRubric);
+            
             const newAssignment = {
                 id: Date.now(),
                 title: assignmentTitle,
                 description: assignmentDescription,
                 dueDate: dueDate,
                 submissionType: submissionType,
-                rubric: selectedRubric ? rubrics.find(r => r.id.toString() === selectedRubric) : null,
+                rubric: selectedRubricObj || null,
                 status: "Draft",
                 createdAt: new Date().toLocaleDateString(),
                 assignedTo: [] // Initially empty, will be assigned later
@@ -1080,14 +1083,25 @@ function SupervisorReports(){
                             </div>
 
                             <div className="form-group">
-                                 <label> Submission:</label>
+                                 <label> Submission Type:</label>
                                 <select 
                                     value={submissionType} 
                                     onChange={(e) => setSubmissionType(e.target.value)}
+                                    className="submission-dropdown"
                                 >
-                                    <option value="git">Git</option>
-                                    <option value="file">File upload</option>
+                                    <option value="git">Git Repository</option>
+                                    <option value="file">File Upload</option>
+                                
                                 </select>
+                                <div className="submission-type-info">
+                                    {submissionType === 'git' && (
+                                        <span className="info-text">Students will submit Git repository URLs</span>
+                                    )}
+                                    {submissionType === 'file' && (
+                                        <span className="info-text">Students will upload files (PDF, DOC, ZIP, etc.)</span>
+                                    )}
+                                   
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label> Grading rubric:</label>
@@ -1130,7 +1144,7 @@ function SupervisorReports(){
                                     </button>
                                     <button 
                                         type="button"
-                                        className="view-rubrics-btn"
+                                        className="create-rubric-btn"
                                         onClick={() => {
                                             setIsCreateAssignmentOpen(false);
                                             setIsRubricListOpen(true);
@@ -1149,7 +1163,7 @@ function SupervisorReports(){
                                     onClick={createAssignment}
                                     disabled={!assignmentTitle.trim() || !dueDate}
                                 >
-                                    Create
+                                    Create Assignment
                                 </button>
                             </div>
                         </div>
