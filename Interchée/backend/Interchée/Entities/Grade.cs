@@ -13,6 +13,7 @@
 
         public Guid GradedByUserId { get; set; }
         public DateTime GradedAt { get; set; }
+        public string? Comment { get; set; }
 
         // Navigation properties
         public AssignmentSubmission? Submission { get; set; }

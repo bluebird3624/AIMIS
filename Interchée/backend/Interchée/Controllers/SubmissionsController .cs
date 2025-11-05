@@ -308,7 +308,8 @@ namespace Interchée.Controllers
                     submission.Grade.RubricScoresJson,
                     submission.Grade.GradedByUserId,
                     submission.Grade.GradedAt,
-                    $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}"
+                    $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}",
+                    submission.Grade.Comment
                 ) : null,
                 commitCount,
                 feedbackCount,
@@ -343,7 +344,7 @@ namespace Interchée.Controllers
 
                 // Get attachments for file submissions
                 var attachments = new List<AttachmentReadDto>();
-                if (submissionType == SubmissionType.File) // ✅ ENUM COMPARISON
+                if (submissionType == SubmissionType.File) 
                 {
                     attachments = await _db.Attachments
                         .Where(a => a.EntityType == "Submission" && a.EntityId == submission.Id)
@@ -388,7 +389,8 @@ namespace Interchée.Controllers
                         submission.Grade.RubricScoresJson,
                         submission.Grade.GradedByUserId,
                         submission.Grade.GradedAt,
-                        $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}"
+                        $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}",
+                        submission.Grade.Comment
                     ) : null,
                     commitCount,
                     feedbackCount,
@@ -529,7 +531,8 @@ namespace Interchée.Controllers
                         submission.Grade.RubricScoresJson,
                         submission.Grade.GradedByUserId,
                         submission.Grade.GradedAt,
-                        $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}"
+                        $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}",
+                        submission.Grade.Comment
                     ) : null,
                     commitCount,
                     feedbackCount,

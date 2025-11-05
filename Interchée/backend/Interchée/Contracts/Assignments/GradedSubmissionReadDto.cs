@@ -11,6 +11,7 @@ namespace Interchée.Contracts.Assignments
         decimal Score,
         decimal MaxScore,
         DateTime GradedAt,
-        SubmissionStatus Status
+        SubmissionStatus Status,
+        string? Comment
     );
 }

@@ -12,6 +12,7 @@ namespace Interchée.Contracts.Assignments
         Guid GradedByUserId,
         string GradedByUserName,
         DateTime GradedAt,
-        SubmissionStatus Status
+        SubmissionStatus Status,
+        string? Comment
     );
 }
