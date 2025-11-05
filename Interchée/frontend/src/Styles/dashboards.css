@@ -326,21 +326,7 @@
 :root {
   --sidebar-width: 280px;
 }
-.sidebar {
-  flex: 1;
-  background: rgb(27, 166, 55);
-  border-right: 1px solid #e5e7eb;
-  overflow-y: auto;
-}
-.sidebar-options.active {
-  background: #eff6ff;
-  color: #3b82f6;
-  border-right: 3px solid #3b82f6;
-}
-.sidebar-item-text {
-  font-size: 14px;
-  font-weight: 500;
-}
+
 
 /* Animations */
 @keyframes dropdownSlide {
@@ -536,8 +522,9 @@
 
 .sidebar-options.active {
   background: #eff6ff;
-  color: #3b82f6;
-  border-left: 4px solid #3b82f6;
+  color:#167aa1;
+  border-left: 4px solid #167aa1;
+  border-right: 4px solid #167aa1;
   margin-left: 7px;
   transform: scale(1.08);
 }
@@ -840,16 +827,18 @@
 
 /* Modal Styles */
 .modal-overlay {
-  position: fixed;
+   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(5px);
+
 }
 
 .modal {

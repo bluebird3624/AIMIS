@@ -1,5 +1,4 @@
-
-
+/* SUPERVISOR SIDE */
 .absence-stats-container {
   display: flex;
   align-items: center;
@@ -64,14 +63,14 @@
   min-height: 400px;
   height: fit-content;
   width:950px;
-  display: flex;
+  display: block;
   flex-direction: column;
 }
 .request-container{
   border: 1.5px solid #e0e0e0; 
   background: #ffffff;
   width: 100%;
-  min-height: 250px;
+  min-height: 260px;
   height: fit-content;
   margin-top: 10px;
   border-radius: 8px;
@@ -83,9 +82,6 @@
   height: 60px;
   display: flex;
 }
-
-
-/* User Info Container - Top Right */
 .request-user-info {
  background-color:transparent;
  height: 50px;
@@ -181,7 +177,7 @@
   margin-bottom: 8px;
   font-weight: 500;
   display: flex;
-  white-space: nowrap; /* Add this line */
+  white-space: nowrap; 
 
 }
 .date{
@@ -242,17 +238,11 @@
     background: #660000;
     transform: scale(1.08);
 }
-
-
-
-
-
 .recent-decision-section {
   background-color: transparent;
-  margin-left: 20px;
   min-height: 450px;
   height: fit-content;
-  width:950px;
+  width:950px ;
   display: block;
 }
 .recent-decision-container{
@@ -264,3 +254,167 @@
   margin-top: 10px;
   border-radius: 8px;
 }
+/* END OF SUPERVISOR SIDE*/
+
+
+
+/* STUDENT SIDE */
+.title{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  margin-left: 20px;
+}
+.request-button{
+   width: 200px;
+    height: 60px;
+    background-color: #167aa1;
+    margin-top: 10px;
+    margin-left: 20px;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    transition: all 0.8s ease;
+    color: #ffff;
+    font-size: 21px;
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+.request-button:hover{
+    background: #093f52;
+    transform: scale(1.08);
+}
+.absence-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+.modal-content{
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 300px;
+  height: fit-content ;
+  width: 500px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+   animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.modal-header{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+.absence-form{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.absence-form-row{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.absence-form-row label{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #676767;
+}
+.absence-form-row input{
+  padding: 8px;
+  font-size: 16px;
+  border: 1.5px solid #a0a0a0;
+  border-radius: 6px;
+  transition: all 0.8s ease;
+}
+.absence-form-row input:focus{
+  border-color: #11cbff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(8, 60, 248, 0.418);
+  transform: scale(1.05);
+}
+.absence-form-row textarea{
+  padding: 8px;
+  font-size: 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+  min-height: 80px;
+  transition: all 0.8s ease;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.absence-form-row textarea:focus{
+  border-color: #11cbff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(8, 60, 248, 0.418);
+  transform: scale(1.05);
+}
+.absence-form-actions{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+} 
+.btn-primary{
+  background-color: #00d71d;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.8s ease;
+  margin-right: auto;
+
+}
+.btn-primary:hover{
+    background: #027d00;
+    transform: scale(1.08);
+}
+.btn-primary:disabled{
+  background-color: #757575;
+  cursor: not-allowed;
+}
+.btn-cancel{
+  background-color: #ff3b3b;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.8s ease;
+  margin-right: 10px;
+}
+.section{
+  margin-left: 20px;
+  margin-top: 20px;
+  min-height: 400px;
+  height: fit-content;  
+  width: 950px;
+  background-color:transparent;}
+
+
+/* END OF STUDENT SIDE */

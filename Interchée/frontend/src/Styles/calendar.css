@@ -6,11 +6,12 @@
 }
 /* Main Calendar Container */
 .calendar-container {
-  padding: 24px;
+  padding: 20px;
   min-width: 700px;
   width: fit-content;
+  height: 550px;
   margin: 0 auto;
-  border-radius: 15px;
+  border-radius: 22px;
   background: #ffffff;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
@@ -40,8 +41,177 @@
   line-height: 1.5;
 }
 
-/* Remove the red background and overflow */
-.calendar-main {
-  /* Remove: background-color: red; */
-  /* Remove: overflow-y: auto; */
+/* Date Overlay Styles */
+.date-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.date-details-container {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.date-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f8f9fa;
+  border-radius: 12px 12px 0 0;
+}
+
+.date-details-header h2 {
+  margin: 0;
+  color: #333;
+  font-family: Arial, sans-serif;
+  font-size: 1.5rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.date-details-content {
+  padding: 24px;
+}
+
+.selected-date-info {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.selected-date-info h3 {
+  margin: 0 0 8px 0;
+  color: #1976d2;
+  font-family: Arial, sans-serif;
+  font-size: 1.3rem;
+}
+
+.selected-date-info p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.date-actions {
+  margin-bottom: 24px;
+}
+
+.date-actions h4 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-family: Arial, sans-serif;
+  font-size: 1.1rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.8s ease;
+}
+
+.action-btn.primary {
+  background: #167aa1;
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background: #0a3546;
+  transform: scale(1.08);
+}
+
+
+
+.events-list h4 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-family: Arial, sans-serif;
+  font-size: 1.1rem;
+}
+
+.no-events {
+  text-align: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  color: #666;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.no-events p {
+  margin: 0;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .date-details-container {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    width: 100%;
+  }
 }
