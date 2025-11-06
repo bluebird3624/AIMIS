@@ -1,5 +1,6 @@
 ﻿using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Entities.Enums; 
 using Microsoft.EntityFrameworkCore;
 
 namespace Interchée.Services
@@ -8,108 +9,50 @@ namespace Interchée.Services
     {
         private readonly AppDbContext _db = db;
 
-        /// <summary>Automatically update submission status based on commit message</summary>
-        public async Task UpdateSubmissionStatusFromCommit(AssignmentSubmission submission, string? commitMessage)
-
-
+        public async Task<bool> AddCommitToSubmission(AssignmentSubmission submission, string? commitMessage, string commitSha)
         {
-            if (string.IsNullOrEmpty(commitMessage)) return;
+            // 🚫 Check if submission is locked (closed or reviewed)
+            if (submission.Status == SubmissionStatus.Reviewed) 
+            {
+                return false; // Cannot add commits to reviewed submissions
+            }
 
-            var message = commitMessage.ToLowerInvariant();
-
+            // 🚫 Check if assignment is closed
             var assignment = await _db.Assignments
-       .FirstOrDefaultAsync(a => a.Id == submission.AssignmentId);
+                .FirstOrDefaultAsync(a => a.Id == submission.AssignmentId);
 
-            if (assignment?.Status == "Closed")
+            if (assignment?.Status == AssignmentStatus.Closed || assignment?.Status == AssignmentStatus.Archived) // ✅ ENUM
             {
-                // Assignment is closed, maintain current status
-                return;
+                return false; // Cannot add commits to submissions in closed assignments
             }
 
-            // Automatic status detection from commit messages
-            if (message.Contains("final") || message.Contains("submit") || message.Contains("complete"))
+            // Check if commit already exists
+            var commitExists = await _db.SubmissionCommits
+                .AnyAsync(c => c.SubmissionId == submission.Id && c.Sha == commitSha);
 
+            if (commitExists)
             {
-                if (submission.Status != "Reviewed")
-                {
-                    submission.Status = "Submitted";
-                    submission.SubmittedAt = DateTime.UtcNow;
-                }
-               
-            }
-            else if (submission.Status == "InProgress") //&& HasSignificantActivity(message)//
-            {
-                // Keep as InProgress for normal development commits
-                submission.Status = "InProgress";
+                return true; // Commit already exists, but that's okay
             }
 
+            // Add the commit
+            var commit = new SubmissionCommit
+            {
+                SubmissionId = submission.Id,
+                Sha = commitSha,
+                Message = commitMessage?.Trim(),
+                CommittedAt = DateTime.UtcNow
+            };
+
+            // Update latest commit SHA
+            submission.LatestCommitSha = commitSha;
+
+            _db.SubmissionCommits.Add(commit);
             await _db.SaveChangesAsync();
+
+            return true;
         }
 
-        /// <summary>Check if commit represents significant work</summary>
-        //  private static bool HasSignificantActivity(string message)
-        //  {
-        //      var insignificantKeywords = new[] { "merge", "update readme", "typo", "fix typo", "minor" };
-        //       return !insignificantKeywords.Any(keyword => message.Contains(keyword));//
-        //  }
-
-        /// <summary>Auto-close assignment if all students have submitted</summary>
-        /*public async Task AutoCloseAssignmentIfAllSubmitted(long assignmentId)
-        {
-            var assignment = await _db.Assignments
-                .Include(a => a.Assignees)
-                .FirstOrDefaultAsync(a => a.Id == assignmentId);
-
-            if (assignment == null || assignment.Status != "Assigned") return;
-
-            var totalAssignees = assignment.Assignees.Count;
-            var submittedCount = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == "Submitted");
-
-            // If all assigned students have submitted, auto-close
-            if (totalAssignees > 0 && submittedCount >= totalAssignees)
-            {
-                assignment.Status = "Closed";
-                await _db.SaveChangesAsync();
-            }
-        }
-
-        /// <summary>Auto-close assignment if all submissions are reviewed</summary>
-        public async Task AutoCloseAssignmentIfAllReviewed(long assignmentId)
-        {
-            var assignment = await _db.Assignments
-                .FirstOrDefaultAsync(a => a.Id == assignmentId);
-
-            if (assignment == null || assignment.Status != "Assigned") return;
-
-            var totalSubmissions = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == assignmentId);
-            var reviewedCount = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == "Reviewed");
-
-            // If all submissions are reviewed, auto-close
-            if (totalSubmissions > 0 && reviewedCount >= totalSubmissions)
-            {
-                assignment.Status = "Closed";
-                await _db.SaveChangesAsync();
-            }
-        }
-
-        /// <summary>Update submission status to Submitted automatically</summary>
-       /* public async Task MarkAsSubmitted(long submissionId)
-        {
-            var submission = await _db.AssignmentSubmissions
-                .FirstOrDefaultAsync(s => s.Id == submissionId);
-
-            if (submission != null)
-            {
-                submission.Status = "Submitted";
-                submission.SubmittedAt = DateTime.UtcNow;
-                await _db.SaveChangesAsync();
-            }
-        }
-        */
-        /// <summary>Update submission status to Reviewed automatically</summary>
         /// <summary>Update submission status to Reviewed (after grading)</summary>
         public async Task<bool> MarkAsReviewed(long submissionId)
         {
@@ -118,20 +61,20 @@ namespace Interchée.Services
 
             if (submission == null) return false;
 
-            // ✅ SIMPLIFIED: Check assignment status directly
+            // Check assignment status directly
             var assignment = await _db.Assignments
                 .FirstOrDefaultAsync(a => a.Id == submission.AssignmentId);
 
-            if (assignment?.Status == "Closed" || assignment?.Status == "Archived")
+            if (assignment?.Status == AssignmentStatus.Closed || assignment?.Status == AssignmentStatus.Archived) // ✅ ENUM
             {
                 // Cannot change status of submission in closed assignment
                 return false;
             }
 
             // Only allow marking as reviewed if currently submitted
-            if (submission.Status == "Submitted")
+            if (submission.Status == SubmissionStatus.Submitted) // ✅ ENUM
             {
-                submission.Status = "Reviewed";
+                submission.Status = SubmissionStatus.Reviewed; // ✅ ENUM
                 await _db.SaveChangesAsync();
                 return true;
             }
@@ -146,7 +89,24 @@ namespace Interchée.Services
                 .FirstOrDefaultAsync(a => a.Id == assignmentId);
 
             // Cannot submit if assignment is closed/archived or doesn't exist
-            return assignment != null && assignment.Status != "Closed" && assignment.Status != "Archived";
+            return assignment != null &&
+                   assignment.Status != AssignmentStatus.Closed && 
+                   assignment.Status != AssignmentStatus.Archived; 
+        }
+
+        /// <summary>Check if commits can be added to submission</summary>
+        public async Task<bool> CanAddCommitsToSubmission(long submissionId)
+        {
+            var submission = await _db.AssignmentSubmissions
+                .Include(s => s.Assignment)
+                .FirstOrDefaultAsync(s => s.Id == submissionId);
+
+            if (submission == null) return false;
+
+            // Cannot add commits if submission is reviewed or assignment is closed
+            return submission.Status != SubmissionStatus.Reviewed && // ✅ ENUM
+                   submission.Assignment?.Status != AssignmentStatus.Closed && // ✅ ENUM
+                   submission.Assignment?.Status != AssignmentStatus.Archived; // ✅ ENUM
         }
     }
 }

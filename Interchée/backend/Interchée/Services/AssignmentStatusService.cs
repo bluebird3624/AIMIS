@@ -1,6 +1,7 @@
 ﻿using Interchée.Contracts.Assignments;
 using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Entities.Enums; 
 using Microsoft.EntityFrameworkCore;
 
 namespace Interchée.Services
@@ -15,20 +16,19 @@ namespace Interchée.Services
             // Auto-close immediately when deadline passes, regardless of submissions
             if (assignment.DueAt.HasValue &&
                 assignment.DueAt.Value < DateTime.UtcNow &&
-                assignment.Status == "Assigned")
+                assignment.Status == AssignmentStatus.Assigned) // ✅ ENUM
             {
-                
-                //  CHANGED: Close assignment immediately when due date passes
-                assignment.Status = "Closed";
+                // CHANGED: Close assignment immediately when due date passes
+                assignment.Status = AssignmentStatus.Closed; // ✅ ENUM
                 await _db.SaveChangesAsync();
                 return;
             }
 
             // Auto-archive if closed for more than 30 days
-            if (assignment.Status == "Closed" &&
+            if (assignment.Status == AssignmentStatus.Closed && // ✅ ENUM
                 assignment.CreatedAt.AddDays(30) < DateTime.UtcNow)
             {
-                assignment.Status = "Archived";
+                assignment.Status = AssignmentStatus.Archived; // ✅ ENUM
                 await _db.SaveChangesAsync();
             }
         }
@@ -39,13 +39,13 @@ namespace Interchée.Services
             var expiredAssignments = await _db.Assignments
                 .Where(a => a.DueAt.HasValue &&
                            a.DueAt.Value < DateTime.UtcNow &&
-                           a.Status == "Assigned")
+                           a.Status == AssignmentStatus.Assigned) // ✅ ENUM
                 .ToListAsync();
 
             foreach (var assignment in expiredAssignments)
             {
-                //  Close assignment immediately without checking submissions
-                assignment.Status = "Closed";
+                // Close assignment immediately without checking submissions
+                assignment.Status = AssignmentStatus.Closed; // ✅ ENUM
             }
 
             await _db.SaveChangesAsync();
@@ -62,18 +62,19 @@ namespace Interchée.Services
 
             var totalAssignees = assignment.Assignees.Count;
             var submittedCount = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == "Submitted");
+                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == SubmissionStatus.Submitted); // ✅ ENUM
             var reviewedCount = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == "Reviewed");
-            var inProgressCount = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == "InProgress");
+                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == SubmissionStatus.Reviewed); // ✅ ENUM
+
+            // 🚫 REMOVED: InProgressCount - no longer exists
+            var notStartedCount = totalAssignees - (submittedCount + reviewedCount);
 
             return new AssignmentProgressDto(
                 TotalAssignees: totalAssignees,
                 SubmittedCount: submittedCount,
                 ReviewedCount: reviewedCount,
-                InProgressCount: inProgressCount,
-                NotStartedCount: totalAssignees - (submittedCount + reviewedCount + inProgressCount),
+                InProgressCount: 0, // ✅ SET TO 0 since we removed this status
+                NotStartedCount: notStartedCount,
                 SubmissionRate: totalAssignees > 0 ? (double)(submittedCount + reviewedCount) / totalAssignees * 100 : 0,
                 ReviewRate: (submittedCount + reviewedCount) > 0 ? (double)reviewedCount / (submittedCount + reviewedCount) * 100 : 0
             );
@@ -89,9 +90,9 @@ namespace Interchée.Services
 
             if (assignment.DueAt.HasValue &&
                 assignment.DueAt.Value < DateTime.UtcNow &&
-                assignment.Status == "Assigned")
+                assignment.Status == AssignmentStatus.Assigned) // ✅ ENUM
             {
-                assignment.Status = "Closed";
+                assignment.Status = AssignmentStatus.Closed; // ✅ ENUM
                 await _db.SaveChangesAsync();
                 return true;
             }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Interchée.Entities.Enums;
+using System.Diagnostics;
 
 namespace Interchée.Entities
 {
@@ -11,13 +12,13 @@ namespace Interchée.Entities
         public string? Branch { get; set; }
         public string? LatestCommitSha { get; set; }
         public DateTime? SubmittedAt { get; set; }
-        public string Status { get; set; } = "Submitted"; // InProgress|Submitted|Reviewed
+        public SubmissionStatus Status { get; set; } = SubmissionStatus.NotStarted;// |Submitted|Reviewed
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
         public Assignment? Assignment { get; set; }
         public AppUser? User { get; set; }
-        public string SubmissionType { get; set; } = string.Empty;
+        public SubmissionType SubmissionType { get; set; } 
         public ICollection<SubmissionCommit> Commits { get; set; } = new List<SubmissionCommit>();
         public Grade? Grade { get; set; }
         public ICollection<FeedbackComment> FeedbackComments { get; set; } = new List<FeedbackComment>();

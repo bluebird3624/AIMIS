@@ -1,10 +1,12 @@
 ﻿using Interchée.Contracts.Assignments;
 using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Entities.Enums;
 using Interchée.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Text.Json;
 
 namespace Interchée.Controllers
@@ -87,7 +89,7 @@ namespace Interchée.Controllers
 
             // Serialize criteria scores to JSON
             string? rubricScoresJson = null;
-            if (dto.CriteriaScores != null && dto.CriteriaScores.Any())
+            if (dto.CriteriaScores != null && dto.CriteriaScores.Count != 0)
             {
                 rubricScoresJson = JsonSerializer.Serialize(dto.CriteriaScores);
             }
@@ -102,6 +104,7 @@ namespace Interchée.Controllers
                     RubricId = dto.RubricId,
                     RubricScoresJson = rubricScoresJson, 
                     GradedByUserId = userId,
+                    Comment = dto.Comment?.Trim(),
                     GradedAt = DateTime.UtcNow
                 };
                 _db.Grades.Add(grade);
@@ -113,11 +116,12 @@ namespace Interchée.Controllers
                 grade.RubricId = dto.RubricId;
                 grade.RubricScoresJson = rubricScoresJson;   
                 grade.GradedByUserId = userId;
+                grade.Comment = dto.Comment?.Trim();
                 grade.GradedAt = DateTime.UtcNow;
             }
 
             // Update submission status to Reviewed when graded
-            submission.Status = "Reviewed";
+            submission.Status = SubmissionStatus.Reviewed;
             await _db.SaveChangesAsync();
 
             var gradedByUserName = await _db.Users
@@ -146,7 +150,8 @@ namespace Interchée.Controllers
                 grade.RubricScoresJson,
                 grade.GradedByUserId,
                 grade.GradedAt,
-                gradedByUserName
+                gradedByUserName,
+                grade.Comment
             );
 
             return Ok(readDto);
@@ -176,7 +181,8 @@ namespace Interchée.Controllers
                     g.Score,
                     g.MaxScore,
                     g.GradedAt,
-                    g.Submission.Status
+                    g.Submission.Status,
+                    g.Comment
                 ))
                 .ToListAsync();
 
@@ -211,7 +217,8 @@ namespace Interchée.Controllers
                     g.GradedByUserId,
                     GradedByUserName = $"{g.GradedByUser!.FirstName} {g.GradedByUser.LastName}",
                     g.GradedAt,
-                    g.Submission.Status
+                    g.Submission.Status,
+                    g.Comment
                 })
                 .ToListAsync();
 
@@ -243,7 +250,8 @@ namespace Interchée.Controllers
                     g.GradedByUserId,
                     g.GradedByUserName,
                     g.GradedAt,
-                    g.Status
+                    g.Status,
+                    g.Comment
                 );
             });
 
@@ -299,7 +307,7 @@ namespace Interchée.Controllers
 
             // Serialize criteria scores to JSON
             string? rubricScoresJson = null;
-            if (dto.CriteriaScores != null && dto.CriteriaScores.Any())
+            if (dto.CriteriaScores != null && dto.CriteriaScores.Count != 0)
             {
                 rubricScoresJson = JsonSerializer.Serialize(dto.CriteriaScores);
             }
@@ -311,11 +319,12 @@ namespace Interchée.Controllers
             grade.RubricScoresJson = rubricScoresJson; // Use RubricScoresJson, NOT RubricJson
             grade.GradedByUserId = userId;
             grade.GradedAt = DateTime.UtcNow;
+            grade.Comment = dto.Comment?.Trim();
 
             // Update submission status to Reviewed when grade is updated
             if (grade.Submission != null)
             {
-                grade.Submission.Status = "Reviewed";
+                grade.Submission.Status = SubmissionStatus.Reviewed;
             }
 
             await _db.SaveChangesAsync();
@@ -343,7 +352,8 @@ namespace Interchée.Controllers
                 grade.RubricScoresJson,
                 grade.GradedByUserId,
                 grade.GradedAt,
-                gradedByUserName
+                gradedByUserName,
+                grade.Comment
             );
 
             return Ok(readDto);
@@ -406,7 +416,9 @@ namespace Interchée.Controllers
                 grade.RubricScoresJson,
                 grade.GradedByUserId,
                 grade.GradedAt,
-                gradedByUserName
+                gradedByUserName,
+                grade.Comment
+
             );
 
             return Ok(readDto);

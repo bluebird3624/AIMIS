@@ -1,6 +1,7 @@
 ﻿using Interchée.Contracts.Assignments;
 using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Entities.Enums;
 using Interchée.Extensions;
 using Interchée.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +21,7 @@ namespace Interchée.Controllers
         private readonly FileService _fileService = fileService;
 
         /// <summary>Submit assignment (Intern/Attaché only)</summary>
-        [HttpPost]
+        [HttpPost("gitsubmission")]
         [Authorize(Roles = "Intern,Attache")]
         [ProducesResponseType(typeof(SubmissionReadDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<SubmissionReadDto>> Submit([FromBody] SubmissionCreateDto dto)
@@ -62,10 +63,10 @@ namespace Interchée.Controllers
                 {
                     AssignmentId = dto.AssignmentId,
                     UserId = userId,
-                    SubmissionType = "GitHub",
+                    SubmissionType = SubmissionType.GitHub,
                     RepoUrl = dto.RepoUrl,
                     Branch = dto.Branch ?? "main",
-                    Status = "Submitted", // AUTOMATIC STATUS
+                    Status = SubmissionStatus.Submitted, // AUTOMATIC STATUS
                     SubmittedAt = DateTime.UtcNow,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -75,8 +76,8 @@ namespace Interchée.Controllers
             {
                 submission.RepoUrl = dto.RepoUrl;
                 submission.Branch = dto.Branch ?? submission.Branch;
-                submission.SubmissionType = "GitHub";
-                submission.Status = "Submitted"; //  Keep as Submitted on re-submit
+               submission.SubmissionType = SubmissionType.GitHub; 
+                submission.Status = SubmissionStatus.Submitted; //  Keep as Submitted on re-submit
                 submission.SubmittedAt = DateTime.UtcNow;
             }
 
@@ -88,7 +89,7 @@ namespace Interchée.Controllers
                 .CountAsync(f => f.SubmissionId == submission.Id);
 
             var readDto = new SubmissionReadDto(
-                submission.Id, submission.AssignmentId, submission.UserId, "GitHub", submission.RepoUrl,
+                submission.Id, submission.AssignmentId, submission.UserId, SubmissionType.GitHub, submission.RepoUrl,
                 submission.Branch, submission.LatestCommitSha, submission.SubmittedAt,
                 submission.Status, submission.CreatedAt, null, commitCount, feedbackCount, new List<AttachmentReadDto>()
             );
@@ -96,7 +97,6 @@ namespace Interchée.Controllers
             return Ok(readDto);
         }
 
-        /// <summary>Submit assignment via file upload (Intern/Attaché only)</summary>
         /// <summary>Submit assignment via file upload (Intern/Attaché only)</summary>
         [HttpPost("file")]
         [Authorize(Roles = "Intern,Attache")]
@@ -144,10 +144,10 @@ namespace Interchée.Controllers
                 {
                     AssignmentId = dto.AssignmentId,
                     UserId = userId,
-                    SubmissionType = "File",
+                    SubmissionType = SubmissionType.File, // ✅ ENUM
                     RepoUrl = null, // No GitHub URL for file submissions
                     Branch = null,
-                    Status = "Submitted",
+                    Status = SubmissionStatus.Submitted,
                     SubmittedAt = DateTime.UtcNow,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -169,8 +169,8 @@ namespace Interchée.Controllers
                 }
 
                 // Update existing submission
-                submission.SubmissionType = "File";
-                submission.Status = "Submitted";
+                submission.SubmissionType = SubmissionType.File; // ✅ ENUM
+                submission.Status = SubmissionStatus.Submitted;
                 submission.SubmittedAt = DateTime.UtcNow;
 
                 // Clear GitHub-specific fields if they exist
@@ -225,7 +225,7 @@ namespace Interchée.Controllers
                 submission.Id,
                 submission.AssignmentId,
                 submission.UserId,
-                "File", // SubmissionType = File
+                SubmissionType.File, // ✅ ENUM
                 null, // No RepoUrl
                 null, // No Branch
                 null, // No LatestCommitSha
@@ -258,12 +258,12 @@ namespace Interchée.Controllers
 
             if (submission == null) return NotFound("No submission found for this assignment");
 
-            // Determine submission type
-            var submissionType = string.IsNullOrEmpty(submission.RepoUrl) ? "File" : "GitHub";
+            // Determine submission type - USE ENUM LOGIC
+            var submissionType = submission.SubmissionType; // ✅ DIRECT ENUM VALUE
 
             // Get attachments for file submissions
             var attachments = new List<AttachmentReadDto>();
-            if (submissionType == "File")
+            if (submissionType == SubmissionType.File) // ✅ ENUM COMPARISON
             {
                 attachments = await _db.Attachments
                     .Where(a => a.EntityType == "Submission" && a.EntityId == submission.Id)
@@ -291,12 +291,12 @@ namespace Interchée.Controllers
                 submission.Id,
                 submission.AssignmentId,
                 submission.UserId,
-                submissionType,
+                submissionType, // ✅ ENUM
                 submission.RepoUrl,
                 submission.Branch,
                 submission.LatestCommitSha,
                 submission.SubmittedAt,
-                submission.Status,
+                submission.Status, // ✅ ENUM
                 submission.CreatedAt,
                 submission.Grade != null ? new GradeReadDto(
                     submission.Grade.Id,
@@ -308,7 +308,8 @@ namespace Interchée.Controllers
                     submission.Grade.RubricScoresJson,
                     submission.Grade.GradedByUserId,
                     submission.Grade.GradedAt,
-                    $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}"
+                    $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}",
+                    submission.Grade.Comment
                 ) : null,
                 commitCount,
                 feedbackCount,
@@ -338,12 +339,12 @@ namespace Interchée.Controllers
 
             foreach (var submission in submissions)
             {
-                // Determine submission type
-                var submissionType = string.IsNullOrEmpty(submission.RepoUrl) ? "File" : "GitHub";
+                // Use direct enum value - no need for string detection
+                var submissionType = submission.SubmissionType; // ✅ ENUM
 
                 // Get attachments for file submissions
                 var attachments = new List<AttachmentReadDto>();
-                if (submissionType == "File")
+                if (submissionType == SubmissionType.File) 
                 {
                     attachments = await _db.Attachments
                         .Where(a => a.EntityType == "Submission" && a.EntityId == submission.Id)
@@ -371,12 +372,12 @@ namespace Interchée.Controllers
                     submission.Id,
                     submission.AssignmentId,
                     submission.UserId,
-                    submissionType,
+                    submissionType, // ✅ ENUM
                     submission.RepoUrl,
                     submission.Branch,
                     submission.LatestCommitSha,
                     submission.SubmittedAt,
-                    submission.Status,
+                    submission.Status, // ✅ ENUM
                     submission.CreatedAt,
                     submission.Grade != null ? new GradeReadDto(
                         submission.Grade.Id,
@@ -388,7 +389,8 @@ namespace Interchée.Controllers
                         submission.Grade.RubricScoresJson,
                         submission.Grade.GradedByUserId,
                         submission.Grade.GradedAt,
-                        $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}"
+                        $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}",
+                        submission.Grade.Comment
                     ) : null,
                     commitCount,
                     feedbackCount,
@@ -400,6 +402,7 @@ namespace Interchée.Controllers
 
             return Ok(result);
         }
+
         /// <summary>Add commit to submission (for webhooks or manual entry)</summary>
         [HttpPost("{submissionId:long}/commits")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -412,8 +415,8 @@ namespace Interchée.Controllers
 
             if (submission == null) return NotFound("Submission not found");
 
-            // Check if assignment is closed
-            if (submission.Assignment?.Status == "Closed" || submission.Assignment?.Status == "Archived")
+            // Check if assignment is closed - USE ENUMS
+            if (submission.Assignment?.Status == AssignmentStatus.Closed || submission.Assignment?.Status == AssignmentStatus.Archived) // ✅ ENUM
             {
                 return BadRequest("Cannot add commits to a submission in a closed assignment.");
             }
@@ -437,9 +440,7 @@ namespace Interchée.Controllers
             // Update latest commit
             submission.LatestCommitSha = dto.Sha;
 
-            // AUTOMATIC STATUS UPDATE BASED ON COMMIT CONTENT
-            await _statusService.UpdateSubmissionStatusFromCommit(submission, dto.Message);
-
+            // 🚫 NO AUTOMATIC STATUS UPDATE
             _db.SubmissionCommits.Add(commit);
             await _db.SaveChangesAsync();
 
@@ -480,12 +481,12 @@ namespace Interchée.Controllers
 
             foreach (var submission in submissions)
             {
-                // Determine submission type
-                var submissionType = string.IsNullOrEmpty(submission.RepoUrl) ? "File" : "GitHub";
+                // Use direct enum value
+                var submissionType = submission.SubmissionType; // ✅ ENUM
 
                 // Get attachments for file submissions
                 var attachments = new List<AttachmentReadDto>();
-                if (submissionType == "File")
+                if (submissionType == SubmissionType.File) // ✅ ENUM COMPARISON
                 {
                     attachments = await _db.Attachments
                         .Where(a => a.EntityType == "Submission" && a.EntityId == submission.Id)
@@ -513,12 +514,12 @@ namespace Interchée.Controllers
                     submission.Id,
                     submission.AssignmentId,
                     submission.UserId,
-                    submissionType,
+                    submissionType, //
                     submission.RepoUrl,
                     submission.Branch,
                     submission.LatestCommitSha,
                     submission.SubmittedAt,
-                    submission.Status,
+                    submission.Status, 
                     submission.CreatedAt,
                     submission.Grade != null ? new GradeReadDto(
                         submission.Grade.Id,
@@ -530,7 +531,8 @@ namespace Interchée.Controllers
                         submission.Grade.RubricScoresJson,
                         submission.Grade.GradedByUserId,
                         submission.Grade.GradedAt,
-                        $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}"
+                        $"{submission.Grade.GradedByUser!.FirstName} {submission.Grade.GradedByUser.LastName}",
+                        submission.Grade.Comment
                     ) : null,
                     commitCount,
                     feedbackCount,
@@ -542,6 +544,7 @@ namespace Interchée.Controllers
 
             return Ok(result);
         }
+
         /// <summary>Update submission (change repo URL or branch)</summary>
         [HttpPut("{id:long}")]
         [Authorize(Roles = "Intern,Attache")]
@@ -556,8 +559,8 @@ namespace Interchée.Controllers
 
             if (submission == null) return NotFound();
 
-            // Check if assignment is closed
-            if (submission.Assignment?.Status == "Closed" || submission.Assignment?.Status == "Archived")
+            // Check if assignment is closed - USE ENUMS
+            if (submission.Assignment?.Status == AssignmentStatus.Closed || submission.Assignment?.Status == AssignmentStatus.Archived) // ✅ ENUM
             {
                 return BadRequest("Cannot update a submission in a closed assignment.");
             }
@@ -580,15 +583,13 @@ namespace Interchée.Controllers
                 .CountAsync(f => f.SubmissionId == submission.Id);
 
             var readDto = new SubmissionReadDto(
-                 submission.Id, submission.AssignmentId, submission.UserId, "GitHub", submission.RepoUrl,
+                 submission.Id, submission.AssignmentId, submission.UserId, SubmissionType.GitHub, submission.RepoUrl, // ✅ ENUM
                 submission.Branch, submission.LatestCommitSha, submission.SubmittedAt,
                 submission.Status, submission.CreatedAt, null, commitCount, feedbackCount, new List<AttachmentReadDto>()
             );
 
             return Ok(readDto);
         }
-
-
 
         /// <summary>Update submission status (Supervisors only - for grading)</summary>
         [HttpPut("{id:long}/status")]
@@ -603,7 +604,7 @@ namespace Interchée.Controllers
             if (submission == null) return NotFound();
 
             // If changing to "Reviewed", use the service method for proper validation
-            if (dto.Status == "Reviewed")
+            if (dto.SubmissionStatus == SubmissionStatus.Reviewed) //
             {
                 var success = await _statusService.MarkAsReviewed(id);
                 if (!success)
@@ -614,13 +615,12 @@ namespace Interchée.Controllers
             else
             {
                 // For other status changes, check if assignment is closed
-
-                if (submission.Assignment?.Status == "Closed" || submission.Assignment?.Status == "Archived")
+                if (submission.Assignment?.Status == AssignmentStatus.Closed || submission.Assignment?.Status == AssignmentStatus.Archived) // ✅ ENUM
                 {
                     return BadRequest("Cannot update status of submission in closed assignment.");
                 }
 
-                submission.Status = dto.Status;
+                submission.Status = dto.SubmissionStatus;
                 await _db.SaveChangesAsync();
             }
 
@@ -630,7 +630,7 @@ namespace Interchée.Controllers
                 .CountAsync(f => f.SubmissionId == submission.Id);
 
             var readDto = new SubmissionReadDto(
-                  submission.Id, submission.AssignmentId, submission.UserId, "GitHub", submission.RepoUrl,
+                  submission.Id, submission.AssignmentId, submission.UserId, SubmissionType.GitHub, submission.RepoUrl, // ✅ ENUM
                 submission.Branch, submission.LatestCommitSha, submission.SubmittedAt,
                 submission.Status, submission.CreatedAt, null, commitCount, feedbackCount, new List<AttachmentReadDto>()
             );

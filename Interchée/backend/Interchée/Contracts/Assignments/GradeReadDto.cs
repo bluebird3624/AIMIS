@@ -11,6 +11,7 @@
         string? RubricScoresJson,
         Guid GradedByUserId,
         DateTime GradedAt,
-        string GradedByUserName
+        string GradedByUserName,
+        string? Comment
     );
 }

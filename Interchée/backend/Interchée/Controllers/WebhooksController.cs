@@ -8,16 +8,10 @@ namespace Interchée.Controllers
 {
     [ApiController]
     [Route("webhooks")]
-    public class WebhooksController : ControllerBase
+    public class WebhooksController(AppDbContext db, ILogger<WebhooksController> logger) : ControllerBase
     {
-        private readonly AppDbContext _db;
-        private readonly ILogger<WebhooksController> _logger;
-
-        public WebhooksController(AppDbContext db, ILogger<WebhooksController> logger)
-        {
-            _db = db;
-            _logger = logger;
-        }
+        private readonly AppDbContext _db = db;
+        private readonly ILogger<WebhooksController> _logger = logger;
 
         /// <summary>GitHub webhook for automatic commit tracking</summary>
         [HttpPost("github")]

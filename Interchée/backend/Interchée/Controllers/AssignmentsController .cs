@@ -1,11 +1,13 @@
 ﻿using Interchée.Contracts.Assignments;
 using Interchée.Data;
 using Interchée.Entities;
+using Interchée.Entities.Enums;
 using Interchée.Extensions;
 using Interchée.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Interchée.Controllers
 {
@@ -37,7 +39,7 @@ namespace Interchée.Controllers
                 .Select(a => new AssignmentReadDto(
                     a.Id, a.Title, a.Description, a.DepartmentId, a.CreatedByUserId,
                     a.DueAt, a.Status, a.CreatedAt, a.Assignees.Count,
-                    a.Submissions.Count(s => s.Status == "Submitted" || s.Status == "Reviewed")
+                   a.Submissions.Count(s => s.Status == SubmissionStatus.Submitted || s.Status == SubmissionStatus.Reviewed)
                 ))
                 .ToListAsync();
 
@@ -59,8 +61,8 @@ namespace Interchée.Controllers
                     .ThenInclude(a => a!.Department)
                 .Select(aa => new
                 {
-                    Assignment = aa.Assignment,
-                    AssignedAt = aa.AssignedAt
+                    aa.Assignment,
+                    aa.AssignedAt
                 })
                 .ToListAsync();
 
@@ -88,7 +90,7 @@ namespace Interchée.Controllers
                     assignment.CreatedAt,
                     aa.AssignedAt,
                     submission != null, // Has submission
-                    submission?.Status ?? "NotStarted", // Submission status
+                    submission?.Status ?? SubmissionStatus.NotStarted, // Submission status
                     submission?.SubmittedAt, // Submission date
                     submission?.Grade != null // Is graded
                 );
@@ -107,6 +109,11 @@ namespace Interchée.Controllers
         public async Task<ActionResult<AssignmentReadDto>> Create([FromBody] AssignmentCreateDto dto)
         {
             var userId = User.GetUserId();
+
+            if (dto.DueAt.HasValue && dto.DueAt.Value < DateTime.UtcNow)
+            {
+                return BadRequest("Due date cannot be in the past. Please set a future due date.");
+            }
 
             // Verify user has role in target department
             var hasAccess = await _db.DepartmentRoleAssignments
@@ -128,7 +135,7 @@ namespace Interchée.Controllers
                 DepartmentId = dto.DepartmentId,
                 CreatedByUserId = userId,
                 DueAt = dto.DueAt,
-                Status = "Created"
+                Status = AssignmentStatus.Created
             };
 
             _db.Assignments.Add(assignment);
@@ -156,9 +163,9 @@ namespace Interchée.Controllers
             if (assignment == null) return NotFound();
 
             // Update assignment status to Assigned when users are assigned
-            if (assignment.Status == "Created" && dto.UserIds.Any())
+            if (assignment.Status == AssignmentStatus.Created && dto.UserIds.Length != 0)
             {
-                assignment.Status = "Assigned";
+                assignment.Status = AssignmentStatus.Assigned;
             }
 
             // Remove existing assignees not in new list
@@ -206,7 +213,7 @@ namespace Interchée.Controllers
             if (assignment == null) return NotFound();
 
             var submissionCount = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == id && (s.Status == "Submitted" || s.Status == "Reviewed"));
+                .CountAsync(s => s.AssignmentId == id && (s.Status == SubmissionStatus.Submitted || s.Status == SubmissionStatus.Reviewed));
 
             var readDto = new AssignmentReadDto(
                 assignment.Id, assignment.Title, assignment.Description, assignment.DepartmentId,
@@ -231,6 +238,11 @@ namespace Interchée.Controllers
 
             if (assignment == null) return NotFound();
 
+             if (dto.DueAt.HasValue && dto.DueAt.Value < DateTime.UtcNow)
+    {
+        return BadRequest("Due date cannot be in the past. Please set a future due date.");
+    }
+
             // Verify user has access to update this assignment's department
             var hasAccess = await _db.DepartmentRoleAssignments
                 .AnyAsync(ra => ra.UserId == userId && ra.DepartmentId == assignment.DepartmentId &&
@@ -248,7 +260,7 @@ namespace Interchée.Controllers
             await _db.SaveChangesAsync();
 
             var submissionCount = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == id && (s.Status == "Submitted" || s.Status == "Reviewed"));
+                .CountAsync(s => s.AssignmentId == id && (s.Status == SubmissionStatus.Submitted || s.Status == SubmissionStatus.Reviewed));
             var assigneeCount = await _db.AssignmentAssignees
                 .CountAsync(aa => aa.AssignmentId == id);
 
@@ -268,7 +280,7 @@ namespace Interchée.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AssignmentReadDto>> UpdateStatus(long id, [FromBody] AssignmentStatusDto dto)
         {
-            var validStatuses = new[] { "Assigned", "Closed", "Archived" };
+            var validStatuses = new[] { AssignmentStatus.Assigned, AssignmentStatus.Closed, AssignmentStatus.Archived };
             if (!validStatuses.Contains(dto.Status))
                 return BadRequest($"Invalid status. Must be one of: {string.Join(", ", validStatuses)}");
 
@@ -281,7 +293,7 @@ namespace Interchée.Controllers
             await _db.SaveChangesAsync();
 
             var submissionCount = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == id && (s.Status == "Submitted" || s.Status == "Reviewed"));
+                .CountAsync(s => s.AssignmentId == id && (s.Status == SubmissionStatus.Submitted || s.Status == SubmissionStatus.Reviewed));
             var assigneeCount = await _db.AssignmentAssignees
                 .CountAsync(aa => aa.AssignmentId == id);
 

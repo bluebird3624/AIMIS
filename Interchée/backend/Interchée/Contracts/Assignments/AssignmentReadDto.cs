@@ -1,4 +1,6 @@
-﻿namespace Interchée.Contracts.Assignments
+﻿using Interchée.Entities.Enums;
+
+namespace Interchée.Contracts.Assignments
 {
     // Read
     public record AssignmentReadDto(
@@ -8,7 +10,7 @@
         int DepartmentId,
         Guid CreatedByUserId,
         DateTime? DueAt,
-        string Status,
+        AssignmentStatus Status,
         DateTime CreatedAt,
         int AssigneeCount,
         int SubmissionCount

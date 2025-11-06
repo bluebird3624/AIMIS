@@ -1,4 +1,6 @@
-﻿namespace Interchée.Contracts.Assignments
+﻿using Interchée.Entities.Enums;
+
+namespace Interchée.Contracts.Assignments
 {
     public record GradedSubmissionReadDto(
         long SubmissionId,
@@ -9,6 +11,7 @@
         decimal Score,
         decimal MaxScore,
         DateTime GradedAt,
-        string Status // String status
+        SubmissionStatus Status,
+        string? Comment
     );
 }

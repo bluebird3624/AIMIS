@@ -12,6 +12,7 @@ namespace Interchée.Contracts.Assignments
         decimal MaxScore,
 
          int? RubricId, // Use rubric instead of manual JSON
-        Dictionary<string, decimal>? CriteriaScores // Individual criteria scores
+        Dictionary<string, decimal>? CriteriaScores, // Individual criteria scores
+        string? Comment
     );
 }

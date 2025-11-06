@@ -1,5 +1,6 @@
 ﻿using Interchée.Contracts.Assignments;
 using Interchée.Data;
+using Interchée.Entities.Enums;
 using Interchée.Extensions;
 using Interchée.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -99,7 +100,8 @@ namespace Interchée.Controllers
                     return Forbid("Submission not found or access denied");
 
                 // Check if assignment allows submissions
-                if (submission.Assignment?.Status == "Closed" || submission.Assignment?.Status == "Archived")
+                if (submission.Assignment?.Status == AssignmentStatus.Closed ||
+    submission.Assignment?.Status == AssignmentStatus.Archived)
                 {
                     return BadRequest("Cannot upload to a closed assignment");
                 }
