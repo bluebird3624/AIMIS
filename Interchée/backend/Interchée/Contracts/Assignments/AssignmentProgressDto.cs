@@ -4,7 +4,7 @@
        int TotalAssignees,
        int SubmittedCount,
        int ReviewedCount,
-       int InProgressCount,
+    //   int InProgressCount,
        int NotStartedCount,
        double SubmissionRate,
        double ReviewRate

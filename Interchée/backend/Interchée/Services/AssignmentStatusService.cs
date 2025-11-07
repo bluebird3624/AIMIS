@@ -62,9 +62,9 @@ namespace Interchée.Services
 
             var totalAssignees = assignment.Assignees.Count;
             var submittedCount = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == SubmissionStatus.Submitted); // ✅ ENUM
+                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == SubmissionStatus.Submitted); 
             var reviewedCount = await _db.AssignmentSubmissions
-                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == SubmissionStatus.Reviewed); // ✅ ENUM
+                .CountAsync(s => s.AssignmentId == assignmentId && s.Status == SubmissionStatus.Reviewed); 
 
             // 🚫 REMOVED: InProgressCount - no longer exists
             var notStartedCount = totalAssignees - (submittedCount + reviewedCount);
@@ -73,7 +73,7 @@ namespace Interchée.Services
                 TotalAssignees: totalAssignees,
                 SubmittedCount: submittedCount,
                 ReviewedCount: reviewedCount,
-                InProgressCount: 0, // ✅ SET TO 0 since we removed this status
+              //  InProgressCount: 0, 
                 NotStartedCount: notStartedCount,
                 SubmissionRate: totalAssignees > 0 ? (double)(submittedCount + reviewedCount) / totalAssignees * 100 : 0,
                 ReviewRate: (submittedCount + reviewedCount) > 0 ? (double)reviewedCount / (submittedCount + reviewedCount) * 100 : 0
@@ -90,9 +90,9 @@ namespace Interchée.Services
 
             if (assignment.DueAt.HasValue &&
                 assignment.DueAt.Value < DateTime.UtcNow &&
-                assignment.Status == AssignmentStatus.Assigned) // ✅ ENUM
+                assignment.Status == AssignmentStatus.Assigned) 
             {
-                assignment.Status = AssignmentStatus.Closed; // ✅ ENUM
+                assignment.Status = AssignmentStatus.Closed; 
                 await _db.SaveChangesAsync();
                 return true;
             }

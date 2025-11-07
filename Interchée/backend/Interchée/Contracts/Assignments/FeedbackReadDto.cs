@@ -1,13 +1,12 @@
 ﻿namespace Interchée.Contracts.Assignments
 {
-    // Read comment
     public record FeedbackReadDto(
-        long Id,
-        long SubmissionId,
-        Guid AuthorUserId,
-        string Comment,
-        DateTime CreatedAt,
-        string AuthorUserName,
-        string AuthorDisplayName
+           long Id,
+           string Title,
+           string Message,
+           Guid CreatedByUserId,
+           string CreatedByUserName,
+            DateTime CreatedAt,
+           List<FeedbackReplyReadDto> Replies
     );
 }
