@@ -48,7 +48,7 @@ const StudentAssignment = () => {
             setIsExpanded(!isExpanded);
         };
 
-        // Handle file drop
+        
         const handleDrop = (e) => {
             e.preventDefault();
             setIsDragOver(false);
