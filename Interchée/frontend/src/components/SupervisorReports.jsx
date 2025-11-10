@@ -402,9 +402,9 @@ function SupervisorReports(){
     const [rubricName, setRubricName] = useState('');
     const [rubricDescription, setRubricDescription] = useState('');
     const [rubrics, setRubrics] = useState([]);
-    const [selectedRubric, setSelectedRubric] = useState('');
+    const [selectedRubric, setSelectedRubric] = useState(0);
     const [assignmentTitle, setAssignmentTitle] = useState('');
-    const [submissionType, setSubmissionType] = useState('git');
+    const [submissionType, setSubmissionType] = useState(0);
     const [assignments, setAssignments] = useState([]);
     const [createdAssignments, setCreatedAssignments] = useState([]);
     const [ongoingAssignments, setOngoingAssignments] = useState([]);
@@ -567,7 +567,7 @@ function SupervisorReports(){
         setRubrics(prev => prev.filter(rubric => rubric.id !== rubricId));
         // await rubricAPI.deleteRubric(rubricId); waiting for Wayne to update delete endpoint
         if (selectedRubric === rubricId.toString()) {
-            setSelectedRubric('');
+            setSelectedRubric(0);
         }
     };
 
@@ -590,9 +590,9 @@ function SupervisorReports(){
                 title: assignmentTitle,
                 description: assignmentDescription,
                 dueDate: dueDate,
-                departmentId: 1
-                // submissionType: submissionType,
-                // rubric: selectedRubricObj || null,
+                departmentId: 1,
+                allowedSubmissionType: submissionType,
+                rubricId: selectedRubric || null,
             };
             await assignmentAPI.createAssignment(newAssignment);
             
@@ -602,8 +602,8 @@ function SupervisorReports(){
             setAssignmentTitle('');
             setAssignmentDescription('');
             setDueDate(null);
-            setSelectedRubric('');
-            setSubmissionType('git');
+            setSelectedRubric(0);
+            setSubmissionType(0);
             setSelectedInterns([]);
             setIsCreateAssignmentOpen(false);
         }
@@ -965,15 +965,15 @@ function SupervisorReports(){
                                     onChange={(e) => setSubmissionType(e.target.value)}
                                     className="submission-dropdown"
                                 >
-                                    <option value="git">Git Repository</option>
-                                    <option value="file">File Upload</option>
+                                    <option value={1}>Git Repository</option>
+                                    <option value={2}>File Upload</option>
                                 
                                 </select>
                                 <div className="submission-type-info">
-                                    {submissionType === 'git' && (
+                                    {submissionType === 'Github' && (
                                         <span className="info-text">Students will submit Git repository URLs</span>
                                     )}
-                                    {submissionType === 'file' && (
+                                    {submissionType === 'File' && (
                                         <span className="info-text">Students will upload files (PDF, DOC, ZIP, etc.)</span>
                                     )}
                                    
@@ -1240,6 +1240,7 @@ function SupervisorReports(){
                                         {interns.map((intern, index) => (
                                             <div key={index} className="checkbox-option">
                                                 <input
+                                                    key={index}
                                                     type="checkbox"
                                                     id={`intern-${index}`}
                                                     checked={selectedInterns.includes(intern.id)}

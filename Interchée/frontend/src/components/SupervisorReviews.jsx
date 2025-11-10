@@ -14,6 +14,7 @@ export default function SupervisorReviews() {
         time: '',
         date: ''
     });
+    const [editingReviewId, setEditingReviewId] = useState(null); // Track which review is being edited
 
     const studentsList = [
         'Vikky',
@@ -55,26 +56,68 @@ export default function SupervisorReviews() {
     };
 
     const handleSubmitReview = () => {
-        // Create new review object
-        const newReview = {
-            id: Date.now(), // Unique ID for the review
-            title: reviewData.title,
-            description: reviewData.description,
-            students: [...reviewData.students],
-            location: reviewData.location,
-            time: reviewData.time,
-            date: reviewData.date,
-            createdAt: new Date().toLocaleDateString(),
-            status: 'upcoming'
-        };
+        if (editingReviewId) {
+            // Update existing review
+            setScheduledReviews(prev => 
+                prev.map(review => 
+                    review.id === editingReviewId 
+                        ? {
+                            ...review,
+                            title: reviewData.title,
+                            description: reviewData.description,
+                            students: [...reviewData.students],
+                            location: reviewData.location,
+                            time: reviewData.time,
+                            date: reviewData.date
+                        }
+                        : review
+                )
+            );
+        } else {
+            // Create new review object
+            const newReview = {
+                id: Date.now(), // Unique ID for the review
+                title: reviewData.title,
+                description: reviewData.description,
+                students: [...reviewData.students],
+                location: reviewData.location,
+                time: reviewData.time,
+                date: reviewData.date,
+                createdAt: new Date().toLocaleDateString(),
+                status: 'upcoming'
+            };
 
-        // Add to scheduled reviews
-        setScheduledReviews(prev => [newReview, ...prev]);
+            // Add to scheduled reviews
+            setScheduledReviews(prev => [newReview, ...prev]);
+        }
         
-        // Close modal after submission
+        // Close modal and reset
+        handleCloseModal();
+    };
+
+    // Function to handle reschedule button click
+    const handleReschedule = (review) => {
+        // Populate the form with the review's data
+        setReviewData({
+            title: review.title,
+            description: review.description,
+            students: [...review.students],
+            location: review.location,
+            time: review.time,
+            date: review.date
+        });
+        
+        // Set the review ID we're editing
+        setEditingReviewId(review.id);
+        
+        // Open the modal
+        setIsScheduleModalOpen(true);
+    };
+
+    // Function to close modal and reset form
+    const handleCloseModal = () => {
         setIsScheduleModalOpen(false);
-        
-        // Reset form
+        setEditingReviewId(null);
         setReviewData({
             title: '',
             description: '',
@@ -83,6 +126,20 @@ export default function SupervisorReviews() {
             time: '',
             date: ''
         });
+    };
+
+    // Function to handle creating a new review (when not editing)
+    const handleNewReview = () => {
+        setEditingReviewId(null);
+        setReviewData({
+            title: '',
+            description: '',
+            students: [],
+            location: '',
+            time: '',
+            date: ''
+        });
+        setIsScheduleModalOpen(true);
     };
 
     const isFormValid = reviewData.title && reviewData.description && 
@@ -95,13 +152,18 @@ export default function SupervisorReviews() {
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
+    // Format date for date input (YYYY-MM-DD)
+    const formatDateForInput = (dateString) => {
+        return new Date(dateString).toISOString().split('T')[0];
+    };
+
     return (
         <>
             <div className="header-row">
                 <h1 style={{ fontFamily:"arial", fontSize: "35px", marginLeft: "20px"}}> Reviews </h1>
                 <button 
                     className="schedule-rev-btn"
-                    onClick={() => setIsScheduleModalOpen(true)}
+                    onClick={handleNewReview}
                 >
                     <icons.IoAdd/> Schedule review
                 </button>
@@ -163,7 +225,7 @@ export default function SupervisorReviews() {
                                         <icons.IoPeopleOutline/>
                                     </div>
                                     <div className="rev-content-wrapper">
-                                        <div className="rev-date-label">Students</div>
+                                        <div className="rev-date-label">Participants</div>
                                         <div className="rev-date">{review.students.length}</div>
                                     </div>
                                 </div>
@@ -187,7 +249,10 @@ export default function SupervisorReviews() {
                             </div>
                             
                             <div className="rev-card-actions">
-                                <button className="rev-complete-btn">
+                                <button 
+                                    className="rev-complete-btn"
+                                    onClick={() => handleReschedule(review)}
+                                >
                                     <icons.IoRefreshOutline/> Reschedule
                                 </button>
                             </div>
@@ -201,10 +266,12 @@ export default function SupervisorReviews() {
                 <div className="rev-modal-overlay">
                     <div className="rev-modal-container">
                         <div className="rev-modal-header">
-                            <h2 className="rev-modal-title">Schedule New Review</h2>
+                            <h2 className="rev-modal-title">
+                                {editingReviewId ? 'Reschedule Review' : 'Schedule New Review'}
+                            </h2>
                             <button 
                                 className="rev-modal-close"
-                                onClick={() => setIsScheduleModalOpen(false)}
+                                onClick={handleCloseModal}
                             >
                                 <icons.IoClose />
                             </button>
@@ -307,7 +374,7 @@ export default function SupervisorReviews() {
                         <div className="rev-modal-actions">
                             <button 
                                 className="rev-cancel-btn"
-                                onClick={() => setIsScheduleModalOpen(false)}
+                                onClick={handleCloseModal}
                             >
                                 Cancel
                             </button>
@@ -316,7 +383,7 @@ export default function SupervisorReviews() {
                                 onClick={handleSubmitReview}
                                 disabled={!isFormValid}
                             >
-                                Schedule Review
+                                {editingReviewId ? 'Update Review' : 'Schedule Review'}
                             </button>
                         </div>
                     </div>
