@@ -5,19 +5,20 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TextField } from '@mui/material';
 import { IoAlertCircleOutline, IoCheckmarkCircleOutline, IoClipboardOutline, IoAdd, IoClose, IoTrash, IoPersonAdd, IoChevronDown, IoChevronUp, IoDownloadOutline, IoOpenOutline } from "react-icons/io5";
+import { rubricAPI, submissionAPI, assignmentAPI, usersAPI } from "../services/api";
 
-// Ungraded Submission Card Component - Moved outside
+
 const UngradedSubmissionCard = ({ submission, onMarksUpdate, onCommentUpdate, onSubmitGrade }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [comment, setComment] = useState(submission.supervisorComment || '');
     const commentTextareaRef = useRef(null);
 
-    // Calculate total marks for a submission
+   
     const calculateTotalMarks = (submission) => {
         return submission.rubric.criteria.reduce((total, criterion) => total + criterion.awardedMarks, 0);
     };
 
-    // Calculate maximum possible marks for a submission
+    
     const calculateMaxMarks = (submission) => {
         return submission.rubric.criteria.reduce((total, criterion) => total + criterion.maxMarks, 0);
     };
@@ -29,7 +30,7 @@ const UngradedSubmissionCard = ({ submission, onMarksUpdate, onCommentUpdate, on
         setIsExpanded(!isExpanded);
     };
 
-    // Auto-resize comment textarea
+    
     useEffect(() => {
         const textarea = commentTextareaRef.current;
         if (textarea) {
@@ -44,16 +45,16 @@ const UngradedSubmissionCard = ({ submission, onMarksUpdate, onCommentUpdate, on
         onCommentUpdate(submission.id, newComment);
     };
 
-    // Handle opening Git URL in new tab
+   
     const openGitUrl = (url) => {
         window.open(url, '_blank');
     };
 
-    // Handle file download
+   
     const handleDownload = (fileName) => {
-        // Simulate file download
+        
         alert(`Downloading file: ${fileName}`);
-        // In a real app, you would fetch the file from your server
+        
     };
 
     const handleSubmitGrade = () => {
@@ -136,7 +137,7 @@ const UngradedSubmissionCard = ({ submission, onMarksUpdate, onCommentUpdate, on
                         <h4 className="sup-rubric-title">{submission.rubric.name}</h4>
                         
                         <div className="sup-criteria-list">
-                            {submission.rubric.criteria.map((criterion) => (
+                            {submission.rubric.items.map((criterion) => (
                                 <div key={criterion.id} className="sup-criterion-item">
                                     <div className="sup-criterion-info">
                                         <div className="sup-criterion-header">
@@ -228,16 +229,16 @@ const UngradedSubmissionCard = ({ submission, onMarksUpdate, onCommentUpdate, on
     );
 };
 
-// Graded Submission Card Component
+
 const GradedSubmissionCard = ({ submission }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
-    // Calculate total marks for a submission
+    
     const calculateTotalMarks = (submission) => {
         return submission.rubric.criteria.reduce((total, criterion) => total + criterion.awardedMarks, 0);
     };
 
-    // Calculate maximum possible marks for a submission
+    
     const calculateMaxMarks = (submission) => {
         return submission.rubric.criteria.reduce((total, criterion) => total + criterion.maxMarks, 0);
     };
@@ -250,12 +251,12 @@ const GradedSubmissionCard = ({ submission }) => {
         setIsExpanded(!isExpanded);
     };
 
-    // Handle opening Git URL in new tab
+   
     const openGitUrl = (url) => {
         window.open(url, '_blank');
     };
 
-    // Handle file download
+  
     const handleDownload = (fileName) => {
         alert(`Downloading file: ${fileName}`);
     };
@@ -393,188 +394,51 @@ function SupervisorReports(){
     const [isRubricListOpen, setIsRubricListOpen] = useState(false);
     const [assignmentDescription, setAssignmentDescription] = useState('');
     const [selectedInterns, setSelectedInterns] = useState([]);
+    const [interns, setInterns] = useState([]);
     const [criteria, setCriteria] = useState([]);
+    const [criterionDescription, setCriterionDescription] = useState('');
+    const [criterionName, setCriterionName] = useState('');
     const [totalMarks, setTotalMarks] = useState(0);
     const [rubricName, setRubricName] = useState('');
+    const [rubricDescription, setRubricDescription] = useState('');
     const [rubrics, setRubrics] = useState([]);
     const [selectedRubric, setSelectedRubric] = useState('');
     const [assignmentTitle, setAssignmentTitle] = useState('');
     const [submissionType, setSubmissionType] = useState('git');
+    const [assignments, setAssignments] = useState([]);
     const [createdAssignments, setCreatedAssignments] = useState([]);
     const [ongoingAssignments, setOngoingAssignments] = useState([]);
     const textareaRef = useRef(null);
     const [dueDate, setDueDate] = useState(null);
     const [assignToInterns, setAssigntointerns] = useState(false);
     const [currentAssignmentId, setCurrentAssignmentId] = useState(null);
+    const [ungradedSubmissions, setUngradedSubmissions] = useState([]);
 
-    // Sample ungraded submissions data with rubrics
-    const [ungradedSubmissions, setUngradedSubmissions] = useState([
-        {
-            id: 1,
-            assignmentTitle: 'React Component Development',
-            studentName: 'John Doe',
-            submissionType: 'git',
-            gitUrl: 'https://github.com/johndoe/react-project.git',
-            submittedDate: '2024-01-12',
-            status: 'Submitted',
-            rubric: {
-                name: 'React Development Rubric',
-                criteria: [
-                    {
-                        id: 1,
-                        name: 'Component Structure',
-                        description: 'Proper component organization and separation of concerns',
-                        maxMarks: 25,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 2,
-                        name: 'State Management',
-                        description: 'Effective use of React state and props',
-                        maxMarks: 25,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 3,
-                        name: 'Code Quality',
-                        description: 'Clean code, proper naming conventions and documentation',
-                        maxMarks: 20,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 4,
-                        name: 'Functionality',
-                        description: 'All features working as specified',
-                        maxMarks: 20,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 5,
-                        name: 'UI/UX Design',
-                        description: 'User interface design and user experience',
-                        maxMarks: 10,
-                        awardedMarks: 0
-                    }
-                ]
-            },
-            supervisorComment: ''
-        },
-        {
-            id: 2,
-            assignmentTitle: 'API Integration Project',
-            studentName: 'Jane Smith',
-            submissionType: 'file',
-            fileName: 'api-integration-report.pdf',
-            fileSize: '2.4 MB',
-            submittedDate: '2024-01-14',
-            status: 'Submitted',
-            rubric: {
-                name: 'API Integration Rubric',
-                criteria: [
-                    {
-                        id: 1,
-                        name: 'API Implementation',
-                        description: 'Proper API integration and error handling',
-                        maxMarks: 30,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 2,
-                        name: 'Data Processing',
-                        description: 'Effective data transformation and validation',
-                        maxMarks: 25,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 3,
-                        name: 'Error Handling',
-                        description: 'Comprehensive error handling and user feedback',
-                        maxMarks: 20,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 4,
-                        name: 'Code Organization',
-                        description: 'Clean and maintainable code structure',
-                        maxMarks: 15,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 5,
-                        name: 'Documentation',
-                        description: 'Clear documentation and comments',
-                        maxMarks: 10,
-                        awardedMarks: 0
-                    }
-                ]
-            },
-            supervisorComment: ''
-        },
-        {
-            id: 3,
-            assignmentTitle: 'Database Design Assignment',
-            studentName: 'Mike Johnson',
-            submissionType: 'git',
-            gitUrl: 'https://github.com/mikej/database-design.git',
-            submittedDate: '2024-01-10',
-            status: 'Submitted',
-            rubric: {
-                name: 'Database Design Rubric',
-                criteria: [
-                    {
-                        id: 1,
-                        name: 'Normalization',
-                        description: 'Proper database normalization up to 3NF',
-                        maxMarks: 30,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 2,
-                        name: 'Relationships',
-                        description: 'Appropriate primary and foreign key relationships',
-                        maxMarks: 25,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 3,
-                        name: 'Constraints',
-                        description: 'Proper use of constraints and data types',
-                        maxMarks: 20,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 4,
-                        name: 'Documentation',
-                        description: 'Clear documentation and ER diagrams',
-                        maxMarks: 15,
-                        awardedMarks: 0
-                    },
-                    {
-                        id: 5,
-                        name: 'Best Practices',
-                        description: 'Following database design best practices',
-                        maxMarks: 10,
-                        awardedMarks: 0
-                    }
-                ]
-            },
-            supervisorComment: ''
-        }
-    ]);
-
-    // Graded submissions start empty
+    
     const [gradedSubmissions, setGradedSubmissions] = useState([]);
 
-    const interns = [
-        'intern number',
-        'Attche 1', 
-        'Intern 2',
-        'Attache 2',
-        'Intern 3',
-        'Attache 3'
-    ];
+    const fetchRubrics  = async() => {
+        const response = await rubricAPI.getAllRubrics();
+        setRubrics(response.data);
+    }
 
-    // Auto-resize textarea when description changes
+    const fetchStudents = async () => {
+        const response = await usersAPI.getUsers();
+        const users = response.data;
+        // const studentRoles = ['attache','intern'];
+        // const studentUsers = users.filter(user => {return studentRoles.includes(user.role)});
+        setInterns(users);       
+
+    }
+
+    const fetchAssignments =  async () => {
+        const response = await assignmentAPI.getAllAssignments();
+        const assignments = response.data;
+        setCreatedAssignments(assignments);
+        // const userDepartmentId = '';
+        // const departmentAssignments = assignments.filter(assignment => assignment.departnmentId === userDepartmentId)
+    }
+    
     useEffect(() => {
         const textarea = textareaRef.current;
         if (textarea) {
@@ -583,33 +447,39 @@ function SupervisorReports(){
         }
     }, [assignmentDescription]);
 
-    // Update total marks whenever criteria change
+    
     useEffect(() => {
-        const total = criteria.reduce((sum, criterion) => sum + criterion.marks, 0);
+        const total = criteria.reduce((sum, criterion) => sum + criterion.maxScore, 0);
         setTotalMarks(total);
     }, [criteria]);
 
-    // Handle checkbox change
-    const handleCheckboxChange = (intern) => {
+    useEffect(() => {
+        fetchRubrics();
+        fetchStudents();
+        fetchAssignments();
+
+    }, []);
+   
+    const handleCheckboxChange = (internId) => {
         setSelectedInterns(prev => {
-            if (prev.includes(intern)) {
-                return prev.filter(item => item !== intern);
+            if (prev.includes(internId)) {
+                return prev.filter(id => id !== internId);
             } else {
-                return [...prev, intern];
+                return [...prev, internId];
             }
         });
     };
 
-    // Select all / deselect all
+    
     const handleSelectAll = () => {
         if (selectedInterns.length === interns.length) {
             setSelectedInterns([]);
         } else {
-            setSelectedInterns([...interns]);
+            setSelectedInterns(interns.map(intern => intern.id));
         }
     };
 
-    // Add new criterion
+   
     const addCriterion = () => {
         const availableMarks = 100 - totalMarks;
         const defaultMarks = availableMarks > 0 ? 1 : 0;
@@ -617,36 +487,41 @@ function SupervisorReports(){
         setCriteria(prev => [
             ...prev,
             {
-                id: Date.now(),
-                name: '',
-                marks: defaultMarks
+                id: Date.now().toString(),
+                criteria: criterionName || '',
+                description: criterionDescription || '',
+                maxScore: defaultMarks,
+                order: 1
             }
         ]);
+
+        setCriterionName('');
+        setCriterionDescription('');
     };
 
-    // Update criterion name
+    
     const updateCriterionName = (id, name) => {
         setCriteria(prev => prev.map(criterion => 
-            criterion.id === id ? { ...criterion, name } : criterion
+            criterion.id === id ? { ...criterion, criteria:name } : criterion
         ));
     };
 
-    // Update criterion marks
+    
     const updateCriterionMarks = (id, newMarks) => {
         const numericMarks = parseInt(newMarks) || 0;
         const currentCriterion = criteria.find(c => c.id === id);
-        const currentMarks = currentCriterion ? currentCriterion.marks : 0;
+        const currentMarks = currentCriterion ? currentCriterion.maxScore : 0;
         const marksDifference = numericMarks - currentMarks;
         const newTotal = totalMarks + marksDifference;
 
         if (newTotal <= 100 && numericMarks >= 0 && numericMarks <= 100) {
             setCriteria(prev => prev.map(criterion => 
-                criterion.id === id ? { ...criterion, marks: numericMarks } : criterion
+                criterion.id === id ? { ...criterion, maxScore: numericMarks } : criterion
             ));
         }
     };
 
-    // Remove criterion
+    
     const removeCriterion = (id) => {
         setCriteria(prev => prev.filter(criterion => criterion.id !== id));
     };
@@ -665,36 +540,38 @@ function SupervisorReports(){
         }
     };
 
-    // Create new rubric
-    const createRubric = () => {
+    
+    const createRubric = async () => {
         if (rubricName.trim() && totalMarks === 100 && criteria.length > 0) {
             const newRubric = {
-                id: Date.now(),
+                
                 name: rubricName,
-                criteria: [...criteria],
-                totalMarks: totalMarks,
-                createdAt: new Date().toLocaleDateString()
+                description: rubricDescription,
+                items: [...criteria]
+                
             };
             
-            setRubrics(prev => [...prev, newRubric]);
             
+            console.log('new rubric: ', newRubric);
+            await rubricAPI.createRubric(newRubric);
             // Reset form
             setRubricName('');
             setCriteria([]);
             setTotalMarks(0);
             setIsGradingRubricOpen(false);
+            fetchRubrics();
         }
     };
 
-    // Delete rubric
-    const deleteRubric = (rubricId) => {
+    const deleteRubric = async (rubricId) => {
         setRubrics(prev => prev.filter(rubric => rubric.id !== rubricId));
+        // await rubricAPI.deleteRubric(rubricId); waiting for Wayne to update delete endpoint
         if (selectedRubric === rubricId.toString()) {
             setSelectedRubric('');
         }
     };
 
-    // Close rubric creation and reset form
+   
     const closeRubricCreation = () => {
         setIsGradingRubricOpen(false);
         setRubricName('');
@@ -702,23 +579,22 @@ function SupervisorReports(){
         setTotalMarks(0);
     };
 
-    // Create new assignment
-    const createAssignment = () => {
+  
+    const createAssignment = async () => {
         if (assignmentTitle.trim() && dueDate) {
-            // Find the selected rubric
+           
             const selectedRubricObj = rubrics.find(r => r.id.toString() === selectedRubric);
             
             const newAssignment = {
-                id: Date.now(),
+                
                 title: assignmentTitle,
                 description: assignmentDescription,
                 dueDate: dueDate,
-                submissionType: submissionType,
-                rubric: selectedRubricObj || null,
-                status: "Draft",
-                createdAt: new Date().toLocaleDateString(),
-                assignedTo: [] // Initially empty, will be assigned later
+                departmentId: 1
+                // submissionType: submissionType,
+                // rubric: selectedRubricObj || null,
             };
+            await assignmentAPI.createAssignment(newAssignment);
             
             setCreatedAssignments(prev => [...prev, newAssignment]);
             
@@ -733,40 +609,44 @@ function SupervisorReports(){
         }
     };
 
-    // Open assign to modal
+   
     const openAssignToModal = (assignmentId) => {
         setCurrentAssignmentId(assignmentId);
         setAssigntointerns(true);
         setSelectedInterns([]);
     };
 
-    // Assign assignment to interns and move to ongoing
-    const assignToStudents = () => {
+    
+    const assignToStudents = async () => {
         if (currentAssignmentId && selectedInterns.length > 0) {
-            // Update the assignment with assigned interns
+          
             const updatedAssignment = createdAssignments.find(assignment => assignment.id === currentAssignmentId);
             if (updatedAssignment) {
                 const assignedAssignment = {
                     ...updatedAssignment,
                     assignedTo: [...selectedInterns],
-                    status: "In Progress"
+                   
                 };
 
-                // Remove from created assignments
+                const userIds = {
+                    userIds: selectedInterns
+                }
+
+                await assignmentAPI.assignAssignment(currentAssignmentId, userIds);
                 setCreatedAssignments(prev => prev.filter(assignment => assignment.id !== currentAssignmentId));
                 
-                // Add to ongoing assignments
+               
                 setOngoingAssignments(prev => [...prev, assignedAssignment]);
             }
 
-            // Close modal and reset
+           
             setAssigntointerns(false);
             setCurrentAssignmentId(null);
             setSelectedInterns([]);
         }
     };
 
-    // Handle marks update for criteria with constraints
+   
     const handleMarksUpdate = (submissionId, criterionId, marks) => {
         const numericMarks = parseInt(marks) || 0;
         
@@ -774,7 +654,7 @@ function SupervisorReports(){
             if (submission.id === submissionId) {
                 const criterion = submission.rubric.criteria.find(c => c.id === criterionId);
                 if (criterion) {
-                    // Ensure marks don't exceed maximum allowed for this criterion
+                   
                     const finalMarks = Math.min(numericMarks, criterion.maxMarks);
                     
                     const updatedRubric = {
@@ -792,7 +672,7 @@ function SupervisorReports(){
         }));
     };
 
-    // Handle supervisor comment update
+    
     const handleCommentUpdate = (submissionId, comment) => {
         setUngradedSubmissions(prev => prev.map(submission => 
             submission.id === submissionId 
@@ -801,13 +681,13 @@ function SupervisorReports(){
         ));
     };
 
-    // Handle grade submission
+    
     const handleSubmitGrade = (submissionId) => {
-        // Find the submission in ungraded submissions
+        
         const submissionToGrade = ungradedSubmissions.find(sub => sub.id === submissionId);
         
         if (submissionToGrade) {
-            // Check if any criterion has marks exceeding maximum
+           
             const hasExceededMarks = submissionToGrade.rubric.criteria.some(
                 criterion => criterion.awardedMarks > criterion.maxMarks
             );
@@ -817,18 +697,16 @@ function SupervisorReports(){
                 return;
             }
 
-            // Create a graded version of the submission
+           
             const gradedSubmission = {
                 ...submissionToGrade,
-                id: Date.now(), // New ID for the graded version
-                status: 'Graded',
                 gradedDate: new Date().toLocaleDateString()
             };
 
-            // Add to graded submissions
+            
             setGradedSubmissions(prev => [...prev, gradedSubmission]);
             
-            // Remove from ungraded submissions
+          
             setUngradedSubmissions(prev => prev.filter(sub => sub.id !== submissionId));
             
             alert(`Grade submitted for ${submissionToGrade.assignmentTitle} by ${submissionToGrade.studentName}`);
@@ -904,7 +782,7 @@ function SupervisorReports(){
                                 <div key={assignment.id} className="assignment-container">
                                     <div className="assignment-header">
                                         <h3 className="assignment-title">{assignment.title}</h3>
-                                        <span className={`assignment-status ${assignment.status.toLowerCase()}`}>
+                                        <span className={`assignment-status ${assignment.status?.toLowerCase() || ''} `}>
                                             {assignment.status}
                                         </span>
                                     </div>
@@ -916,11 +794,11 @@ function SupervisorReports(){
                                         <div className="assignment-meta">
                                             <div className="meta-item">
                                                 <strong>Due Date:</strong>
-                                                <span>{assignment.dueDate ? new Date(assignment.dueDate).toLocaleDateString() : "Not set"}</span>
+                                                <span>{assignment.dueAt ? new Date(assignment.dueAt).toLocaleDateString() : "Not set"}</span>
                                             </div>
                                             <div className="meta-item">
                                                 <strong>Submission:</strong>
-                                                <span>{assignment.submissionType}</span>
+                                                <span>{assignment.submissionType || ''}</span>
                                             </div>
                                             <div className="meta-item">
                                                 <strong>Rubric:</strong>
@@ -929,10 +807,7 @@ function SupervisorReports(){
                                             <div className="meta-item">
                                                 <strong>Assigned to:</strong>
                                                 <span>
-                                                    {assignment.assignedTo.length > 0 
-                                                        ? assignment.assignedTo.join(', ') 
-                                                        : "Not assigned yet"
-                                                    }
+                                                    {assignment.assigneeCount} Students
                                                 </span>
                                             </div>
                                         </div>
@@ -941,10 +816,10 @@ function SupervisorReports(){
                                         <button 
                                             className="assign-to-btn"
                                             onClick={() => openAssignToModal(assignment.id)}
-                                            disabled={assignment.assignedTo.length > 0}
+                                            disabled={assignment.assigneeCount > 0}
                                         >
                                             <IoPersonAdd style={{ marginRight: '5px' }} />
-                                            {assignment.assignedTo.length > 0 ? 'Assigned' : 'Assign to students'}
+                                            {assignment.assigneeCount > 0 ? 'Assigned' : 'Assign to students'}
                                         </button>
                                     </div>
                                 </div>
@@ -968,16 +843,16 @@ function SupervisorReports(){
                                 <div className="assignment-details">
                                     <div className="assigned-users">
                                         <strong>Assigned to: </strong>
-                                        {assignment.assignedTo.map((user, index) => (
+                                        {assignment.assignedTo?.map((user, index) => (
                                             <span key={user} className="user-tag">
                                                 {user}
                                                 {index < assignment.assignedTo.length - 1 && ', '}
                                             </span>
-                                        ))}
+                                        )) || ''}
                                     </div>
                                     <div className="due-date">
                                         <strong>Due: </strong>
-                                        {new Date(assignment.dueDate).toLocaleDateString()}
+                                        {new Date(assignment.dueAt).toLocaleDateString()}
                                     </div>
                                     <div className="assignment-description">
                                         <strong>Description: </strong>
@@ -985,7 +860,7 @@ function SupervisorReports(){
                                     </div>
                                     <div className="submission-type">
                                         <strong>Submission: </strong>
-                                        {assignment.submissionType}
+                                        {assignment.submissionType || ''}
                                     </div>
                                     <div className="rubric-info">
                                         <strong>Rubric: </strong>
@@ -1113,7 +988,7 @@ function SupervisorReports(){
                                     <option value="">Select a grading rubric</option>
                                     {rubrics.map(rubric => (
                                         <option key={rubric.id} value={rubric.id}>
-                                            {rubric.name} ({rubric.totalMarks} marks, {rubric.criteria.length} criteria)
+                                            {rubric.name} ({/*{rubric.totalMarks} marks,*/} {rubric.items.length} criteria)
                                         </option>
                                     ))}
                                 </select>
@@ -1122,10 +997,10 @@ function SupervisorReports(){
                                         <strong>Selected Rubric: </strong>
                                         {rubrics.find(r => r.id.toString() === selectedRubric)?.name}
                                         <div className="rubric-preview">
-                                            {rubrics.find(r => r.id.toString() === selectedRubric)?.criteria.map((criterion, index) => (
+                                            {rubrics.find(r => r.id.toString() === selectedRubric)?.items.map((criterion, index) => (
                                                 <div key={criterion.id} className="preview-criterion-small">
-                                                    <span>{criterion.name}</span>
-                                                    <span>{criterion.marks} pts</span>
+                                                    <span>{criterion.criteria}</span>
+                                                    <span>{criterion.maxScore} pts</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -1202,6 +1077,7 @@ function SupervisorReports(){
                             {/* Criteria List */}
                             <div className="criteria-list">
                                 {criteria.map((criterion, index) => (
+                                    
                                     <div key={criterion.id} className="criterion-item">
                                         <div className="criterion-header">
                                             <span className="criterion-number">Criterion {index + 1}</span>
@@ -1216,7 +1092,7 @@ function SupervisorReports(){
                                             <input
                                                 type="text"
                                                 placeholder="Criterion name"
-                                                value={criterion.name}
+                                                value={criterion.criteria}
                                                 onChange={(e) => updateCriterionName(criterion.id, e.target.value)}
                                                 className="criterion-name-input"
                                             />
@@ -1226,7 +1102,7 @@ function SupervisorReports(){
                                                     type="number"
                                                     min="0"
                                                     max="100"
-                                                    value={criterion.marks}
+                                                    value={criterion.maxScore}
                                                     onChange={(e) => updateCriterionMarks(criterion.id, e.target.value)}
                                                     className="marks-input"
                                                 />
@@ -1300,20 +1176,20 @@ function SupervisorReports(){
                                             </div>
                                             <div className="rubric-details">
                                                 <div className="rubric-meta">
-                                                    <span>Total Marks: {rubric.totalMarks}</span>
-                                                    <span>Criteria: {rubric.criteria.length}</span>
+                                                    <span>Total Marks: {rubric.totalMarks || 100}</span>
+                                                    <span>Criteria: {rubric.items.length}</span>
                                                     <span>Created: {rubric.createdAt}</span>
                                                 </div>
                                                 <div className="criteria-preview">
-                                                    {rubric.criteria.slice(0, 3).map((criterion, index) => (
+                                                    {rubric.items.slice(0, 3).map((criterion, index) => (
                                                         <div key={criterion.id} className="preview-criterion">
-                                                            <span className="preview-name">{criterion.name}</span>
-                                                            <span className="preview-marks">{criterion.marks} pts</span>
+                                                            <span className="preview-name">{criterion.criteria}</span>
+                                                            <span className="preview-marks">{criterion.maxScore} pts</span>
                                                         </div>
                                                     ))}
-                                                    {rubric.criteria.length > 3 && (
+                                                    {rubric.items.length > 3 && (
                                                         <div className="more-criteria">
-                                                            +{rubric.criteria.length - 3} more criteria
+                                                            +{rubric.items.length - 3} more criteria
                                                         </div>
                                                     )}
                                                 </div>
@@ -1365,12 +1241,12 @@ function SupervisorReports(){
                                                 <input
                                                     type="checkbox"
                                                     id={`intern-${index}`}
-                                                    checked={selectedInterns.includes(intern)}
-                                                    onChange={() => handleCheckboxChange(intern)}
+                                                    checked={selectedInterns.includes(intern.id)}
+                                                    onChange={() => handleCheckboxChange(intern.id)}
                                                     className="intern-checkbox"
                                                 />
                                                 <label htmlFor={`intern-${index}`} className="checkbox-label">
-                                                    {intern}
+                                                    {intern.userName}
                                                 </label>
                                             </div>
                                         ))}
@@ -1378,7 +1254,13 @@ function SupervisorReports(){
                                 </div>
                                 <div className="selected-interns">
                                     <strong style={{fontFamily: 'arial'}}>Selected ({selectedInterns.length}): </strong>
-                                    {selectedInterns.length > 0 ? selectedInterns.join(', ') : 'None'}
+                                    {selectedInterns.length > 0 ? 
+                                        selectedInterns.map(id => {
+                                            const user = interns.find(intern => intern.id === id);
+                                            return user ? user.userName : id;
+                                        }).join(', ') 
+                                        : 'None'
+                                    }
                                 </div>
                             </div>
                             <div className="modal-actions">
