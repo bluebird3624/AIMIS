@@ -1,5 +1,7 @@
 import React from 'react';
 import '../Styles/profilePage.css';
+import * as icons from 'react-icons/io5';
+import defaultProfile from '../assets/default.png'; // Import the default image
 
 const ProfilePage = () => {
   const raw = sessionStorage.getItem('user_data');
@@ -8,8 +10,12 @@ const ProfilePage = () => {
     role: 'Attachee',
     email: 'john.doe@example.com',
     dob: '1990-01-01',
-    employeeNumber: 'EMP-001',
     phone: '+123456789'
+  };
+
+  // Fallback function in case the image fails to load
+  const handleImageError = (e) => {
+    e.target.src = defaultProfile;
   };
 
   return (
@@ -22,9 +28,15 @@ const ProfilePage = () => {
         <aside className="profileLeftBody">
           <div className="profilePhoto">
             <img
-              src={user.avatar || '../assets/dashboards.png'}
+              src={user.avatar || defaultProfile}
               alt={user.username}
+              onError={handleImageError}
             />
+          </div>
+          <div>
+            <button className='change-photo'>
+              <icons.IoCameraReverseOutline/>
+            </button>
           </div>
 
           <div className="profileNameRole">
@@ -35,10 +47,9 @@ const ProfilePage = () => {
           <div className="profileSummary">
             <h4>Summary</h4>
             <ul className="info-list">
-              <li><span className="label">DOB</span><span className="value">{user.dob || ''}</span></li>
-              <li><span className="label">Employee No.</span><span className="value">{user.employeeNumber || ''}</span></li>
-              <li><span className="label">Email</span><span className="value">{user.email}</span></li>
-              <li><span className="label">Phone</span><span className="value">{user.phone || ''}</span></li>
+              <li><span className="profile-label">DOB</span><span className="value">{user.dob || ''}</span></li>
+              <li><span className="profile-label">Email</span><span className="value">{user.email}</span></li>
+              <li><span className="profile-label">Phone</span><span className="value">{user.phone || ''}</span></li>
             </ul>
           </div>
         </aside>
@@ -48,10 +59,10 @@ const ProfilePage = () => {
             <h4>Personal Info</h4>
             <hr />
             <ul className="info-list">
-              <li><span className="label">Full name</span><span className="value">{user.username}</span></li>
-              <li><span className="label">Date of birth</span><span className="value">{user.dob || ''}</span></li>
-              <li><span className="label">Email</span><span className="value">{user.email}</span></li>
-              <li><span className="label">Phone</span><span className="value">{user.phone || ''}</span></li>
+              <li><span className="profile-label">Full name</span><span className="value">{user.username}</span></li>
+              <li><span className="profile-label">Date of birth</span><span className="value">{user.dob || ''}</span></li>
+              <li><span className="profile-label">Email</span><span className="value">{user.email}</span></li>
+              <li><span className="profile-label">Phone</span><span className="value">{user.phone || ''}</span></li>
             </ul>
           </div>
 
@@ -59,14 +70,11 @@ const ProfilePage = () => {
             <h4>Organization</h4>
             <hr />
             <ul className="info-list">
-              <li><span className="label">Employee No.</span><span className="value">{user.employeeNumber || ''}</span></li>
-              <li><span className="label">Department</span><span className="value">Product</span></li>
-              <li><span className="label">Manager</span><span className="value">Jane Manager</span></li>
-              <li><span className="label">Start date</span><span className="value">2022-01-10</span></li>
+              <li><span className="profile-label">Department</span><span className="value">Product</span></li>
+              <li><span className="profile-label">Manager</span><span className="value">Jane Manager</span></li>
+              <li><span className="profile-label">Start date</span><span className="value">2022-01-10</span></li>
             </ul>
           </div>
-
-         
         </section>
       </div>
     </div>

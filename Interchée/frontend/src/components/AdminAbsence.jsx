@@ -142,9 +142,9 @@ function Adminabsence() {
 
   return (
     <>
-      <div className="greeting-message">
-        <h1>Absence Management</h1>
-      </div>
+      <h1 style={{ fontFamily:"arial", fontSize: " 35px", marginLeft: "20px"}}> Absence Management</h1>
+      <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}> Handle leave requests from students </p>
+    
 
       <div className="stats-row" style={{ display: 'flex', gap: 12, alignItems: 'center', margin: '16px 0' }}>
         <div className="absence-stats-container">

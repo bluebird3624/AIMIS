@@ -716,7 +716,8 @@ function SupervisorReports(){
     return(
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <div>
-                <h1 style={{ fontFamily:"arial", fontSize: " 30px", marginLeft: "20px"}}> Assignments & Reports</h1>
+                <h1 style={{ fontFamily:"arial", fontSize: " 35px", marginLeft: "20px"}}> Assignments & Reports</h1>
+                <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}> Create assignments and assign them to students in your department</p>
                 <button 
                 className="create-assn-button"
                 onClick={ () => setIsCreateAssignmentOpen (true)}

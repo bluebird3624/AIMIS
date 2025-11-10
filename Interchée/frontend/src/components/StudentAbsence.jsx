@@ -177,9 +177,9 @@ const renderRequestCard = (r) => (
   return (
     <>
     <div className='title'>
-            <h1>Absence Management</h1>
-            <p>Request for leave</p>
+            <h1 style={{ fontFamily:"arial", fontSize: " 35px"}}> Absence</h1>
      </div>   
+       <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}>Request for leave</p>
 
           
         <button className="request-button" onClick={handleCreateRequest} type="button"> < icons.IoWalkOutline/>Request Absence</button> 
