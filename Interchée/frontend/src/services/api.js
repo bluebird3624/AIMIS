@@ -6,7 +6,7 @@ const env = import.meta.env.VITE_ENV;
 
 const BACKEND_API_URL = import.meta.env.VITE_APP_BACKEND_API_URL;
 const api = axios.create({
-    baseURL: "http://localhost:5007/",
+    baseURL: "http://172.20.2.140:5007/",
     timeout: 15000,
     headers: {
         'Accept':'application/json',
@@ -88,4 +88,66 @@ export const absenceAPI = {
     getRequestsByDepartment: (id) => 
         api.get(`/absence-requests/department/${id}`)
 }
+
+export const rubricAPI = {
+    getAllRubrics: () =>
+        api.get(`/rubrics`),
+    createRubric: (formData) =>
+        api.post('/rubrics', formData)
+}
+
+export const assignmentAPI = {
+    getAllAssignments: () =>
+        api.get('/assignments'),
+    createAssignment: (assignmentData) =>
+        api.post('/assignments', assignmentData),
+    getMyAssignments: () =>
+        api.get('/assignments/my-assignments'),
+    assignAssignment: (assignmentId, selectedInterns) =>
+        api.post(`/assignments/${assignmentId}/assign`, selectedInterns),
+    getSpecificAssignment: (id) =>
+        api.get(`/assignments/${id}`),
+    updateAssignment: (id,assignmentData) =>
+        api.put(`/assignments/${id}`, assignmentData),
+    deleteAssignment: (id) =>
+        api.delete(`/assignments/${id}`),
+    updateAssignmentStatus: (id, status) =>
+        api.put(`/assignments/${id}/status`, status),
+    getAssignmentProgress: (id) =>
+        api.get(`/assignments/${id}/progress`)
+}
+
+export const attachmentAPI = {
+
+}
+
+export const submissionAPI = {
+    makeGithubSubmission: (assignmentId, repoUrl) =>
+        api.post(`/submissions`, assignmentId, repoUrl),
+    makeFileSubmission: (assignmentId, fileUrl) => 
+        api.post('/submissions/file', assignmentId, fileUrl),
+    fetchSpecificSubmission: (id) =>
+        api.get(`/submissions/assignment/${id}`),
+    fetchMySubmissions: () =>
+        api.get('/submissions/my-submissions'),
+    addCommit: (submissionId, commitData) =>
+        api.post(`/submissions/${submissionId}/commits`, commitData),
+    getCommits: (submissionId) =>
+        api.get(`/submissions/${submissionId}/commits`),
+    getAssignmentSubmissionsAll: (assignmentId) =>
+        api.get(`/submissions/assignment/${assignmentId}/all`),
+    updateGitSubmission: (submissionId, updateData) =>
+        api.put(`/submissions/${submissionId}`, updateData),
+    deleteSubmission: (submissionId) =>
+        api.delete(`/submissions/${submissionId}`),
+    updateSubmissionStatus: (submissionId, status) =>
+        api.put(`/submissions/${submissionId}/status`, status)
+
+
+
+
+    }
+
+
+
 export default api;
