@@ -5,7 +5,10 @@ namespace Interchée.Contracts.Review
     // Schedule a review
     public record ReviewScheduleDto(
         [Required] Guid UserId,
-        [Required] DateTime ScheduledAt
+        [Required] DateTime ScheduledAt,
+        [Required, MaxLength(200)] string Title,
+        [MaxLength(1000)] string? Description,
+        [MaxLength(100)] string? Location
     );
 
     // Submit review scores and feedback
@@ -30,6 +33,9 @@ namespace Interchée.Contracts.Review
         Guid UserId,
         Guid SupervisorId,
         int DepartmentId,
+        string? Title,
+        string? Description,
+        string? Location,
         DateTime ScheduledAt,
         DateTime? ConductedAt,
         string Status,
@@ -51,6 +57,9 @@ namespace Interchée.Contracts.Review
         DateTime CreatedAt
     );
     public record ReviewUpdateDto(
-    [Required] DateTime ScheduledAt
+    [Required] DateTime ScheduledAt,
+    [MaxLength(200)] string? Title,
+    [MaxLength(1000)] string? Description,
+    [MaxLength(100)] string? Location
 );
 }
