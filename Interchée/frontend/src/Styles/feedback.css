@@ -1,0 +1,223 @@
+.feedback-button{
+    display: flex ;
+    align-items: center;
+   width: fit-content;
+    height: 60px;
+    background-color: #167aa1;
+    margin-top: 10px;
+    margin-left: 20px;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    transition: all 0.8s ease;
+    color: #ffff;
+    font-size: 21px;
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: pointer;
+}
+.feedback-button:hover{
+    background: #093f52;
+    transform: scale(1.08);
+}
+
+.feed-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1000;
+    animation: feed-fadeIn 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+@keyframes feed-fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.feed-modal-container {
+    background: white;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
+    animation: rev-slideUp 0.3s ease;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes rev-slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+.feed-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    border-bottom: 1px solid #e1e5e9;
+    background: #f8f9fa;
+}
+
+.feed-modal-title {
+    margin: 0;
+    color: #131313;
+    font-size: 26px;
+    font-weight: 600;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.feed-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #7f8c8d;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.feed-modal-close:hover {
+    background: #686565;
+    color: white;
+}
+.rev-modal-content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Form Groups */
+.feed-form-group {
+    margin-bottom: 20px;
+}
+
+.feed-form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.feed-form-input,
+.feed-form-textarea,
+.feed-form-select {
+    width: 95%;
+    padding: 12px 16px;
+    border: 1.5px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.feed-form-input:focus,
+.feed-form-textarea:focus,
+.feed-form-select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.feed-form-textarea {
+    resize: vertical;
+    min-height: 80px;
+    height: fit-content;
+}
+.feed-modal-actions {
+    display: flex;
+    gap: 12px;
+    padding: 24px;
+    border-top: 1px solid #e1e5e9;
+    background: #f8f9fa;
+}
+
+.feed-cancel-btn {
+    flex: 1;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: #95a5a6;
+    color: #ffffff;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+
+.feed-cancel-btn:hover {
+    background: #95a5a6;
+    color: white;
+}
+
+.feed-submit-btn {
+    flex: 1;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: #27ae60;
+    color: white;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+
+.feed-submit-btn:hover:not(:disabled) {
+    background: #219a52;
+    transform: translateY(-1px);
+}
+
+.feed-submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+@media (max-width: 768px) {
+    .feed-modal-container {
+        max-width: 100%;
+        border-radius: 0;
+        max-height: 100vh;
+    }
+    
+    .feed-datetime-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .feed-modal-actions {
+        flex-direction: column;
+    }
+    
+    .header-row {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .feed-modal-content {
+        padding: 16px;
+    }
+    
+    .feed-modal-header {
+        padding: 16px;
+    }
+    
+    .feed-modal-actions {
+        padding: 16px;
+    }
+}
+

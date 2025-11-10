@@ -6,11 +6,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {roles} from '../utils/constants';
 import SearchBar from '../components/SearchBar';
 import UserProfile from '../components/UserProfile';
-import Group from '../assets/Group.svg';
+import dashGroup from '../assets/dashGroup.svg';
 import Homebutton from '../components/homepage';
 import Userspage from '../components/Userspage';
 import Adminabsence from '../components/AdminAbsence';
-import Adminreports from '../components/AdminReports';
+import Adminfeedback from '../components/Adminfeedback';
 import ProfilePage from '../components/ProfilePage';
 import Calendar from '../components/Calendar';
 import { getCurrentUser } from '../services/auth';
@@ -18,6 +18,9 @@ import StudentAssignment from '../components/StudentAssignment';
 import SupervisorReports from '../components/SupervisorReports';
 import StudentAbsence from '../components/StudentAbsence';
 import Adminreviews from '../components/AdminReviews';
+import SupervisorReviews from '../components/SupervisorReviews';
+import StudentReviews from '../components/StudentReviews';
+import StudentFeedback from '../components/StudentFeedback';
 
 
 
@@ -27,13 +30,18 @@ const componentMap = {
   users: Userspage,
   adminAbsence: Adminabsence,
   calendar: Calendar,
-  reports: Adminreports,
+  feedback: Adminfeedback,
   profilePage: ProfilePage,
   studentAssignment: StudentAssignment,
   supervisorReports: SupervisorReports,
-  default: Homebutton,
   studentAbsence: StudentAbsence,
-  adminReviews: Adminreviews
+  adminReviews: Adminreviews,
+  supervisorReviews: SupervisorReviews,
+  studentReviews: StudentReviews,
+  studentFeedback: StudentFeedback,
+
+
+  default: Homebutton
 };
 
 const sidebarConfig = {
@@ -43,9 +51,8 @@ const sidebarConfig = {
     path: '/admin-dash',
     iconOutline: icons.IoHomeOutline,
     iconSolid: icons.IoHome,
-    roles: [roles.ADMIN, roles.ATTACHEE, roles.INTERN, roles.SUPERVISOR]
+    roles: [roles.ADMIN,roles.SUPERVISOR,roles.ATTACHEE, roles.INTERN]
   },
-
 
   users: {
     id: 'users',
@@ -69,12 +76,11 @@ const sidebarConfig = {
 
 
 
-  reports: {
-    id: 'reports',
-    name: 'Reports',
-    path: '/reports',
-    iconOutline: icons.IoBarChartOutline,
-    iconSolid: icons.IoBarChart,
+  feedback: {
+    id: 'feedback',
+    name: 'Feedback',
+    iconOutline: icons.IoChatbubblesOutline,
+    iconSolid: icons.IoChatbubblesSharp,
     roles: [roles.ADMIN]
   },
 
@@ -123,11 +129,31 @@ const sidebarConfig = {
     iconOutline : icons.IoBookOutline,
     iconSolid : icons.IoBook,
     roles : [roles.ADMIN]
+  },
+
+  supervisorReviews: {
+    id : 'supervisorReviews',
+    name : 'Reviews',
+    iconOutline : icons.IoBookOutline,
+    iconSolid : icons.IoBook,
+    roles : [roles.SUPERVISOR]
+  },
+
+  studentReviews: {
+    id : 'studentReviews', 
+    name : 'Reviews',
+    iconOutline : icons.IoBookOutline,
+    iconSolid : icons.IoBook,
+    roles : [roles.ATTACHEE, roles.INTERN]
+  },
+
+  studentFeedback:{
+    id : 'studentFeedback',
+    name : 'Feedback',
+    iconOutline : icons.IoChatbubblesOutline,
+    iconSolid : icons.IoChatbubblesSharp,
+    roles : [roles.ATTACHEE, roles.INTERN]
   }
-
-
-
-
 
 };
 
@@ -212,20 +238,22 @@ function AdminDash() {
   };
 
   return (
-    <motion.div
-      initial={{ x: '100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '-100%' }}
-      transition={{ type : 'tween' , duration: 2.1  }}
-      className="absolute inset-0"
+     <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{
+        type: "tween",
+        ease: "anticipate",
+        duration: 2.1
+      }}
     >
-      
     <div className="dashboard-layout">
     
       <div className="dashboard-header">
    
          <div className="header-logo">
-          <img src={Group} alt="Company Logo" className="logo-image" />
+          <img src={dashGroup} alt="Company Logo" className="logo-image" />
         </div>
 
         <div className="header-search">

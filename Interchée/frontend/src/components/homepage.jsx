@@ -1,7 +1,9 @@
+
 import * as icons from 'react-icons/io5';
 import React, { useState, useEffect } from 'react';
 import '../Styles/dashboards.css'
 import { useNavigate, useLocation } from 'react-router-dom';
+import { getCurrentUser } from '../services/auth';
 
 function Homebutton() {
   const [greeting, setGreeting] = useState('');
@@ -10,6 +12,22 @@ function Homebutton() {
   const [upcomingAbsences, setUpcomingAbsences] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
+
+
+  const getUserRole = () => {
+    try {
+      const userData = getCurrentUser();
+     
+      if (userData) {
+        
+        return userData.role || 'invalid'; 
+      }
+      return 'invalid';
+    } catch (error) {
+      console.error('Error getting user role:', error);
+      return 'Employee';
+    }
+  };
 
   // Step 1: Greeting with time and name functionality
   useEffect(() => {

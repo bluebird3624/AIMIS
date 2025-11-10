@@ -162,6 +162,7 @@ function Userspage() {
           Create User
         </button>
       </div>
+      <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}> All students and supervisors across all departments</p>
 
       
       <h2 style={{ fontFamily: "arial"}}>Verified Users</h2>
