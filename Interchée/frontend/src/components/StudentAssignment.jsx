@@ -8,133 +8,7 @@ const StudentAssignment = () => {
     const [filter, setFilter] = useState('all');
     const [assignments, setAssignments] = useState([]);
 
-    // const assignments = [
-    //     {
-    //         id: 1,
-    //         title: 'React Component Development',
-    //         status: 'Submitted',
-    //         description: 'Create a responsive React component with proper state management and CSS styling. Include error handling and accessibility features.',
-    //         dueAt: '2024-01-15',
-    //         submissionType: 'git',
-    //         departmentName: 'Sarah Johnson',
-    //         assignedAt: '2024-01-01'
-    //     },
-    //     {
-    //         id: 2,
-    //         title: 'API Integration Project',
-    //         status: 'Pending',
-    //         description: 'Integrate with a third-party API and handle different response states including loading, success, and error states.',
-    //         dueAt: '2024-01-20',
-    //         submissionType: 'file',
-    //         departmentName: 'Michael Chen',
-    //         assignedAt: '2024-01-05'
-    //     },
-    //     {
-    //         id: 3,
-    //         title: 'Database Design Assignment',
-    //         status: 'Graded',
-    //         description: 'Design a normalized database schema for an e-commerce application with proper relationships and constraints.',
-    //         dueAt: '2024-01-10',
-    //         submissionType: 'git',
-    //         departmentName: 'Emily Rodriguez',
-    //         assignedAt: '2023-12-28',
-    //         rubric: {
-    //             name: 'Database Design Rubric',
-    //             totalMarks: 85,
-    //             criteria: [
-    //                 {
-    //                     name: 'Normalization',
-    //                     description: 'Proper normalization up to 3NF',
-    //                     marksOutOf: 30,
-    //                     marksAwarded: 28
-    //                 },
-    //                 {
-    //                     name: 'Relationships',
-    //                     description: 'Appropriate primary and foreign keys',
-    //                     marksOutOf: 25,
-    //                     marksAwarded: 22
-    //                 },
-    //                 {
-    //                     name: 'Constraints',
-    //                     description: 'Proper use of constraints and data types',
-    //                     marksOutOf: 20,
-    //                     marksAwarded: 18
-    //                 },
-    //                 {
-    //                     name: 'Documentation',
-    //                     description: 'Clear documentation and ER diagrams',
-    //                     marksOutOf: 15,
-    //                     marksAwarded: 12
-    //                 },
-    //                 {
-    //                     name: 'Best Practices',
-    //                     description: 'Following database design best practices',
-    //                     marksOutOf: 10,
-    //                     marksAwarded: 5
-    //                 }
-    //             ],
-    //             departmentNameComment: "Excellent work on normalization and relationships! Your database design shows strong understanding of 3NF. However, I noticed some missing constraints that would ensure data integrity. The documentation could be more detailed with clearer ER diagrams. Overall, a solid submission with room for improvement in best practices implementation."
-    //         }
-    //     },
-    //     {
-    //         id: 4,
-    //         title: 'Research Paper',
-    //         status: 'Submitted',
-    //         description: 'Write a comprehensive research paper on modern web development frameworks.',
-    //         dueAt: '2024-01-25',
-    //         submissionType: 'file',
-    //         departmentName: 'David Kim',
-    //         assignedAt: '2024-01-03'
-    //     },
-    //     {
-    //         id: 5,
-    //         title: 'Web Application Project',
-    //         status: 'Graded',
-    //         description: 'Build a full-stack web application with frontend and backend components.',
-    //         dueAt: '2024-01-18',
-    //         submissionType: 'git',
-    //         departmentName: 'Alex Thompson',
-    //         assignedAt: '2024-01-02',
-    //         rubric: {
-    //             name: 'Full-Stack Development Rubric',
-    //             totalMarks: 92,
-    //             criteria: [
-    //                 {
-    //                     name: 'Frontend Implementation',
-    //                     description: 'React components and user interface',
-    //                     marksOutOf: 30,
-    //                     marksAwarded: 28
-    //                 },
-    //                 {
-    //                     name: 'Backend API',
-    //                     description: 'RESTful API design and implementation',
-    //                     marksOutOf: 30,
-    //                     marksAwarded: 30
-    //                 },
-    //                 {
-    //                     name: 'Database Integration',
-    //                     description: 'Database connectivity and operations',
-    //                     marksOutOf: 20,
-    //                     marksAwarded: 18
-    //                 },
-    //                 {
-    //                     name: 'Code Quality',
-    //                     description: 'Clean code and proper documentation',
-    //                     marksOutOf: 10,
-    //                     marksAwarded: 8
-    //                 },
-    //                 {
-    //                     name: 'Deployment',
-    //                     description: 'Application deployment and accessibility',
-    //                     marksOutOf: 10,
-    //                     marksAwarded: 8
-    //                 }
-    //             ],
-    //             departmentNameComment: "Outstanding work on the backend API - perfect score! The frontend implementation is very clean and user-friendly. The database integration works well, though there are some optimization opportunities. Code quality is good with clear documentation. The deployment process is smooth and the application is easily accessible. Great job overall!"
-    //         }
-    //     }
-    // ];
-
+ 
     const fetchAssignments = async() => {
         const response = await assignmentAPI.getMyAssignments();
         setAssignments(response.data);
@@ -174,7 +48,7 @@ const StudentAssignment = () => {
             setIsExpanded(!isExpanded);
         };
 
-        // Handle file drop
+        
         const handleDrop = (e) => {
             e.preventDefault();
             setIsDragOver(false);
