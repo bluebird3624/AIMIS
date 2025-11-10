@@ -13,6 +13,9 @@ namespace Interchée.Contracts.Assignments
         AssignmentStatus Status,
         DateTime CreatedAt,
         int AssigneeCount,
-        int SubmissionCount
+        int SubmissionCount,
+        SubmissionType AllowedSubmissionType, 
+        int RubricId, 
+        string? RubricName
     );
 }

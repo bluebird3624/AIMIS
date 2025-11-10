@@ -7,6 +7,7 @@ using Interchée.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog.Parsing;
 using System.Linq;
 
 namespace Interchée.Controllers
@@ -36,10 +37,12 @@ namespace Interchée.Controllers
 
             var assignments = await _db.Assignments
                 .Where(a => userDepartmentIds.Contains(a.DepartmentId))
+                .Include(a => a.Rubric)
                 .Select(a => new AssignmentReadDto(
                     a.Id, a.Title, a.Description, a.DepartmentId, a.CreatedByUserId,
                     a.DueAt, a.Status, a.CreatedAt, a.Assignees.Count,
-                   a.Submissions.Count(s => s.Status == SubmissionStatus.Submitted || s.Status == SubmissionStatus.Reviewed)
+                   a.Submissions.Count(s => s.Status == SubmissionStatus.Submitted || s.Status == SubmissionStatus.Reviewed),
+                   a.AllowedSubmissionType,  a.RubricId, a.Rubric.Name 
                 ))
                 .ToListAsync();
 
@@ -110,11 +113,17 @@ namespace Interchée.Controllers
         {
             var userId = User.GetUserId();
 
+
             if (dto.DueAt.HasValue && dto.DueAt.Value < DateTime.UtcNow)
             {
                 return BadRequest("Due date cannot be in the past. Please set a future due date.");
             }
-
+            //  VALIDATE RUBRIC IF PROVIDED
+            var rubricExists = await _db.Rubrics.AnyAsync(r => r.Id == dto.RubricId && r.IsActive);
+            if (!rubricExists)
+            {
+                return BadRequest("Invalid rubric ID or rubric is not active.");
+            }
             // Verify user has role in target department
             var hasAccess = await _db.DepartmentRoleAssignments
                 .AnyAsync(ra => ra.UserId == userId && ra.DepartmentId == dto.DepartmentId &&
@@ -135,16 +144,23 @@ namespace Interchée.Controllers
                 DepartmentId = dto.DepartmentId,
                 CreatedByUserId = userId,
                 DueAt = dto.DueAt,
+                AllowedSubmissionType = dto.AllowedSubmissionType, 
+                RubricId = dto.RubricId, 
                 Status = AssignmentStatus.Created
             };
 
             _db.Assignments.Add(assignment);
             await _db.SaveChangesAsync();
 
+            string rubricName = await _db.Rubrics
+       .Where(r => r.Id == assignment.RubricId)
+       .Select(r => r.Name)
+       .FirstOrDefaultAsync() ?? "Unknown";
+
             var readDto = new AssignmentReadDto(
                 assignment.Id, assignment.Title, assignment.Description, assignment.DepartmentId,
                 assignment.CreatedByUserId, assignment.DueAt, assignment.Status, assignment.CreatedAt,
-                0, 0
+                0, 0, assignment.AllowedSubmissionType, assignment.RubricId, rubricName
             );
 
             return Ok(readDto);
@@ -200,6 +216,55 @@ namespace Interchée.Controllers
             return Ok();
         }
 
+        /// <summary>Get names of interns/attachés assigned to an assignment</summary>
+[HttpGet("{assignmentId:long}/assignees")]
+[Authorize(Roles = "Admin,HR,Supervisor")]
+[ProducesResponseType(typeof(IEnumerable<AssignmentAssigneeReadDto>), StatusCodes.Status200OK)]
+public async Task<ActionResult<IEnumerable<AssignmentAssigneeReadDto>>> GetAssignmentAssignees(long assignmentId)
+{
+    var userId = User.GetUserId();
+
+    // Verify user has access to this assignment's department
+    var assignment = await _db.Assignments
+        .FirstOrDefaultAsync(a => a.Id == assignmentId);
+
+    if (assignment == null) return NotFound("Assignment not found");
+
+    var hasAccess = await _db.DepartmentRoleAssignments
+        .AnyAsync(ra => ra.UserId == userId && ra.DepartmentId == assignment.DepartmentId &&
+                       (ra.RoleName == "Admin" || ra.RoleName == "HR" || ra.RoleName == "Supervisor"));
+
+    if (!hasAccess) return Forbid();
+
+            var assignees = await _db.AssignmentAssignees
+                .Where(aa => aa.AssignmentId == assignmentId)
+                .Select(aa => new
+                {
+                    aa.UserId,
+                    aa.User!.FirstName,
+                    aa.User.LastName,
+                    aa.User.Email,
+                    aa.AssignedAt,
+                    RoleName = _db.DepartmentRoleAssignments
+                        .Where(dra => dra.UserId == aa.UserId && dra.DepartmentId == assignment.DepartmentId)
+                        .Select(dra => dra.RoleName)
+                        .FirstOrDefault()
+                })
+                .Select(x => new AssignmentAssigneeReadDto(
+                    x.UserId,
+                    x.FirstName,
+                    x.LastName,
+                    x.Email!,
+                    x.RoleName ?? "Unknown",
+                    x.AssignedAt
+                ))
+                .OrderBy(a => a.FirstName)
+                .ThenBy(a => a.LastName)
+                .ToListAsync();
+
+            return Ok(assignees);
+        }
+
         /// <summary>Get assignment by ID</summary>
         [HttpGet("{id:long}")]
         [ProducesResponseType(typeof(AssignmentReadDto), StatusCodes.Status200OK)]
@@ -218,7 +283,7 @@ namespace Interchée.Controllers
             var readDto = new AssignmentReadDto(
                 assignment.Id, assignment.Title, assignment.Description, assignment.DepartmentId,
                 assignment.CreatedByUserId, assignment.DueAt, assignment.Status, assignment.CreatedAt,
-                assignment.Assignees.Count, submissionCount
+                assignment.Assignees.Count, submissionCount, assignment.AllowedSubmissionType, assignment.RubricId, null
             );
 
             return Ok(readDto);
@@ -267,7 +332,7 @@ namespace Interchée.Controllers
             var readDto = new AssignmentReadDto(
                 assignment.Id, assignment.Title, assignment.Description, assignment.DepartmentId,
                 assignment.CreatedByUserId, assignment.DueAt, assignment.Status, assignment.CreatedAt,
-                assigneeCount, submissionCount
+                assigneeCount, submissionCount, assignment.AllowedSubmissionType, assignment.RubricId, null
             );
 
             return Ok(readDto);
@@ -300,7 +365,7 @@ namespace Interchée.Controllers
             var readDto = new AssignmentReadDto(
                 assignment.Id, assignment.Title, assignment.Description, assignment.DepartmentId,
                 assignment.CreatedByUserId, assignment.DueAt, assignment.Status, assignment.CreatedAt,
-                assigneeCount, submissionCount
+                assigneeCount, submissionCount, assignment.AllowedSubmissionType, assignment.RubricId, null
             );
 
             return Ok(readDto);
