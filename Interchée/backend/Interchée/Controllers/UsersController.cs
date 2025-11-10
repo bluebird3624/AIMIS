@@ -11,7 +11,7 @@ namespace Interchée.Controllers
     /// </summary>
     [ApiController]
     [Route("users")]
-    [Authorize(Roles = "Admin,HR")]
+    [Authorize(Roles = "Admin,HR,Supervisor")]
     public class UsersController : ControllerBase
     {
         private readonly UserService _svc;
