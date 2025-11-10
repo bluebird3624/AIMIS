@@ -1,9 +1,7 @@
 ﻿namespace Interchée.Contracts.Assignments
 {
-    public record FeedbackCreateDto(
-           string Title,
+    public record FeedbackReplyCreateDto(
            string Message
-
     );
-        
+
 }

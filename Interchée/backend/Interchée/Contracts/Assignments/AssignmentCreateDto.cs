@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Interchée.Entities.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Interchée.Contracts.Assignments
 {
@@ -7,7 +8,9 @@ namespace Interchée.Contracts.Assignments
         [Required][MaxLength(160)] string Title,
         string? Description,
         int DepartmentId,
-        DateTime? DueAt
+        DateTime? DueAt,
+        SubmissionType AllowedSubmissionType, 
+        int RubricId
     );
 
 }

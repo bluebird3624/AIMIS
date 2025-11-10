@@ -46,6 +46,8 @@ namespace Interchée.Data
         public DbSet<Rubric> Rubrics => Set<Rubric>();
         public DbSet<RubricItem> RubricItems => Set<RubricItem>();
         public DbSet<FeedbackComment> FeedbackComments => Set<FeedbackComment>();
+        public DbSet<Feedback> Feedbacks => Set<Feedback>();
+        public DbSet<FeedbackReply> FeedbackReplies => Set<FeedbackReply>();
 
         protected override void OnModelCreating(ModelBuilder b)
 
@@ -248,12 +250,14 @@ namespace Interchée.Data
                     .HasForeignKey(x => x.DepartmentId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
-
+            
             // Assignment
             b.Entity<Assignment>(e =>
             {
                 e.Property(x => x.Title).HasMaxLength(160).IsRequired();
-                e.Property(x => x.Status).HasMaxLength(32).IsRequired();
+                e.Property(x => x.Status)
+                .HasConversion<string>()  // Store enum as string in database
+                .HasMaxLength(20);
 
                 // Indexes for performance
                 e.HasIndex(x => x.DepartmentId);
@@ -269,6 +273,11 @@ namespace Interchée.Data
                     .WithMany()
                     .HasForeignKey(x => x.CreatedByUserId)
                     .OnDelete(DeleteBehavior.Restrict); // Keep assignments if user is deleted
+                /*
+                                e.HasOne(a => a.Rubric)
+                                .WithMany()
+                                .HasForeignKey(a => a.RubricId)
+                                .OnDelete(DeleteBehavior.Restrict);*/
             });
 
             // AssignmentAssignee (Junction table)
@@ -297,6 +306,14 @@ namespace Interchée.Data
                 e.Property(x => x.LatestCommitSha).HasMaxLength(64);
                 e.Property(x => x.Status).HasMaxLength(32).IsRequired();
 
+                e.Property(x => x.Status)
+                .HasConversion<string>()
+                .HasMaxLength(20);
+
+                e.Property(x => x.SubmissionType)
+                    .HasConversion<string>()
+                    .HasMaxLength(20);
+
                 // Unique constraint: one submission per assignment per user
                 e.HasIndex(x => new { x.AssignmentId, x.UserId }).IsUnique();
 
@@ -315,7 +332,7 @@ namespace Interchée.Data
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Restrict); // Keep submission history if user is deleted
             });
-
+            
             // SubmissionCommit
             b.Entity<SubmissionCommit>(e =>
             {
@@ -377,8 +394,6 @@ namespace Interchée.Data
                .OnDelete(DeleteBehavior.Restrict);
             });
 
-            {
-
                 // Rubric configuration
                 b.Entity<Rubric>(e =>
                 {
@@ -417,11 +432,30 @@ namespace Interchée.Data
                         .HasForeignKey(x => x.AuthorUserId)
                         .OnDelete(DeleteBehavior.Restrict); // Keep comment history if user is deleted
                 });
+                b.Entity<Feedback>(entity =>
+                {
+                    entity.HasOne(f => f.CreatedByUser)
+                          .WithMany()
+                          .HasForeignKey(f => f.CreatedByUserId)
+                          .OnDelete(DeleteBehavior.Restrict);
+                });
 
+                // FeedbackReply configuration
+                b.Entity<FeedbackReply>(entity =>
+                {
+                    entity.HasOne(fr => fr.Feedback)
+                          .WithMany(f => f.Replies)
+                          .HasForeignKey(fr => fr.FeedbackId)
+                          .OnDelete(DeleteBehavior.Cascade);
+
+                    entity.HasOne(fr => fr.CreatedByUser)
+                          .WithMany()
+                          .HasForeignKey(fr => fr.CreatedByUserId)
+                          .OnDelete(DeleteBehavior.Restrict);
+                });
             }
 
         }
 
     }
-}
 
