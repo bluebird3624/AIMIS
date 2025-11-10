@@ -25,6 +25,7 @@ function Login() {
             const password = document.getElementById('password').value;
 
             setLoading(true);
+            console.log('email and pass: ', email + ' ' + password);
             const response = await login({ email, password });
             
             if (response.accessToken || response.token) {
