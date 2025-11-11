@@ -59,6 +59,65 @@ namespace Interchée.Controllers
             return Ok(ToReadDto(review));
         }
 
+        /// <summary>Schedule reviews for multiple Attachés at once</summary>
+        [HttpPost("bulk")]
+        [Authorize(Roles = "Supervisor,HR,Admin")]
+        [ProducesResponseType(typeof(List<ReviewReadDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<List<ReviewReadDto>>> ScheduleBulkReviews([FromBody] BulkReviewScheduleDto dto)
+        {
+            var supervisorId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            // Verify supervisor has access to a department
+            var supervisorDept = await _db.DepartmentRoleAssignments
+                .Where(x => x.UserId == supervisorId &&
+                           (x.RoleName == "Supervisor" || x.RoleName == "HR" || x.RoleName == "Admin"))
+                .Select(x => x.DepartmentId)
+                .FirstOrDefaultAsync();
+
+            if (supervisorDept == 0) return BadRequest("Supervisor is not assigned to a valid department");
+
+            // Verify all users exist and are Attachés in supervisor's department
+            var validUsers = await _db.DepartmentRoleAssignments
+                .Where(x => dto.UserIds.Contains(x.UserId) &&
+                           x.RoleName == "Attache" &&
+                           (x.DepartmentId == supervisorDept || User.IsInRole("Admin") || User.IsInRole("HR")))
+                .Select(x => new { x.UserId, x.DepartmentId })
+                .ToListAsync();
+
+            if (validUsers.Count != dto.UserIds.Count)
+            {
+                var invalidUserIds = dto.UserIds.Except(validUsers.Select(x => x.UserId)).ToList();
+                return BadRequest($"The following users are not Attachés in your department: {string.Join(", ", invalidUserIds)}");
+            }
+
+            var reviews = new List<Review>();
+
+            foreach (var user in validUsers)
+            {
+                var review = new Review
+                {
+                    UserId = user.UserId,
+                    SupervisorId = supervisorId,
+                    DepartmentId = user.DepartmentId,
+                    Title = dto.Title.Trim(),
+                    Description = dto.Description?.Trim(),
+                    Location = dto.Location?.Trim(),
+                    ScheduledAt = dto.ScheduledAt,
+                    Status = "Scheduled",
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                reviews.Add(review);
+            }
+
+            _db.Reviews.AddRange(reviews);
+            await _db.SaveChangesAsync();
+
+            var readDtos = reviews.Select(r => ToReadDto(r)).ToList();
+            return Ok(readDtos);
+        }
+
         /// <summary>Submit review scores and feedback</summary>
         [HttpPost("{id:long}/submit")]
         [Authorize(Roles = "Supervisor,HR,Admin")]

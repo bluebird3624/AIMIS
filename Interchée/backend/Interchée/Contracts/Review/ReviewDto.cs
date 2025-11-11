@@ -47,7 +47,7 @@ namespace Interchée.Contracts.Review
         decimal OverallScore,
         string? OverallComments,
         DateTime CreatedAt,
-        List<ReviewFeedbackReadDto>? Feedbacks
+        List<ReviewFeedbackReadDto>? Feedbacksp
     );
 
     public record ReviewFeedbackReadDto(
@@ -62,4 +62,12 @@ namespace Interchée.Contracts.Review
     [MaxLength(1000)] string? Description,
     [MaxLength(100)] string? Location
 );
+    // Add to your Review DTOs
+    public record BulkReviewScheduleDto(
+        [Required, MinLength(1)] List<Guid> UserIds, // Multiple Attaché IDs
+        [Required] DateTime ScheduledAt,
+        [Required, MaxLength(200)] string Title,
+        [MaxLength(1000)] string? Description,
+        [MaxLength(100)] string? Location
+    );
 }
