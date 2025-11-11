@@ -10,6 +10,7 @@ namespace Interchée.Contracts.Assignments
         string DepartmentName,
         DateTime? DueAt,
         AssignmentStatus Status,
+        SubmissionType AllowedSubmissionType,
         DateTime CreatedAt,
         DateTime AssignedAt,
         bool HasSubmission,

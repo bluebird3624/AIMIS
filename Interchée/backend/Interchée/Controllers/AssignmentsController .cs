@@ -90,12 +90,14 @@ namespace Interchée.Controllers
                     assignment.Department!.Name,
                     assignment.DueAt,
                     assignment.Status,
+                    assignment.AllowedSubmissionType,
                     assignment.CreatedAt,
                     aa.AssignedAt,
                     submission != null, // Has submission
                     submission?.Status ?? SubmissionStatus.NotStarted, // Submission status
                     submission?.SubmittedAt, // Submission date
                     submission?.Grade != null // Is graded
+                   
                 );
             })
             .OrderByDescending(a => a.DueAt)
