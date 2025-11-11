@@ -20,7 +20,17 @@ namespace Interchée.Controllers
         [ProducesResponseType(typeof(AbsenceRequestReadDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<AbsenceRequestReadDto>> Create([FromBody] AbsenceRequestCreateDto dto)
         {
+
+            // A) Extract user from JWT token
+
             var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            // Prevent past dates in controller
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+            if (dto.StartDate < today)
+            {
+                return BadRequest("Start date cannot be in the past");
+            }
 
             // Get user's department from role assignments
             var userDept = await _db.DepartmentRoleAssignments
@@ -32,6 +42,7 @@ namespace Interchée.Controllers
 
             var days = (decimal)(dto.EndDate.DayNumber - dto.StartDate.DayNumber) + 1;
 
+            // B) Convert DTO → Entity
             var request = new AbsenceRequest
             {
                 UserId = userId,
@@ -41,12 +52,13 @@ namespace Interchée.Controllers
                 Days = days,
                 Reason = dto.Reason.Trim(),
                 Status = "Pending",
-                RequestedAt = DateTime.UtcNow
+                RequestedAt = DateTime.UtcNow,
             };
-
+            // C) Use DbContext to save
             _db.AbsenceRequests.Add(request);
             await _db.SaveChangesAsync();
 
+            // D) Convert Entity → DTO for response
             var readDto = new AbsenceRequestReadDto(
                 request.Id, request.UserId, request.DepartmentId,
                 request.StartDate, request.EndDate, request.Days,
@@ -148,6 +160,192 @@ namespace Interchée.Controllers
             );
 
             return Ok(readDto);
+        }
+
+        /// <summary>Update my absence request (only if Pending)</summary>
+        [HttpPut("{id:long}")]
+        [Authorize(Roles = "Intern,Attache")]
+        [ProducesResponseType(typeof(AbsenceRequestReadDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<AbsenceRequestReadDto>> UpdateMyRequest(
+            long id, [FromBody] AbsenceRequestCreateDto dto)
+        {
+            var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var request = await _db.AbsenceRequests
+                .Include(x => x.Decision)
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+
+            if (request == null) return NotFound();
+            if (request.Status != "Pending") return BadRequest("Can only update pending requests");
+
+            var days = (decimal)(dto.EndDate.DayNumber - dto.StartDate.DayNumber) + 1;
+
+            request.StartDate = dto.StartDate;
+            request.EndDate = dto.EndDate;
+            request.Days = days;
+            request.Reason = dto.Reason.Trim();
+
+            await _db.SaveChangesAsync();
+
+            var readDto = new AbsenceRequestReadDto(
+                request.Id, request.UserId, request.DepartmentId,
+                request.StartDate, request.EndDate, request.Days,
+                request.Reason, request.Status, request.RequestedAt,
+                request.Decision != null ? new AbsenceDecisionReadDto(
+                    request.Decision.Id, request.Decision.DecidedByUserId,
+                    request.Decision.Decision, request.Decision.Comment, request.Decision.DecidedAt
+                ) : null
+            );
+
+            return Ok(readDto);
+        }
+        /// <summary>Delete my absence request (only if Pending)</summary>
+        [HttpDelete("{id:long}")]
+        [Authorize(Roles = "Intern,Attache")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DeleteMyRequest(long id)
+        {
+            var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var request = await _db.AbsenceRequests
+                .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+
+            if (request == null) return NotFound();
+            if (request.Status != "Pending") return BadRequest("Can only delete pending requests");
+
+            _db.AbsenceRequests.Remove(request);
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+        }
+        /// <summary>Create or update absence limit policy</summary>
+        [HttpPost("policies")]
+        [Authorize(Roles = "HR,Admin")]
+        [ProducesResponseType(typeof(AbsencePolicyReadDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<AbsencePolicyReadDto>> CreatePolicy([FromBody] AbsencePolicyCreateDto dto)
+        {
+            // Validate department exists if scope is Department
+            if (dto.Scope == "Department" && dto.DepartmentId.HasValue)
+            {
+                var departmentExists = await _db.Departments.AnyAsync(d => d.Id == dto.DepartmentId.Value);
+                if (!departmentExists) return BadRequest("Department not found");
+            }
+
+            // Check for overlapping policies
+            var overlapping = await _db.AbsenceLimitPolicies
+                .Where(p => p.Scope == dto.Scope &&
+                           p.DepartmentId == dto.DepartmentId &&
+                           p.EffectiveFrom <= (dto.EffectiveTo ?? DateOnly.MaxValue) &&
+                           (p.EffectiveTo >= dto.EffectiveFrom || p.EffectiveTo == null))
+                .AnyAsync();
+
+            if (overlapping) return BadRequest("Policy already exists for this period");
+
+            var policy = new AbsenceLimitPolicy
+            {
+                Scope = dto.Scope,
+                DepartmentId = dto.Scope == "Department" ? dto.DepartmentId : null,
+                MaxDaysPerTerm = dto.MaxDaysPerTerm,
+                MaxDaysPerMonth = dto.MaxDaysPerMonth,
+                EffectiveFrom = dto.EffectiveFrom,
+                EffectiveTo = dto.EffectiveTo
+            };
+
+            _db.AbsenceLimitPolicies.Add(policy);
+            await _db.SaveChangesAsync();
+
+            var readDto = new AbsencePolicyReadDto(
+                policy.Id, policy.Scope, policy.DepartmentId,
+                policy.MaxDaysPerTerm, policy.MaxDaysPerMonth,
+                policy.EffectiveFrom, policy.EffectiveTo
+            );
+
+            return Ok(readDto);
+        }
+
+        /// <summary>Get all absence limit policies</summary>
+        [HttpGet("policies")]
+        [Authorize(Roles = "HR,Admin,Supervisor")]
+        [ProducesResponseType(typeof(IEnumerable<AbsencePolicyReadDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<AbsencePolicyReadDto>>> GetPolicies()
+        {
+            var policies = await _db.AbsenceLimitPolicies
+                .Include(p => p.Department)
+                .OrderBy(p => p.Scope)
+                .ThenBy(p => p.DepartmentId)
+                .ThenBy(p => p.EffectiveFrom)
+                .Select(p => new AbsencePolicyReadDto(
+                    p.Id, p.Scope, p.DepartmentId,
+                    p.MaxDaysPerTerm, p.MaxDaysPerMonth,
+                    p.EffectiveFrom, p.EffectiveTo
+                ))
+                .ToListAsync();
+
+            return Ok(policies);
+        }
+
+        /// <summary>Get current effective policy for a department</summary>
+        [HttpGet("policies/current")]
+        [Authorize]
+        [ProducesResponseType(typeof(AbsencePolicyReadDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<AbsencePolicyReadDto>> GetCurrentPolicy(
+            [FromQuery] int? departmentId = null)
+        {
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            // Get global policy
+            var globalPolicy = await _db.AbsenceLimitPolicies
+                .Where(p => p.Scope == "Global" &&
+                           p.EffectiveFrom <= today &&
+                           (p.EffectiveTo >= today || p.EffectiveTo == null))
+                .OrderByDescending(p => p.EffectiveFrom)
+                .FirstOrDefaultAsync();
+
+            // Get department-specific policy if departmentId provided
+            AbsenceLimitPolicy? departmentPolicy = null;
+            if (departmentId.HasValue)
+            {
+                departmentPolicy = await _db.AbsenceLimitPolicies
+                    .Where(p => p.Scope == "Department" &&
+                               p.DepartmentId == departmentId &&
+                               p.EffectiveFrom <= today &&
+                               (p.EffectiveTo >= today || p.EffectiveTo == null))
+                    .OrderByDescending(p => p.EffectiveFrom)
+                    .FirstOrDefaultAsync();
+            }
+
+            // Prefer department policy over global policy
+            var effectivePolicy = departmentPolicy ?? globalPolicy;
+            if (effectivePolicy == null) return NotFound("No active policy found");
+
+            var readDto = new AbsencePolicyReadDto(
+                effectivePolicy.Id, effectivePolicy.Scope, effectivePolicy.DepartmentId,
+                effectivePolicy.MaxDaysPerTerm, effectivePolicy.MaxDaysPerMonth,
+                effectivePolicy.EffectiveFrom, effectivePolicy.EffectiveTo
+            );
+
+            return Ok(readDto);
+        }
+
+        /// <summary>Delete a policy</summary>
+        [HttpDelete("policies/{id:int}")]
+        [Authorize(Roles = "HR,Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeletePolicy(int id)
+        {
+            var policy = await _db.AbsenceLimitPolicies.FindAsync(id);
+            if (policy == null) return NotFound();
+
+            _db.AbsenceLimitPolicies.Remove(policy);
+            await _db.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

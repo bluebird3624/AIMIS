@@ -6,7 +6,9 @@
         long SubmissionId,
         decimal Score,
         decimal MaxScore,
-        string? RubricJson,
+         int? RubricId,           
+        string? RubricName,
+        string? RubricScoresJson,
         Guid GradedByUserId,
         DateTime GradedAt,
         string GradedByUserName

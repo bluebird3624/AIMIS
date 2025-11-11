@@ -5,6 +5,7 @@
         long Id,
         long AssignmentId,
         Guid UserId,
+        string SubmissionType, // "GitHub" or "File"
         string? RepoUrl,
         string? Branch,
         string? LatestCommitSha,
@@ -13,6 +14,7 @@
         DateTime CreatedAt,
         GradeReadDto? Grade,
         int CommitCount,
-        int FeedbackCount
+        int FeedbackCount,
+        List<AttachmentReadDto> FileAttachments // Only for File submissions
     );
 }
