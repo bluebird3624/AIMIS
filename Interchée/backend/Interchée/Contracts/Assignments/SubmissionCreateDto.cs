@@ -4,7 +4,7 @@ namespace Interchée.Contracts.Assignments
 {
     // Create/Update submission
     public record SubmissionCreateDto(
-        [Required] long AssignmentId,  // ADD THIS
+        [Required] long AssignmentId,  
         [Required][Url] string RepoUrl,
         string? Branch
     );

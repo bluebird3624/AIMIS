@@ -8,7 +8,7 @@
         public string? Description { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTime? DueAt { get; set; }
-        public string Status { get; set; } = "Assigned"; // Assigned|Closed|Archived
+        public string Status { get; set; } = "Created"; // Created|Assigned|Closed|
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation properties
@@ -16,5 +16,6 @@
         public AppUser? CreatedByUser { get; set; }
         public ICollection<AssignmentAssignee> Assignees { get; set; } = new List<AssignmentAssignee>();
         public ICollection<AssignmentSubmission> Submissions { get; set; } = new List<AssignmentSubmission>();
+        public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
     }
 }

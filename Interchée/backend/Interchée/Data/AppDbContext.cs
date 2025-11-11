@@ -1,194 +1,120 @@
 ﻿using Interchée.Entities;
-
 using Microsoft.AspNetCore.Identity;
-
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
 using Microsoft.EntityFrameworkCore;
-
 using System.Collections.Generic;
-
 using System.Reflection.Emit;
 
 namespace Interchée.Data
-
 {
-
-    public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
-
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>(options)
     {
-
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
         public DbSet<OnboardingRequest> OnboardingRequests => Set<OnboardingRequest>();
-
         public DbSet<OnboardingDecision> OnboardingDecisions => Set<OnboardingDecision>();
-
         public DbSet<Department> Departments => Set<Department>();
-
         public DbSet<DepartmentRoleAssignment> DepartmentRoleAssignments => Set<DepartmentRoleAssignment>();
-
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
-        //Absence Management
-
+        // Absence Management
         public DbSet<AbsenceRequest> AbsenceRequests => Set<AbsenceRequest>();
         public DbSet<AbsenceDecision> AbsenceDecisions => Set<AbsenceDecision>();
         public DbSet<AbsenceLimitPolicy> AbsenceLimitPolicies => Set<AbsenceLimitPolicy>();
 
+        // Learning & Assignment Module
         public DbSet<Assignment> Assignments => Set<Assignment>();
         public DbSet<AssignmentAssignee> AssignmentAssignees => Set<AssignmentAssignee>();
         public DbSet<AssignmentSubmission> AssignmentSubmissions => Set<AssignmentSubmission>();
         public DbSet<SubmissionCommit> SubmissionCommits => Set<SubmissionCommit>();
+        public DbSet<Attachment> Attachments => Set<Attachment>();
         public DbSet<Grade> Grades => Set<Grade>();
+        public DbSet<Rubric> Rubrics => Set<Rubric>();
+        public DbSet<RubricItem> RubricItems => Set<RubricItem>();
         public DbSet<FeedbackComment> FeedbackComments => Set<FeedbackComment>();
 
+        // Review Module
+        public DbSet<Review> Reviews => Set<Review>();
+        public DbSet<ReviewFeedback> ReviewFeedbacks => Set<ReviewFeedback>();
+
         protected override void OnModelCreating(ModelBuilder b)
-
         {
-
             base.OnModelCreating(b);
 
             // AppUser name fields
-
             b.Entity<AppUser>(e =>
-
             {
-
                 e.Property(x => x.FirstName).HasMaxLength(64).IsRequired();
-
                 e.Property(x => x.LastName).HasMaxLength(64).IsRequired();
-
                 e.Property(x => x.MiddleName).HasMaxLength(64);
-
             });
 
             // Department
-
             b.Entity<Department>(e =>
-
             {
-
                 e.Property(x => x.Name).HasMaxLength(128).IsRequired();
-
                 e.HasIndex(x => x.Name).IsUnique();
-
                 e.Property(x => x.Code).HasMaxLength(32);
-
             });
 
             // DepartmentRoleAssignment (User ↔ RoleName ↔ Department)
-
             b.Entity<DepartmentRoleAssignment>(e =>
-
             {
-
                 e.Property(x => x.RoleName).HasMaxLength(64).IsRequired();
-
                 e.HasIndex(x => new { x.UserId, x.DepartmentId, x.RoleName }).IsUnique();
-
                 e.HasOne(x => x.User)
-
                     .WithMany()
-
                     .HasForeignKey(x => x.UserId)
-
                     .OnDelete(DeleteBehavior.Cascade);
-
                 e.HasOne(x => x.Department)
-
                     .WithMany(d => d.Assignments)
-
                     .HasForeignKey(x => x.DepartmentId)
-
                     .OnDelete(DeleteBehavior.Cascade);
-
             });
 
             // RefreshToken (optional but mapped)
-
             b.Entity<RefreshToken>(e =>
-
             {
-
                 e.HasIndex(x => x.Token).IsUnique();
-
                 e.Property(x => x.Token).HasMaxLength(512).IsRequired();
-
                 e.HasOne(x => x.User)
-
                     .WithMany()
-
                     .HasForeignKey(x => x.UserId)
-
                     .OnDelete(DeleteBehavior.Cascade);
-
             });
 
+            // OnboardingRequest
             b.Entity<OnboardingRequest>(e =>
-
             {
-
                 e.Property(x => x.Email).HasMaxLength(256).IsRequired();
-
                 e.Property(x => x.FirstName).HasMaxLength(64).IsRequired();
-
                 e.Property(x => x.LastName).HasMaxLength(64).IsRequired();
-
                 e.Property(x => x.MiddleName).HasMaxLength(64);
-
                 e.Property(x => x.FullName).HasMaxLength(128).IsRequired();
-
                 e.Property(x => x.Status).HasMaxLength(32).IsRequired(); // Pending/Approved/Rejected
-
                 e.Property(x => x.RequestedAt).IsRequired();
-
                 e.HasIndex(x => new { x.Email, x.Status })
-
                  .HasDatabaseName("IX_Onboard_Email_Status");
-
                 e.HasOne(x => x.Department)
-
                  .WithMany()
-
                  .HasForeignKey(x => x.DepartmentId)
-
                  .OnDelete(DeleteBehavior.Restrict); // preserve history
-
             });
 
             // OnboardingDecision
-
             b.Entity<OnboardingDecision>(e =>
-
             {
-
                 e.ToTable("OnboardingDecisions");
-
                 e.HasKey(x => x.Id);
-
                 e.Property(x => x.Action)
-
                     .HasMaxLength(32)
-
                     .IsRequired();
-
                 e.Property(x => x.Reason)
-
                     .HasMaxLength(1000);
-
                 e.Property(x => x.CreatedAt)
-
                     .HasConversion(v => v, v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
-
                 e.HasOne(x => x.Request)
-
                     .WithMany(r => r.Decisions)            // add Decisions nav on OnboardingRequest (see next)
-
                     .HasForeignKey(x => x.RequestId)
-
                     .OnDelete(DeleteBehavior.Cascade);     // delete log when request is deleted (usually you keep requests)
-
             });
 
             // AbsenceRequest
@@ -328,6 +254,25 @@ namespace Interchée.Data
                     .OnDelete(DeleteBehavior.Cascade); // Remove commits if submission deleted
             });
 
+            // Attachment configuration
+            b.Entity<Attachment>(e =>
+            {
+                e.Property(x => x.FileName).HasMaxLength(255).IsRequired();
+                e.Property(x => x.StoredFileName).HasMaxLength(255).IsRequired();
+                e.Property(x => x.ContentType).HasMaxLength(100).IsRequired();
+                e.Property(x => x.FilePath).HasMaxLength(500).IsRequired();
+                e.Property(x => x.EntityType).HasMaxLength(50).IsRequired();
+
+                // Index for efficient queries
+                e.HasIndex(x => new { x.EntityType, x.EntityId });
+
+                // Relationship with uploader
+                e.HasOne(x => x.UploadedByUser)
+                    .WithMany()
+                    .HasForeignKey(x => x.UploadedByUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
             // Grade
             b.Entity<Grade>(e =>
             {
@@ -347,6 +292,32 @@ namespace Interchée.Data
                     .WithMany()
                     .HasForeignKey(x => x.GradedByUserId)
                     .OnDelete(DeleteBehavior.Restrict); // Keep grade history if user is deleted
+
+                e.HasOne(x => x.Rubric)
+               .WithMany()
+               .HasForeignKey(x => x.RubricId)
+               .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Rubric configuration
+            b.Entity<Rubric>(e =>
+            {
+                e.Property(x => x.Name).HasMaxLength(100).IsRequired();
+                e.Property(x => x.Description).HasMaxLength(500);
+                e.HasIndex(x => x.Name).IsUnique();
+            });
+
+            // RubricItem configuration
+            b.Entity<RubricItem>(e =>
+            {
+                e.Property(x => x.Criteria).HasMaxLength(200).IsRequired();
+                e.Property(x => x.Description).HasMaxLength(500);
+                e.Property(x => x.MaxScore).HasPrecision(5, 2);
+
+                e.HasOne(x => x.Rubric)
+                    .WithMany(r => r.Items)
+                    .HasForeignKey(x => x.RubricId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             // FeedbackComment
@@ -366,9 +337,51 @@ namespace Interchée.Data
                     .OnDelete(DeleteBehavior.Restrict); // Keep comment history if user is deleted
             });
 
+            // Review configuration
+            b.Entity<Review>(e =>
+            {
+                e.Property(x => x.Status).HasMaxLength(32).IsRequired();
+                e.Property(x => x.TeamworkScore).HasPrecision(3, 2);
+                e.Property(x => x.CommunicationScore).HasPrecision(3, 2);
+                e.Property(x => x.TechnicalSkillsScore).HasPrecision(3, 2);
+                e.Property(x => x.InitiativeScore).HasPrecision(3, 2);
+                e.Property(x => x.ProfessionalismScore).HasPrecision(3, 2);
+                e.Property(x => x.OverallScore).HasPrecision(3, 2);
+                e.Property(x => x.OverallComments).HasMaxLength(1000);
+
+                e.HasIndex(x => x.UserId);
+                e.HasIndex(x => x.SupervisorId);
+                e.HasIndex(x => x.DepartmentId);
+                e.HasIndex(x => x.ScheduledAt);
+                e.HasIndex(x => x.Status);
+
+                e.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.Supervisor)
+                    .WithMany()
+                    .HasForeignKey(x => x.SupervisorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.Department)
+                    .WithMany()
+                    .HasForeignKey(x => x.DepartmentId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // ReviewFeedback configuration
+            b.Entity<ReviewFeedback>(e =>
+            {
+                e.Property(x => x.Category).HasMaxLength(64).IsRequired();
+                e.Property(x => x.Feedback).HasMaxLength(500).IsRequired();
+
+                e.HasOne(x => x.Review)
+                    .WithMany(x => x.Feedbacks)
+                    .HasForeignKey(x => x.ReviewId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
         }
-
     }
-
 }
-
