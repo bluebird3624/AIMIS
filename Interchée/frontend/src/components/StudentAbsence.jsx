@@ -221,7 +221,7 @@ const renderRequestCard = (r) => (
               <div className='section'>
                 <div className='requests-container'>
                   {loading && <div className="loading">Loading requests…</div>}
-                  {!loading && pendingRequests.length === 0 && <div className="empty">No pending requests</div>}
+                  {!loading && pendingRequests.length === 0 && <div className="no-requests">No pending requests</div>}
                   {pendingRequests.map(renderRequestCard)}
                 </div>
               </div>
@@ -230,7 +230,7 @@ const renderRequestCard = (r) => (
               <div className='section'>
                 <div className='requests-container'>
                   {loading && <div className="loading">Loading requests…</div>}
-                  {!loading && pastRequests.length === 0 && <div className="empty">No past requests</div>}
+                  {!loading && pastRequests.length === 0 && <div className="no-requests">No past requests</div>}
                   {pastRequests.map(renderRequestCard)}
                 </div>
               </div>     

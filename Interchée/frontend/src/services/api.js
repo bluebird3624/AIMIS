@@ -148,6 +148,11 @@ export const submissionAPI = {
 
     }
 
+    export const ReviewAPI = {
+        createReview: (reviewData) => 
+            api.post('/reviews', reviewData),
+    }
+
 
 
 export default api;
