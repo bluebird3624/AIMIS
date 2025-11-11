@@ -1,10 +1,15 @@
 import { useState } from "react";
 import * as icons from 'react-icons/io5';
 import '../styles/reviews.css'; 
-
+import { ReviewAPI } from "../services/api";
+import { getCurrentUser } from "../services/auth";
 
 export default function StudentReviews() {
     
+    
+    const fetchReviews = async () => {
+
+    }
 
 
 

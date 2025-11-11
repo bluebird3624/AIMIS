@@ -221,3 +221,116 @@
     }
 }
 
+/* END OF STUDENT SIDE*/
+
+
+
+/* SUPERVISOR SIDE*/
+.feed-card-section{
+    background-color: transparent;
+    margin-left: 20px;
+    width: 950px;
+    min-height: 400px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+
+}
+.feed-card{
+    width: 100%;
+    min-height: 300px;
+    height: fit-content;
+    border-radius: 10px;
+    border: #b8bcbd 1.5px solid;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.381);
+}
+.feed-card-toprow{
+    width: 100%;
+    height: fit-content;
+    background-color: transparent;
+    display: flex;
+
+}
+.feed-card-secondrow{
+    width: 100%;
+    height: fit-content;
+    background-color: transparent;
+    display: flex;
+
+}
+.feed-card-thirdrow{
+    width: 100%;
+    height: fit-content;
+    background-color:transparent;
+    display: flex;
+    margin-bottom: 20px;
+
+}
+
+.feed-title{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: #181f22;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+.feed-student{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    color: #797777;
+    gap: 10px;
+    margin-left: 20px;
+    font-size: 20px;
+    margin-top: 10px;
+}
+.feed-date{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    color: #797777;
+    word-spacing: 20px;
+    margin-left: auto;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-right: 30px;
+}
+.feed-message {
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #d3d9df;
+    border-radius: 8px;
+    border-left: none;
+    margin-left: 20px;
+    width: 750px;
+    margin-top: 20px;
+}
+
+.feed-message p {
+    margin: 0;
+    color: #0e1318;
+    line-height: 1.5;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+.reply-button{
+    padding: 12px 24px;
+    width: 200px;
+    border: none;
+    border-radius: 8px;
+    background: #27ae60;
+    color: white;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    margin-left: 20px;
+}
+.reply-button:hover {
+    background: #219a52;
+    transform: translateY(-1px);
+}
+
+
+/*END OF SUPERVISOR SIDE*/

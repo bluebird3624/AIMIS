@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import '../styles/reviews.css';
 import * as icons from 'react-icons/io5';
+import { ReviewAPI, usersAPI } from "../services/api";
 
 export default function SupervisorReviews() {
     const [viewMore, setViewMore] = useState(false);
@@ -14,23 +15,33 @@ export default function SupervisorReviews() {
         time: '',
         date: ''
     });
+    const [studentsList, setStudentsList] = useState([]);
     const [editingReviewId, setEditingReviewId] = useState(null); // Track which review is being edited
 
-    const studentsList = [
-        'Vikky',
-        'V Soimo',
-        'Waffl3',
-        'Wayn',
-        'Dan',
-        'R0y'
-    ];
-
+    
     const timeSlots = [
         '08:00 AM', '08:30 AM', '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM',
         '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
         '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM',
         '05:00 PM', '05:30 PM'
     ];
+    const fetchReviews  = async () => {
+
+    }
+
+    
+
+    const fetchUsers = async() => {
+        const response = await usersAPI.getUsers();
+        setStudentsList(response.data);
+
+    }
+
+    useEffect(() => {
+        fetchReviews();
+        fetchUsers();
+        
+    }, []);
 
     const handleStudentToggle = (student) => {
         setReviewData(prev => ({
@@ -55,7 +66,7 @@ export default function SupervisorReviews() {
         }));
     };
 
-    const handleSubmitReview = () => {
+    const handleSubmitReview = async() => {
         if (editingReviewId) {
             // Update existing review
             setScheduledReviews(prev => 
@@ -84,10 +95,12 @@ export default function SupervisorReviews() {
                 time: reviewData.time,
                 date: reviewData.date,
                 createdAt: new Date().toLocaleDateString(),
-                status: 'upcoming'
+               
             };
 
-            // Add to scheduled reviews
+            const formattedReviewData = {}
+
+            await ReviewAPI.createReview(formattedReviewData)
             setScheduledReviews(prev => [newReview, ...prev]);
         }
         
@@ -312,6 +325,7 @@ export default function SupervisorReviews() {
                                         {studentsList.map((student, index) => (
                                             <div key={index} className="rev-student-option">
                                                 <input
+                                                    key={index}
                                                     type="checkbox"
                                                     id={`student-${index}`}
                                                     checked={reviewData.students.includes(student)}
