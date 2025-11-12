@@ -347,7 +347,7 @@ public async Task<ActionResult<IEnumerable<AssignmentAssigneeReadDto>>> GetAssig
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AssignmentReadDto>> UpdateStatus(long id, [FromBody] AssignmentStatusDto dto)
         {
-            var validStatuses = new[] { AssignmentStatus.Assigned, AssignmentStatus.Closed, AssignmentStatus.Archived };
+            var validStatuses = new[] { AssignmentStatus.Assigned, AssignmentStatus.Closed};
             if (!validStatuses.Contains(dto.Status))
                 return BadRequest($"Invalid status. Must be one of: {string.Join(", ", validStatuses)}");
 

@@ -21,7 +21,7 @@ namespace Interchée.Services
             var assignment = await _db.Assignments
                 .FirstOrDefaultAsync(a => a.Id == submission.AssignmentId);
 
-            if (assignment?.Status == AssignmentStatus.Closed || assignment?.Status == AssignmentStatus.Archived) // ✅ ENUM
+            if (assignment?.Status == AssignmentStatus.Closed) 
             {
                 return false; // Cannot add commits to submissions in closed assignments
             }
@@ -65,16 +65,16 @@ namespace Interchée.Services
             var assignment = await _db.Assignments
                 .FirstOrDefaultAsync(a => a.Id == submission.AssignmentId);
 
-            if (assignment?.Status == AssignmentStatus.Closed || assignment?.Status == AssignmentStatus.Archived) // ✅ ENUM
+            if (assignment?.Status == AssignmentStatus.Closed) 
             {
                 // Cannot change status of submission in closed assignment
                 return false;
             }
 
             // Only allow marking as reviewed if currently submitted
-            if (submission.Status == SubmissionStatus.Submitted) // ✅ ENUM
+            if (submission.Status == SubmissionStatus.Submitted) 
             {
-                submission.Status = SubmissionStatus.Reviewed; // ✅ ENUM
+                submission.Status = SubmissionStatus.Reviewed; 
                 await _db.SaveChangesAsync();
                 return true;
             }
@@ -90,8 +90,7 @@ namespace Interchée.Services
 
             // Cannot submit if assignment is closed/archived or doesn't exist
             return assignment != null &&
-                   assignment.Status != AssignmentStatus.Closed && 
-                   assignment.Status != AssignmentStatus.Archived; 
+                   assignment.Status != AssignmentStatus.Closed ; 
         }
 
         /// <summary>Check if commits can be added to submission</summary>
@@ -104,9 +103,8 @@ namespace Interchée.Services
             if (submission == null) return false;
 
             // Cannot add commits if submission is reviewed or assignment is closed
-            return submission.Status != SubmissionStatus.Reviewed && // ✅ ENUM
-                   submission.Assignment?.Status != AssignmentStatus.Closed && // ✅ ENUM
-                   submission.Assignment?.Status != AssignmentStatus.Archived; // ✅ ENUM
+            return submission.Status != SubmissionStatus.Reviewed && 
+                   submission.Assignment?.Status != AssignmentStatus.Closed; 
         }
     }
 }

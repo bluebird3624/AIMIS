@@ -169,7 +169,7 @@ namespace Interchée.Controllers
                 }
 
                 // Update existing submission
-                submission.SubmissionType = SubmissionType.File; // ✅ ENUM
+                submission.SubmissionType = SubmissionType.File; 
                 submission.Status = SubmissionStatus.Submitted;
                 submission.SubmittedAt = DateTime.UtcNow;
 
@@ -225,7 +225,7 @@ namespace Interchée.Controllers
                 submission.Id,
                 submission.AssignmentId,
                 submission.UserId,
-                SubmissionType.File, // ✅ ENUM
+                SubmissionType.File, 
                 null, // No RepoUrl
                 null, // No Branch
                 null, // No LatestCommitSha
@@ -259,11 +259,11 @@ namespace Interchée.Controllers
             if (submission == null) return NotFound("No submission found for this assignment");
 
             // Determine submission type - USE ENUM LOGIC
-            var submissionType = submission.SubmissionType; // ✅ DIRECT ENUM VALUE
+            var submissionType = submission.SubmissionType; 
 
             // Get attachments for file submissions
             var attachments = new List<AttachmentReadDto>();
-            if (submissionType == SubmissionType.File) // ✅ ENUM COMPARISON
+            if (submissionType == SubmissionType.File) 
             {
                 attachments = await _db.Attachments
                     .Where(a => a.EntityType == "Submission" && a.EntityId == submission.Id)
@@ -291,12 +291,12 @@ namespace Interchée.Controllers
                 submission.Id,
                 submission.AssignmentId,
                 submission.UserId,
-                submissionType, // ✅ ENUM
+                submissionType, 
                 submission.RepoUrl,
                 submission.Branch,
                 submission.LatestCommitSha,
                 submission.SubmittedAt,
-                submission.Status, // ✅ ENUM
+                submission.Status, 
                 submission.CreatedAt,
                 submission.Grade != null ? new GradeReadDto(
                     submission.Grade.Id,
@@ -340,7 +340,7 @@ namespace Interchée.Controllers
             foreach (var submission in submissions)
             {
                 // Use direct enum value - no need for string detection
-                var submissionType = submission.SubmissionType; // ✅ ENUM
+                var submissionType = submission.SubmissionType; 
 
                 // Get attachments for file submissions
                 var attachments = new List<AttachmentReadDto>();
@@ -372,12 +372,12 @@ namespace Interchée.Controllers
                     submission.Id,
                     submission.AssignmentId,
                     submission.UserId,
-                    submissionType, // ✅ ENUM
+                    submissionType, 
                     submission.RepoUrl,
                     submission.Branch,
                     submission.LatestCommitSha,
                     submission.SubmittedAt,
-                    submission.Status, // ✅ ENUM
+                    submission.Status, 
                     submission.CreatedAt,
                     submission.Grade != null ? new GradeReadDto(
                         submission.Grade.Id,
@@ -416,7 +416,7 @@ namespace Interchée.Controllers
             if (submission == null) return NotFound("Submission not found");
 
             // Check if assignment is closed - USE ENUMS
-            if (submission.Assignment?.Status == AssignmentStatus.Closed || submission.Assignment?.Status == AssignmentStatus.Archived) // ✅ ENUM
+            if (submission.Assignment?.Status == AssignmentStatus.Closed) 
             {
                 return BadRequest("Cannot add commits to a submission in a closed assignment.");
             }
@@ -559,8 +559,8 @@ namespace Interchée.Controllers
 
             if (submission == null) return NotFound();
 
-            // Check if assignment is closed - USE ENUMS
-            if (submission.Assignment?.Status == AssignmentStatus.Closed || submission.Assignment?.Status == AssignmentStatus.Archived) // ✅ ENUM
+            // Check if assignment is closed - 
+            if (submission.Assignment?.Status == AssignmentStatus.Closed) 
             {
                 return BadRequest("Cannot update a submission in a closed assignment.");
             }
@@ -583,7 +583,7 @@ namespace Interchée.Controllers
                 .CountAsync(f => f.SubmissionId == submission.Id);
 
             var readDto = new SubmissionReadDto(
-                 submission.Id, submission.AssignmentId, submission.UserId, SubmissionType.GitHub, submission.RepoUrl, // ✅ ENUM
+                 submission.Id, submission.AssignmentId, submission.UserId, SubmissionType.GitHub, submission.RepoUrl, 
                 submission.Branch, submission.LatestCommitSha, submission.SubmittedAt,
                 submission.Status, submission.CreatedAt, null, commitCount, feedbackCount, new List<AttachmentReadDto>()
             );
@@ -615,7 +615,7 @@ namespace Interchée.Controllers
             else
             {
                 // For other status changes, check if assignment is closed
-                if (submission.Assignment?.Status == AssignmentStatus.Closed || submission.Assignment?.Status == AssignmentStatus.Archived) // ✅ ENUM
+                if (submission.Assignment?.Status == AssignmentStatus.Closed )
                 {
                     return BadRequest("Cannot update status of submission in closed assignment.");
                 }

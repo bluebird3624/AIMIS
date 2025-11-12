@@ -100,8 +100,7 @@ namespace Interchée.Controllers
                     return Forbid("Submission not found or access denied");
 
                 // Check if assignment allows submissions
-                if (submission.Assignment?.Status == AssignmentStatus.Closed ||
-    submission.Assignment?.Status == AssignmentStatus.Archived)
+                if (submission.Assignment?.Status == AssignmentStatus.Closed)
                 {
                     return BadRequest("Cannot upload to a closed assignment");
                 }

@@ -10,7 +10,7 @@ namespace Interchée.Entities
         public string? Description { get; set; }
         public Guid CreatedByUserId { get; set; }
         public DateTime? DueAt { get; set; }
-        public SubmissionType AllowedSubmissionType { get; set; } 
+        public SubmissionType AllowedSubmissionType { get; set; } = SubmissionType.GitHub;
         public int RubricId { get; set; }
         public AssignmentStatus Status { get; set; } = AssignmentStatus.Created; // Created|Assigned|Closed|
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

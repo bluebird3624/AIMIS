@@ -16,21 +16,14 @@ namespace Interchée.Services
             // Auto-close immediately when deadline passes, regardless of submissions
             if (assignment.DueAt.HasValue &&
                 assignment.DueAt.Value < DateTime.UtcNow &&
-                assignment.Status == AssignmentStatus.Assigned) // ✅ ENUM
+                assignment.Status == AssignmentStatus.Assigned) 
             {
                 // CHANGED: Close assignment immediately when due date passes
-                assignment.Status = AssignmentStatus.Closed; // ✅ ENUM
+                assignment.Status = AssignmentStatus.Closed; 
                 await _db.SaveChangesAsync();
                 return;
             }
 
-            // Auto-archive if closed for more than 30 days
-            if (assignment.Status == AssignmentStatus.Closed && // ✅ ENUM
-                assignment.CreatedAt.AddDays(30) < DateTime.UtcNow)
-            {
-                assignment.Status = AssignmentStatus.Archived; // ✅ ENUM
-                await _db.SaveChangesAsync();
-            }
         }
 
         /// <summary>Background service method to auto-update expired assignments</summary>
@@ -39,13 +32,13 @@ namespace Interchée.Services
             var expiredAssignments = await _db.Assignments
                 .Where(a => a.DueAt.HasValue &&
                            a.DueAt.Value < DateTime.UtcNow &&
-                           a.Status == AssignmentStatus.Assigned) // ✅ ENUM
+                           a.Status == AssignmentStatus.Assigned)
                 .ToListAsync();
 
             foreach (var assignment in expiredAssignments)
             {
                 // Close assignment immediately without checking submissions
-                assignment.Status = AssignmentStatus.Closed; // ✅ ENUM
+                assignment.Status = AssignmentStatus.Closed; 
             }
 
             await _db.SaveChangesAsync();

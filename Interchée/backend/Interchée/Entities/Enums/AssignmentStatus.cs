@@ -6,7 +6,7 @@ namespace Interchée.Entities.Enums
         Created = 1,    // Assignment created but not assigned
         Assigned = 2,   // Assignment assigned to students
         Closed = 3,     // Assignment closed (no more submissions)
-        Archived = 4    // Assignment archived
+      
     }
 
     
