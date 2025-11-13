@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as icons from 'react-icons/io5';
 import '../styles/reviews.css'; 
 import { ReviewAPI } from "../services/api";
@@ -6,10 +6,19 @@ import { getCurrentUser } from "../services/auth";
 
 export default function StudentReviews() {
     
-    
+    const [reviews, setReviews] = useState([]);
+
     const fetchReviews = async () => {
+        const user = getCurrentUser();
+        const response = await ReviewAPI.fetchReviews(user.userId);
+        console.log(response);
+        setReviews(response.data);
 
     }
+
+    useEffect(()=> {
+        fetchReviews();
+    },[]);
 
 
 
@@ -21,7 +30,10 @@ export default function StudentReviews() {
                 <button>Completed</button>
         </div>
         <div className="rev-cards-section">
-                                    <div className="review-card">
+                                {reviews.map((review, index) => (
+                                    <div className="review-card"
+                                        key={index}
+                                    >
                                         <div className="review-card-toprow">
                                             <p className="card-revtitle">-</p>
                                             <span className="rev-status-badge">-</span>
@@ -33,20 +45,12 @@ export default function StudentReviews() {
                                                     <icons.IoCalendarNumberOutline/>
                                                 </div>
                                                 <div className="rev-content-wrapper">
-                                                    <div className="rev-date-label">Date</div>
-                                                    <div className="rev-date"> - </div>
+                                                    <div className="rev-date-label">Sheduled AT</div>
+                                                    <div className="rev-date"> {review.scheduledAt} </div>
                                                 </div>
                                             </div>
             
-                                            <div className="rev-date-container">
-                                                <div className="rev-icon-container">
-                                                    <icons.IoTimeOutline/>
-                                                </div>
-                                                <div className="rev-content-wrapper">
-                                                    <div className="rev-date-label">Time</div>
-                                                    <div className="rev-date"></div>
-                                                </div>
-                                            </div>
+                                            
                                         </div>
                                         
                                         <div className="card-statsrow">
@@ -56,7 +60,7 @@ export default function StudentReviews() {
                                                 </div>
                                                 <div className="rev-content-wrapper">
                                                     <div className="rev-date-label">Location</div>
-                                                    <div className="rev-date"></div>
+                                                    <div className="rev-date">{review.location}</div>
                                                 </div>
                                             </div>
             
@@ -66,13 +70,13 @@ export default function StudentReviews() {
                                                 </div>
                                                 <div className="rev-content-wrapper">
                                                     <div className="rev-date-label">Supervisor</div>
-                                                    <div className="rev-date"></div>
+                                                    <div className="rev-date">{review.supervisorId}</div>
                                                 </div>
                                             </div>
                                         </div>
                                             <div className="rev-description">
                                                 <h2> Review Description</h2>
-                                                <p></p>
+                                                <p>{review.description}</p>
                                             </div>
                                                                                 
                                         <div className="involved-students-row">
@@ -86,7 +90,8 @@ export default function StudentReviews() {
                                         </div>
                                         
                                         
-                                    </div>
+                                    </div> 
+                                    ))}
                                 
                         
                         

@@ -2,6 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import '../styles/reviews.css';
 import * as icons from 'react-icons/io5';
 import { ReviewAPI, usersAPI } from "../services/api";
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { TextField } from '@mui/material';
+import {getCurrentUser} from '../services/auth'
+
+
+
 
 export default function SupervisorReviews() {
     const [viewMore, setViewMore] = useState(false);
@@ -10,23 +18,19 @@ export default function SupervisorReviews() {
     const [reviewData, setReviewData] = useState({
         title: '',
         description: '',
-        students: [],
+        userIds: [''],
         location: '',
-        time: '',
-        date: ''
+        scheduledAt: '',
     });
     const [studentsList, setStudentsList] = useState([]);
     const [editingReviewId, setEditingReviewId] = useState(null); // Track which review is being edited
 
+    const user = getCurrentUser();
+    const userId = user.userId;
     
-    const timeSlots = [
-        '08:00 AM', '08:30 AM', '09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM',
-        '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
-        '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM',
-        '05:00 PM', '05:30 PM'
-    ];
     const fetchReviews  = async () => {
-
+        const response = await ReviewAPI.fetchReviews(userId);
+        setScheduledReviews(response.data);
     }
 
     
@@ -46,12 +50,13 @@ export default function SupervisorReviews() {
     const handleStudentToggle = (student) => {
         setReviewData(prev => ({
             ...prev,
-            students: prev.students.includes(student)
-                ? prev.students.filter(s => s !== student)
-                : [...prev.students, student]
+            userIds: prev.userIds.includes(student)
+                ? prev.userIds.filter(s => s !== student)
+                : [...prev.userIds, student]
         }));
     };
 
+        //function needs modification to set the student ids and not the student object itself
     const handleSelectAllStudents = () => {
         setReviewData(prev => ({
             ...prev,
@@ -68,7 +73,7 @@ export default function SupervisorReviews() {
 
     const handleSubmitReview = async() => {
         if (editingReviewId) {
-            // Update existing review
+           
             setScheduledReviews(prev => 
                 prev.map(review => 
                     review.id === editingReviewId 
@@ -76,51 +81,41 @@ export default function SupervisorReviews() {
                             ...review,
                             title: reviewData.title,
                             description: reviewData.description,
-                            students: [...reviewData.students],
+                            userIds: [...reviewData.userIds],
                             location: reviewData.location,
-                            time: reviewData.time,
-                            date: reviewData.date
                         }
                         : review
                 )
             );
         } else {
-            // Create new review object
-            const newReview = {
-                id: Date.now(), // Unique ID for the review
-                title: reviewData.title,
-                description: reviewData.description,
-                students: [...reviewData.students],
-                location: reviewData.location,
-                time: reviewData.time,
-                date: reviewData.date,
-                createdAt: new Date().toLocaleDateString(),
-               
-            };
+            
+           
 
-            const formattedReviewData = {}
+            
+            console.log("formatted review data: ",reviewData)
 
-            await ReviewAPI.createReview(formattedReviewData)
-            setScheduledReviews(prev => [newReview, ...prev]);
+            await ReviewAPI.createReview(reviewData)
+            setScheduledReviews(prev => [reviewData, ...prev]);
+            
         }
         
-        // Close modal and reset
+       
         handleCloseModal();
     };
 
-    // Function to handle reschedule button click
+   
     const handleReschedule = (review) => {
-        // Populate the form with the review's data
+        
         setReviewData({
             title: review.title,
             description: review.description,
             students: [...review.students],
             location: review.location,
-            time: review.time,
-            date: review.date
+            scheduledAt: review.time,
+            
         });
         
-        // Set the review ID we're editing
+      
         setEditingReviewId(review.id);
         
         // Open the modal
@@ -134,10 +129,10 @@ export default function SupervisorReviews() {
         setReviewData({
             title: '',
             description: '',
-            students: [],
+            userIds: [],
             location: '',
-            time: '',
-            date: ''
+            scheduledAt: ''
+           
         });
     };
 
@@ -147,17 +142,17 @@ export default function SupervisorReviews() {
         setReviewData({
             title: '',
             description: '',
-            students: [],
+            userIds: [],
             location: '',
-            time: '',
-            date: ''
+            scheduledAt: '',
+            
         });
         setIsScheduleModalOpen(true);
     };
 
     const isFormValid = reviewData.title && reviewData.description && 
-                       reviewData.students.length > 0 && reviewData.location && 
-                       reviewData.time && reviewData.date;
+                       reviewData.userIds.length > 0 && reviewData.location && 
+                       reviewData.scheduledAt;
 
     // Format date to display in a more readable format
     const formatDate = (dateString) => {
@@ -239,7 +234,7 @@ export default function SupervisorReviews() {
                                     </div>
                                     <div className="rev-content-wrapper">
                                         <div className="rev-date-label">Participants</div>
-                                        <div className="rev-date">{review.students.length}</div>
+                                        <div className="rev-date">{review.userIds.length}</div>
                                     </div>
                                 </div>
                             </div>
@@ -319,7 +314,7 @@ export default function SupervisorReviews() {
                                         className="rev-select-all-btn"
                                         onClick={handleSelectAllStudents}
                                     >
-                                        {reviewData.students.length === studentsList.length ? 'Deselect All' : 'Select All'}
+                                        {reviewData.userIds.length === studentsList.length ? 'Deselect All' : 'Select All'}
                                     </button>
                                     <div className="rev-students-list">
                                         {studentsList.map((student, index) => (
@@ -328,23 +323,23 @@ export default function SupervisorReviews() {
                                                     key={index}
                                                     type="checkbox"
                                                     id={`student-${index}`}
-                                                    checked={reviewData.students.includes(student)}
-                                                    onChange={() => handleStudentToggle(student)}
+                                                    checked={reviewData.userIds.includes(student.id)}
+                                                    onChange={() => handleStudentToggle(student.id)}
                                                     className="rev-student-checkbox"
                                                 />
                                                 <label 
                                                     htmlFor={`student-${index}`}
                                                     className="rev-student-label"
                                                 >
-                                                    {student}
+                                                    {student.userName}
                                                 </label>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                                 <div className="rev-selected-students">
-                                    <strong>Selected ({reviewData.students.length}): </strong>
-                                    {reviewData.students.length > 0 ? reviewData.students.join(', ') : 'None'}
+                                    <strong>Selected ({reviewData.userIds.length}): </strong>
+                                    {reviewData.userIds.length > 0 ? reviewData.userIds.join(', ') : 'None'}
                                 </div>
                             </div>
                             <div className="rev-form-group">
@@ -358,21 +353,31 @@ export default function SupervisorReviews() {
                                 />
                             </div>
                             <div className="rev-datetime-row">
-                                <div className="rev-form-group rev-date-group">
-                                    <label className="rev-form-label">Date *</label>
-                                    <input
-                                        type="date"
-                                        className="rev-form-input"
-                                        value={reviewData.date}
-                                        onChange={(e) => handleInputChange('date', e.target.value)}
-                                    />
-                                </div>
-                                <div className="rev-form-group rev-time-group">
-                                    <label className="rev-form-label">Time *</label>
-                                    <select
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <div className="rev-form-group">
+                                        <label className="rev-form-label">Scheduled Date & Time *</label>
+                                        <DateTimePicker
+                                            value={reviewData.scheduledAt}
+                                            onChange={(newValue) => handleInputChange('scheduledAt', newValue)}
+                                            renderInput={(params) => (
+                                                <TextField 
+                                                    {...params} 
+                                                    fullWidth
+                                                    className="rev-form-input"
+                                                />
+                                            )}
+                                            minDateTime={new Date()} // Prevent past dates
+                                        />
+                                    </div>
+                                </LocalizationProvider>
+                                
+                                {/* <div className="rev-form-group rev-time-group">
+                                    <label className="rev-form-label">Scheduled At</label>
+                                    
+                                    {/* <select
                                         className="rev-form-select"
-                                        value={reviewData.time}
-                                        onChange={(e) => handleInputChange('time', e.target.value)}
+                                        value={reviewData.scheduledAt}
+                                        onChange={(e) => handleInputChange('scheduledAt', e.target.value)}
                                     >
                                         <option value="">Select time</option>
                                         {timeSlots.map((time, index) => (
@@ -380,8 +385,8 @@ export default function SupervisorReviews() {
                                                 {time}
                                             </option>
                                         ))}
-                                    </select>
-                                </div>
+                                    </select> 
+                                </div> */}
                             </div>
                         </div>
 

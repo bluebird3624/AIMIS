@@ -6,7 +6,7 @@ const env = import.meta.env.VITE_ENV;
 
 const BACKEND_API_URL = import.meta.env.VITE_APP_BACKEND_API_URL;
 const api = axios.create({
-    baseURL: "http://172.20.2.155:5007/",
+    baseURL: "http://172.20.2.140:5007/",
     timeout: 15000,
     headers: {
         'Accept':'application/json',
@@ -150,7 +150,10 @@ export const submissionAPI = {
 
     export const ReviewAPI = {
         createReview: (reviewData) => 
-            api.post('/reviews', reviewData),
+            api.post('/reviews/bulk', reviewData),
+        fetchReviews: (id) =>
+            api.get(`/reviews/user/${id}`)
+        
     }
 
 
