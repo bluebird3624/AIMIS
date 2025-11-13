@@ -150,7 +150,10 @@ export const submissionAPI = {
 
     export const ReviewAPI = {
         createReview: (reviewData) => 
-            api.post('/reviews', reviewData),
+            api.post('/reviews/bulk', reviewData),
+        fetchReviews: (id) =>
+            api.get(`/reviews/user/${id}`)
+        
     }
 
 

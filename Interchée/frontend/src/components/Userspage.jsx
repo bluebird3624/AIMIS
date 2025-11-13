@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { departmentAPI, onboardAPI, usersAPI } from '../services/api';
 
+
 function Userspage() {
+  
   
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -14,9 +16,9 @@ function Userspage() {
   const [departments, setDepartments] = useState(null);
   const [users, setUsers] = useState(null);
   const [newUser, setNewUser] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     dept: '',
-    role: '',
     email: ''
   });
   const [selectedDept, setSelectedDept] = useState('');
@@ -42,25 +44,31 @@ function Userspage() {
 
   const fetchDepartments = async () =>{
     const departments = await departmentAPI.getDepartments();
+    console.log('departmennts: ', departments.data);
     setDepartments(departments.data);
   }
 
   const fetchUsers = async () => {
     const verifiedUsers = await usersAPI.getUsers();
     setUsers(verifiedUsers.data);
-    const unverifiedUsers = await onboardAPI.getOnboardingRequests();
-    setOnboardingRequests(unverifiedUsers.data);
+    const response = await onboardAPI.getOnboardingRequests();
+    const unverifiedUsers =  (response.data).filter(item => item.status != 'Approved');
+
+    setOnboardingRequests(unverifiedUsers);
 
   };
  
-  const handleCreateUser = () => {
-    if (newUser.name && newUser.dept && newUser.role && newUser.email) {
+  const handleCreateUser = async () => {
+    if (newUser.firstName && newUser.dept && newUser.email ) {
       const user = {
-        id: Date.now(),
-        ...newUser
+        email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        middleName: '',
+        departmentId: newUser.dept
       };
-      setUsers([...users, user]);
-      setNewUser({ name: '', dept: '', role: '', email: '' });
+      await onboardAPI.createOnboardingRequest(user);
+      setNewUser({ firstName: '', dept: '', email: '', lastName: '' });
       setIsCreateModalOpen(false);
     } else {
       alert('Please fill all fields');
@@ -242,12 +250,21 @@ function Userspage() {
           <div className="modal">
             <h2>Create New User</h2>
             <div className="form-group">
-              <label>Name:</label>
+              <label>First Name:</label>
               <input
                 type="text"
-                value={newUser.name}
-                onChange={(e) => setNewUser({...newUser, name: e.target.value})}
-                placeholder="Enter name"
+                value={newUser.firstName}
+                onChange={(e) => setNewUser({...newUser, firstName: e.target.value})}
+                placeholder="Enter first name"
+              />
+            </div>
+            <div className="form-group">
+              <label>Last Name:</label>
+              <input
+                type="text"
+                value={newUser.lastName}
+                onChange={(e) => setNewUser({...newUser, lastName: e.target.value})}
+                placeholder="Enter last name"
               />
             </div>
             <div className="form-group">
@@ -257,25 +274,14 @@ function Userspage() {
                 onChange={(e) => setNewUser({...newUser, dept: e.target.value})}
               >
                 {departments.map(dept => (
-                  <option key={dept.value} value={dept.value}>
-                    {dept.label}
+                  <option key={dept.id} value={dept.id}>
+                    {dept.name}
                   </option>
                 ))}
               </select>
             </div>
-            <div className="form-group">
-              <label>Role:</label>
-              <select
-                value={newUser.role}
-                onChange={(e) => setNewUser({...newUser, role: e.target.value})}
-              >
-                {roles.map(role => (
-                  <option key={role.value} value={role.value}>
-                    {role.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            
+        
             <div className="form-group">
               <label>Email:</label>
               <input
