@@ -25,6 +25,12 @@
   font-size: 28px;
   color: #ff9500;
 }
+.ab-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
 
 
 .approved-icon-container {
@@ -70,10 +76,10 @@
   border: 1.5px solid #e0e0e0; 
   background: #ffffff;
   width: 100%;
-  min-height: 260px;
+  min-height: 200px;
   height: fit-content;
   margin-top: 10px;
-  border-radius: 8px;
+  border-radius: 15px;
 
 }
 .top-row{
@@ -86,8 +92,8 @@
  background-color:transparent;
  height: 50px;
  width: 250px;
- margin-left: 5px;
- margin-top: 5px;
+ margin-left: 20px;
+ margin-top: 10px;
 }
 
 .request-user-name {
@@ -103,7 +109,8 @@
 }
 
 .absence-reason {
-  font-size: 17px;
+  font-size: 20px;
+  font-weight: 500;
   color: #7f8c8d;
   font-family:Arial, Helvetica, sans-serif;
   white-space: nowrap;
@@ -113,16 +120,18 @@
 }
 .absence-status-pending{
   margin-left: auto;
-  background-color: #c4c4c4;
+  background-color: #d0d5dd;
   height: 25px;
-  width: 120px;
+  width: 90px;
   border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 18px;
-  color: #000000;
-  margin-top: 5px;
-  margin-right: 5px;
-  text-align: center;
+  color: #3d3d3d;
+  margin-top: 20px;
+  margin-right: 10px;
+  text-align:center ;
+  justify-content:center;
+  align-items: center;
 }
 .absence-status-approved{
   margin-left: auto;
@@ -133,8 +142,8 @@
   font-family: Arial, Helvetica, sans-serif;
   font-size: 18px;
   color: #ffffff;
-  margin-top: 5px;
-  margin-right: 5px;
+  margin-top: 20px;
+  margin-right: 10px;
   text-align: center;
 }
 .absence-status-rejected{
@@ -198,8 +207,8 @@
 }
 .approve-button{
   border-radius: 20px;
-  width: 290px;
-  height: 60px;
+  width: 300px;
+  height: 50px;
   display: flex;
   cursor: pointer;
   margin-left: 55px ;
@@ -215,8 +224,8 @@
 }
 .reject-button{
   border-radius: 20px;
-  width: 290px;
-  height: 60px;
+  width: 300px;
+  height: 50px;
   display: flex;
   cursor: pointer;
   margin-left: 55px ;
@@ -252,7 +261,7 @@
   min-height: 190px;
   height: fit-content;
   margin-top: 10px;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 /* END OF SUPERVISOR SIDE*/
 

@@ -10,8 +10,7 @@ const StudentAbsence = () => {
   const [form, setForm] = useState({
     startDate: '',
     endDate: '',
-    reason: '',
-    comments: ''
+    reason: ''
   });
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -92,7 +91,7 @@ const StudentAbsence = () => {
        
         await fetchRequests();
       }
-      setForm({ startDate: '', endDate: '', reason: '', comments: '' });
+      setForm({ startDate: '', endDate: '', reason: '' });
     } catch (err) {
       console.error('Submit failed', err);
       setError('Start date cannot be  in the past.');
@@ -108,7 +107,7 @@ const StudentAbsence = () => {
 
   const closeModal = () => {
     setAbsenceModal(false);
-    setForm({ startDate: '', endDate: '', reason: '', comments: '' });
+    setForm({ startDate: '', endDate: '', reason: '' });
     setError(null);
   }
 
@@ -140,7 +139,7 @@ const renderRequestCard = (r) => (
         <div className="icon-container">
             <icons.IoCalendarNumberOutline style={{ fontSize: '40px' }} />
         </div>
-        <div className='content-wrapper'>
+        <div className='ab-content-wrapper'>
         <div className="date-label">From</div>
         <div className="date">{r.startDate?.slice(0,10) || '-'}</div>
         </div>
@@ -150,7 +149,7 @@ const renderRequestCard = (r) => (
         <div className="icon-container">
             <icons.IoCalendarNumberOutline style={{ fontSize: '40px' }} />
         </div>
-        <div className='content-wrapper'>
+        <div className='ab-content-wrapper'>
         <div className="date-label">To</div>
         <div className="date">{r.endDate?.slice(0,10) || '-'}</div>
         </div>
@@ -160,15 +159,11 @@ const renderRequestCard = (r) => (
         <div className="icon-container">
             <icons.IoTimerOutline style={{ fontSize: '40px' }} />
         </div>
-        <div className='content-wrapper'>
+        <div className='ab-content-wrapper'>
         <div className="date-label">Duration</div>
+         <div className="date">{r.days != null ? `${r.days} day(s)` : '-'}</div>
         </div>
-        <div className="date">{r.days != null ? `${r.days} day(s)` : '-'}</div>
       </div>
-    </div>
-    <div className='absence-form-row'>
-        <label> Comments </label>
-        <textarea style={{ marginTop: 8 }}>{r.comments || '—'}</textarea>
     </div>
     </div>
 
@@ -179,7 +174,7 @@ const renderRequestCard = (r) => (
     <div className='title'>
             <h1 style={{ fontFamily:"arial", fontSize: " 35px"}}> Absence</h1>
      </div>   
-       <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}>Request for leave</p>
+       <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}>Request and track your leave requests</p>
 
           
         <button className="request-button" onClick={handleCreateRequest} type="button"> < icons.IoWalkOutline/>Request Absence</button> 
@@ -259,10 +254,7 @@ const renderRequestCard = (r) => (
                 <input name="reason" type="text" value={form.reason} onChange={handleChange} placeholder="e.g. Medical" required />
               </div>
 
-              <div className="absence-form-row">
-                <label>Comments</label>
-                <textarea name="comments" value={form.comments} onChange={handleChange} placeholder="Optional details" />
-              </div>
+              
 
               <div className="absence-form-actions">
                 <button type="submit" className="btn-primary" disabled={submitting}>

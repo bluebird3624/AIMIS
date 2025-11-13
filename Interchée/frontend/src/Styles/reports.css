@@ -21,16 +21,20 @@
 }
 
 .assign-container{
-    min-height: 600px;
-    height: fit-content;
-    max-height: 85vh; /* Limit height to 85% of viewport */
-    width: 600px;
-    background-color: #ffff;
-    border-radius: 15px;
-    overflow-y: auto;
+    background: white;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
+    animation: rev-slideUp 0.3s ease;
     overflow-x: hidden;
-    margin: 60px auto; /* Added top and bottom margin */
-    padding: 20px 0; /* Added internal padding */
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes rev-slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
 }
 .modal-overlay {
   position: fixed;
@@ -51,15 +55,16 @@
 
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: 600;
-  color: #7e7e7e;
-  margin-left: 20px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .form-group input {
