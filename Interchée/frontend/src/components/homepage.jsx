@@ -111,6 +111,7 @@ function Homebutton() {
           </span>
         </h1>
       </div>
+      <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}> Here's what's going on</p>
       <div className='stats-row'>
         <div className="stats-container">
           <div className="icon-container">
@@ -151,7 +152,7 @@ function Homebutton() {
       </div>
       <div className='adminlarge-container'>
         <div className='adminsmall-container'>
-          <h1 className='adminsmall-container-label'> Recent activities</h1>
+          <p className='adminsmall-container-label'> Notifications</p>
 
         </div>
         <div className='adminsmall-container'>

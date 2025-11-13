@@ -921,7 +921,11 @@ function SupervisorReports(){
                 { isCreateAsssignmentOpen && (
                     <div className="modal-overlay">
                         <div className="assign-container">
-                            <h2 style={{ fontFamily: "arial", marginLeft: "20px"}}> New assignment</h2>
+                             <div className="rev-modal-header">
+                                                        <h2 className="rev-modal-title">
+                                                           Create new assignment
+                                                        </h2>
+                                                    </div>
                             <div className="form-group"> 
                                 <label> Assignment title</label>
                                 <input

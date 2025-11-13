@@ -182,7 +182,7 @@ function Adminabsence() {
 
       <div className="absence-request-section">
         {loading && <div className="loading">Loading requests…</div>}
-        {!loading && requests.length === 0 && <div className="empty">No requests</div>}
+        {!loading && requests.length === 0 && <div className="no-requests">No requests</div>}
 
         
 
@@ -230,18 +230,15 @@ function Adminabsence() {
                   </div>
                   <div className="content-wrapper">
                     <div className="date-label">Duration</div>
-                    <div className="date">{r.duration || '—'}</div>
+                    <div className="date">{r.days != null ? `${r.days} day(s)` : '-'}</div>
                   </div>
                 </div>
               </div>
               <div className="actions">
-               
-                 
-                  <p style={{ marginTop: 8 }}>{r.comments || 'no comment'}</p>
 
                   {/* show action buttons only for pending requests */}
                   {String(r.status || '').toLowerCase() === 'pending' && (
-                    <div style={{ marginTop: 12, display: 'flex', gap: 12 }}>
+                    <div className='button-row'>
                       <button
                         className="approve-button"
                         onClick={() => handleDecision(r.id, 'approve')}
@@ -270,7 +267,7 @@ function Adminabsence() {
     
         })}
 
-      <h2 style={{ fontFamily: 'arial', marginLeft: '20px' }}> Recent Decisions</h2>
+      <h2 style={{ fontFamily: 'arial' }}> Recent Decisions</h2>
 
       <div className="recent-decision-section">
       
@@ -319,7 +316,7 @@ function Adminabsence() {
                   </div>
                   <div className="content-wrapper">
                     <div className="date-label">Duration</div>
-                    <div className="date">{r.duration || '—'}</div>
+                    <div className="date">{r.days != null ? `${r.days} day(s)` : '-'}</div>
                   </div>
                 </div>
               </div>

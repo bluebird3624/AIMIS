@@ -1,7 +1,7 @@
 import React from 'react';
 import '../Styles/profilePage.css';
 import * as icons from 'react-icons/io5';
-import defaultProfile from '../assets/default.png'; // Import the default image
+import defaultProfile from '../assets/default.png'; 
 
 const ProfilePage = () => {
   const raw = sessionStorage.getItem('user_data');
