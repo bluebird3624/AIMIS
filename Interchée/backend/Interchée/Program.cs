@@ -1,7 +1,9 @@
-ï»¿using InterchÃ©e.Auth;
-using InterchÃ©e.Data;
-using InterchÃ©e.Entities;
-using InterchÃ©e.Services;
+using Interchée.Auth;
+using Interchée.Data;
+using Interchée.Entities;
+using Interchée.Services;
+using Interchée.Services.Email;
+using Interchée.Services.Email.Entity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -105,8 +107,6 @@ builder.Services.AddOpenApi();
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>()!;
 builder.Services.AddSingleton(jwtOptions);
 
-builder.Services.AddHostedService<AssignmentAutoCloseService>();
-
 // Token services
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<RefreshTokenService>();
@@ -115,10 +115,11 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RoleAssignmentService>();
 builder.Services.AddScoped<OnboardingService>();
 builder.Services.AddScoped<IAuthorizationHandler, DepartmentRoleHandler>();
+builder.Services.AddSingleton<IEmailSender, DevEmailSender>();
+
+
+
 builder.Services.AddHttpClient<SimpleGitService>();
-builder.Services.AddScoped<SubmissionStatusService>();     
-builder.Services.AddScoped<AssignmentStatusService>();
-builder.Services.AddScoped<FileService>();
 
 var app = builder.Build();
 

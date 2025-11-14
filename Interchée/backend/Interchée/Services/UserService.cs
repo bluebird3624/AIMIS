@@ -20,7 +20,7 @@ namespace Interchée.Services
         {
             var full = $"{(first ?? string.Empty).Trim()} {(last ?? string.Empty).Trim()}".Trim();
             return string.IsNullOrWhiteSpace(full)
-                ? (userNameFallback ?? string.Empty)
+                ? userNameFallback ?? string.Empty
                 : full;
         }
 
