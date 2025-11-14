@@ -48,7 +48,7 @@ namespace Interchée.Data
         public DbSet<FeedbackComment> FeedbackComments => Set<FeedbackComment>();
         public DbSet<Feedback> Feedbacks => Set<Feedback>();
         public DbSet<FeedbackReply> FeedbackReplies => Set<FeedbackReply>();
-
+        public DbSet<Review> Reviews => Set<Review>();
         protected override void OnModelCreating(ModelBuilder b)
 
         {
@@ -453,9 +453,43 @@ namespace Interchée.Data
                           .HasForeignKey(fr => fr.CreatedByUserId)
                           .OnDelete(DeleteBehavior.Restrict);
                 });
-            }
+
+            b.Entity<Review>(e =>
+            {
+                e.Property(x => x.Status).HasMaxLength(32).IsRequired();
+                e.Property(x => x.TeamworkScore).HasPrecision(3, 2);
+                e.Property(x => x.CommunicationScore).HasPrecision(3, 2);
+                e.Property(x => x.TechnicalSkillsScore).HasPrecision(3, 2);
+                e.Property(x => x.InitiativeScore).HasPrecision(3, 2);
+                e.Property(x => x.ProfessionalismScore).HasPrecision(3, 2);
+                e.Property(x => x.OverallScore).HasPrecision(3, 2);
+                e.Property(x => x.OverallComments).HasMaxLength(1000);
+
+                e.HasIndex(x => x.UserId);
+                e.HasIndex(x => x.SupervisorId);
+                e.HasIndex(x => x.DepartmentId);
+                e.HasIndex(x => x.ScheduledAt);
+                e.HasIndex(x => x.Status);
+
+                e.HasOne(x => x.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.Supervisor)
+                    .WithMany()
+                    .HasForeignKey(x => x.SupervisorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(x => x.Department)
+                    .WithMany()
+                    .HasForeignKey(x => x.DepartmentId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
 
         }
+
+    }
 
     }
 
