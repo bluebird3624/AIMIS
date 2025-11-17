@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import * as icons from 'react-icons/io5';
 import '../styles/reviews.css'; 
-import { ReviewAPI } from "../services/api";
+import { ReviewAPI, usersAPI } from "../services/api";
 import { getCurrentUser } from "../services/auth";
 
 export default function StudentReviews() {
     
     const [reviews, setReviews] = useState([]);
+    const [users, setUsers] = useState([]);
 
     const fetchReviews = async () => {
         const user = getCurrentUser();
@@ -16,9 +17,23 @@ export default function StudentReviews() {
 
     }
 
+    const fetchUsers = async () => {
+        const response = await usersAPI.getUsers();
+        setUsers(response.data);
+             
+        
+    }
+
+    const fetchSupervisorName =  (supervisorId) => {
+       const user = users.find(u => u.id === supervisorId);
+        return user? user.userName : "user not found";
+    }
+
     useEffect(()=> {
         fetchReviews();
+        fetchUsers();
     },[]);
+
 
 
 
@@ -30,13 +45,16 @@ export default function StudentReviews() {
                 <button>Completed</button>
         </div>
         <div className="rev-cards-section">
-                                {reviews.map((review, index) => (
+                                {reviews.map((review, index) => {
+
+                                    const supervisorName = fetchSupervisorName(review.supervisorId);
+                                    return (
                                     <div className="review-card"
                                         key={index}
                                     >
                                         <div className="review-card-toprow">
-                                            <p className="card-revtitle">-</p>
-                                            <span className="rev-status-badge">-</span>
+                                            <p className="card-revtitle">{review.title}</p>
+                                            <span className="rev-status-badge"></span>
                                         </div>
                                         
                                         <div className="card-statsrow">
@@ -45,9 +63,11 @@ export default function StudentReviews() {
                                                     <icons.IoCalendarNumberOutline/>
                                                 </div>
                                                 <div className="rev-content-wrapper">
-                                                    <div className="rev-date-label">Sheduled AT</div>
+                                                    <div className="rev-date-label">Sheduled at</div>
                                                     <div className="rev-date"> {review.scheduledAt} </div>
                                                 </div>
+
+                                              
                                             </div>
             
                                             
@@ -70,7 +90,7 @@ export default function StudentReviews() {
                                                 </div>
                                                 <div className="rev-content-wrapper">
                                                     <div className="rev-date-label">Supervisor</div>
-                                                    <div className="rev-date">{review.supervisorId}</div>
+                                                    <div className="rev-date">{supervisorName}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -79,19 +99,11 @@ export default function StudentReviews() {
                                                 <p>{review.description}</p>
                                             </div>
                                                                                 
-                                        <div className="involved-students-row">
-                                            <strong>Involved Students: </strong> 
-                                        </div>
-                                        <div className="students-row">
-                                                <div className="student-name-container">
-                                                    
-                                                </div>
-                                            
-                                        </div>
+                                      
                                         
                                         
                                     </div> 
-                                    ))}
+                                    )})}
                                 
                         
                         

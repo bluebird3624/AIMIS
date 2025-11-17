@@ -245,16 +245,7 @@ export default function SupervisorReviews() {
                                 </div>
                             )}
                             
-                            <div className="involved-students-row">
-                                <strong>Involved Students: </strong> 
-                            </div>
-                            <div className="students-row">
-                                {review.students.map((student, index) => (
-                                    <div key={index} className="student-name-container">
-                                        {student}
-                                    </div>
-                                ))}
-                            </div>
+                         
                             
                             <div className="rev-card-actions">
                                 <button 
