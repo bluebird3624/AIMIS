@@ -920,133 +920,157 @@ function SupervisorReports(){
                 {/* CREATE NEW ASSIGNMENT */}
                 { isCreateAsssignmentOpen && (
                     <div className="modal-overlay">
-                        <div className="assign-container">
-                             <div className="rev-modal-header">
-                                                        <h2 className="rev-modal-title">
-                                                           Create new assignment
-                                                        </h2>
-                                                    </div>
-                            <div className="form-group"> 
-                                <label> Assignment title</label>
-                                <input
-                                    type="text"
-                                    placeholder="Enter assignment title"
-                                    value={assignmentTitle}
-                                    onChange={(e) => setAssignmentTitle(e.target.value)}
-                                /> 
-                            </div>
-                            <div className="form-group">
-                                <label>Assignment Description</label>
-                                <textarea
-                                    ref={textareaRef}
-                                    value={assignmentDescription}
-                                    onChange={(e) => setAssignmentDescription(e.target.value)}
-                                    placeholder="Enter assignment description... "
-                                    rows={1}
-                                />
-                            </div>
+                        <div className="rev-modal-container">
+    <div className="rev-modal-header">
+        <h2 className="rev-modal-title">
+            Create new assignment
+        </h2>
+    </div>
+    
+    <div className="rev-modal-content">
+        <div className="rev-form-group">
+            <label className="rev-form-label">Assignment Title *</label>
+            <input
+                type="text"
+                className="rev-form-input"
+                placeholder="Enter assignment title"
+                value={assignmentTitle}
+                onChange={(e) => setAssignmentTitle(e.target.value)}
+            />
+        </div>
+        
+        <div className="rev-form-group">
+            <label className="rev-form-label">Assignment Description</label>
+            <textarea
+                ref={textareaRef}
+                className="rev-form-textarea"
+                value={assignmentDescription}
+                onChange={(e) => setAssignmentDescription(e.target.value)}
+                placeholder="Enter assignment description..."
+                rows={3}
+            />
+        </div>
 
-                            <div className="form-group">
-                                    <label>Due Date</label>
-                                    <DatePicker
-                                        value={dueDate}
-                                        onChange={(newDate) => setDueDate(newDate)}
-                                        renderInput={(params) => (
-                                            <TextField 
-                                                {...params} 
-                                                fullWidth
-                                                placeholder="click the icon to select due date"
-                                            />
-                                        )}
-                                        className="date-picker"
-                                    />
-                            </div>
+        <div className="rev-form-group">
+            <label className="rev-form-label">Due Date *</label>
+            <DatePicker
+                value={dueDate}
+                onChange={(newDate) => setDueDate(newDate)}
+                renderInput={(params) => (
+                    <TextField 
+                        {...params} 
+                        fullWidth
+                        className="rev-form-input"
+                        placeholder="Click to select due date"
+                    />
+                )}
+            />
+        </div>
 
-                            <div className="form-group">
-                                 <label> Submission Type:</label>
-                                <select 
-                                    value={submissionType} 
-                                    onChange={(e) => setSubmissionType(e.target.value)}
-                                    className="submission-dropdown"
-                                >
-                                    <option value={1}>Git Repository</option>
-                                    <option value={2}>File Upload</option>
-                                
-                                </select>
-                                <div className="submission-type-info">
-                                    {submissionType === 'Github' && (
-                                        <span className="info-text">Students will submit Git repository URLs</span>
-                                    )}
-                                    {submissionType === 'File' && (
-                                        <span className="info-text">Students will upload files (PDF, DOC, ZIP, etc.)</span>
-                                    )}
-                                   
-                                </div>
+        <div className="rev-form-group">
+            <label className="rev-form-label">Submission Type</label>
+            <select 
+                value={submissionType} 
+                onChange={(e) => setSubmissionType(e.target.value)}
+                className="rev-form-select"
+            >
+                <option value={1}>Git Repository</option>
+                <option value={2}>File Upload</option>
+            </select>
+            <div className="rev-selected-students">
+                {submissionType === '1' && (
+                    <span>Students will submit Git repository URLs</span>
+                )}
+                {submissionType === '2' && (
+                    <span>Students will upload files (PDF, DOC, ZIP, etc.)</span>
+                )}
+            </div>
+        </div>
+        
+        <div className="rev-form-group">
+            <label className="rev-form-label">Grading Rubric</label>
+            <select 
+                value={selectedRubric} 
+                onChange={(e) => setSelectedRubric(e.target.value)}
+                className="rev-form-select"
+            >
+                <option value="">Select a grading rubric</option>
+                {rubrics.map(rubric => (
+                    <option key={rubric.id} value={rubric.id}>
+                        {rubric.name} ({rubric.items.length} criteria)
+                    </option>
+                ))}
+            </select>
+            
+            {selectedRubric && (
+                <div className="selected-rubric-info">
+                    <div className="rev-selected-students">
+                        <strong>Selected Rubric: </strong>
+                        {rubrics.find(r => r.id.toString() === selectedRubric)?.name}
+                    </div>
+                    <div className="rubric-preview">
+                        {rubrics.find(r => r.id.toString() === selectedRubric)?.items.map((criterion, index) => (
+                            <div key={criterion.id} className="preview-criterion-small">
+                                <span>{criterion.criteria}</span>
+                                <span>{criterion.maxScore} pts</span>
                             </div>
-                            <div className="form-group">
-                                <label> Grading rubric:</label>
-                                <select 
-                                    value={selectedRubric} 
-                                    onChange={(e) => setSelectedRubric(e.target.value)}
-                                    className="rubric-dropdown"
-                                >
-                                    <option value="">Select a grading rubric</option>
-                                    {rubrics.map(rubric => (
-                                        <option key={rubric.id} value={rubric.id}>
-                                            {rubric.name} ({/*{rubric.totalMarks} marks,*/} {rubric.items.length} criteria)
-                                        </option>
-                                    ))}
-                                </select>
-                                {selectedRubric && (
-                                    <div className="selected-rubric-info">
-                                        <strong>Selected Rubric: </strong>
-                                        {rubrics.find(r => r.id.toString() === selectedRubric)?.name}
-                                        <div className="rubric-preview">
-                                            {rubrics.find(r => r.id.toString() === selectedRubric)?.items.map((criterion, index) => (
-                                                <div key={criterion.id} className="preview-criterion-small">
-                                                    <span>{criterion.criteria}</span>
-                                                    <span>{criterion.maxScore} pts</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                                <div className="rubric-actions">
-                                    <button 
-                                        type="button"
-                                        className="create-rubric-btn"
-                                        onClick={() => {
-                                            setIsCreateAssignmentOpen(false);
-                                            setIsGradingRubricOpen(true);
-                                        }}
-                                    >
-                                        Create New Rubric
-                                    </button>
-                                    <button 
-                                        type="button"
-                                        className="create-rubric-btn"
-                                        onClick={() => {
-                                            setIsCreateAssignmentOpen(false);
-                                            setIsRubricListOpen(true);
-                                        }}
-                                    >
-                                        View All Rubrics
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="modal-actions">
-                                <button className="cancel-btn" onClick={() => setIsCreateAssignmentOpen(false)}>
-                                   Cancel
-                                </button>
-                                <button 
-                                    className="assign-btn"
-                                    onClick={createAssignment}
-                                    disabled={!assignmentTitle.trim() || !dueDate}
-                                >
-                                    Create Assignment
-                                </button>
-                            </div>
-                        </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+            
+            <div className="rubric-actions" style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
+                <button 
+                    type="button"
+                    className="rev-cancel-btn"
+                    style={{ flex: 1, fontSize: '14px', padding: '10px 16px' }}
+                    onClick={() => {
+                        setIsCreateAssignmentOpen(false);
+                        setIsGradingRubricOpen(true);
+                    }}
+                >
+                    Create New Rubric
+                </button>
+                <button 
+                    type="button"
+                    className="rev-cancel-btn"
+                    style={{ flex: 1, fontSize: '14px', padding: '10px 16px' }}
+                    onClick={() => {
+                        setIsCreateAssignmentOpen(false);
+                        setIsRubricListOpen(true);
+                    }}
+                >
+                    View All Rubrics
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div className="rev-modal-actions">
+        <button 
+            className="rev-cancel-btn"
+            onClick={() => setIsCreateAssignmentOpen(false)}
+        >
+            Cancel
+        </button>
+        <button 
+            className="rev-submit-btn"
+            onClick={createAssignment}
+            disabled={!assignmentTitle.trim() || !dueDate}
+        >
+            Create Assignment
+        </button>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
                     </div>
                 )}
 

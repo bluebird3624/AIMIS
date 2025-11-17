@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+ import React, { useState, useEffect } from 'react';
 import { departmentAPI, onboardAPI, usersAPI } from '../services/api';
 
 
@@ -193,6 +193,12 @@ function Userspage() {
                 <td>{user.role || ''}</td>
                 <td>{user.email}</td>
                 <td className="actions">
+                  <button
+                  className='view-button'
+                  
+                  >
+                    View
+                  </button>
                   <button 
                     className="edit-button"
                     onClick={() => handleEditUser(user)}
