@@ -1020,6 +1020,19 @@
   color: #ffff;
 }
 
+.view-button{
+  background: transparent;
+  color: #bb0de7;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.view-button:hover{
+  background: #bb0de7;
+  color: #ffff;
+}
 .delete-button {
   background: transparent;
   color: #c82333;

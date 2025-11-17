@@ -20,17 +20,7 @@
   background: #093343;
 }
 
-.assign-container{
-    background: white;
-    width: 100%;
-    max-width: 700px;
-    max-height: 90vh;
-    border-radius: 20px 20px 0 0;
-    animation: rev-slideUp 0.3s ease;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-}
+
 
 @keyframes rev-slideUp {
     from { transform: translateY(100%); }
@@ -51,68 +41,6 @@
     padding: 40px 20px; 
 }
 
-/* Optional: Add smooth scrolling */
-
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.form-group input {
-  width: 80%;
-  padding: 10px;
-  border: 1.5px solid #949494;
-  border-radius: 4px;
-  font-size: 16px;
-  box-sizing: border-box;
-  margin-left: 20px;
-}
-.form-group textarea{
-  width: 80%;
-  padding: 10px;
-  border: 1.5px solid #949494;
-  border-radius: 4px;
-  font-size: 16px;
-  box-sizing: border-box;
-  margin-left: 20px;
-  min-height: 25px;
-  height: fit-content;
-  font-family: Arial, Helvetica, sans-serif;
-  resize: none;
-  overflow: hidden;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #007bff;
-}
-.form-group select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  box-sizing: border-box;
-  background: white;
-}
-
-.form-group select:focus {
-  outline: none;
-  border-color: #007bff;
-}
-.form-group textarea:focus{ /* Fixed: removed space between textarea and :focus */
-   outline: none;
-  border-color: #007bff;
-}
 /* Date Picker Styles */
 .date-picker {
     width: 100%;
@@ -1509,4 +1437,86 @@
 .create-rubric-btn:hover{
     color: #167aa1;
     font-weight: bold;
+}
+/* Additional styles for the assignment form */
+.selected-rubric-info {
+    margin-top: 12px;
+}
+
+.rubric-preview {
+    margin-top: 8px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e1e5e9;
+}
+
+.preview-criterion-small {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.preview-criterion-small:last-child {
+    border-bottom: none;
+}
+
+.preview-criterion-small span:first-child {
+    color: #2c3e50;
+    flex: 1;
+}
+
+.preview-criterion-small span:last-child {
+    color: #27ae60;
+    font-weight: 600;
+    margin-left: 12px;
+}
+
+/* Date picker adjustments */
+.date-picker .rev-form-input {
+    width: 100%;
+}
+
+/* Rubric actions button styling */
+.rubric-actions .rev-cancel-btn {
+    background: #6c757d;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.rubric-actions .rev-cancel-btn:hover {
+    background: #5a6268;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .rubric-actions {
+        flex-direction: column;
+    }
+    
+    .preview-criterion-small {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .preview-criterion-small span:last-child {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .rubric-preview {
+        padding: 8px;
+    }
+    
+    .preview-criterion-small {
+        font-size: 12px;
+    }
 }
