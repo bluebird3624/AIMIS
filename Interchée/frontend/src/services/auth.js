@@ -7,7 +7,8 @@ const USER_DATA_KEY = 'user_data';
 const NAME_IDENTIFIER_CLAIM = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
 const EMAIL_CLAIM = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
 const NAME_CLAIM = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
-const ROLE_CLAIM = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";  
+const ROLE_CLAIM = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"; 
+const DEPARTMENT_CLAIM = "department"; 
 
 
 /**
@@ -56,7 +57,7 @@ const constructUserData = (token) => {
         email: rawPayload.email || rawPayload[EMAIL_CLAIM],
         username: rawPayload[NAME_CLAIM],
         role:    rawPayload[ROLE_CLAIM] ,
-        
+        departmentId: rawPayload[DEPARTMENT_CLAIM],
         expiryTime: rawPayload.exp ? rawPayload.exp * 1000 : null,
     };
     console.log ('userData being stored: ', userData);

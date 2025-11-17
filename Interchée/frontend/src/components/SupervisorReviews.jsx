@@ -27,6 +27,8 @@ export default function SupervisorReviews() {
 
     const user = getCurrentUser();
     const userId = user.userId;
+    const deptId = user.departmentId;
+   
     
     const fetchReviews  = async () => {
         const response = await ReviewAPI.fetchReviews(userId);
@@ -37,7 +39,8 @@ export default function SupervisorReviews() {
 
     const fetchUsers = async() => {
         const response = await usersAPI.getUsers();
-        setStudentsList(response.data);
+        const students = (response.data).filter(u => u.departmentName === "IT" && u.roleName != "Admin" && u.roleName != "Supervisor" )
+        setStudentsList(students);
 
     }
 

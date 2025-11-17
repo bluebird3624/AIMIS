@@ -73,6 +73,8 @@ export const usersAPI = {
         api.post('/users', data),
     assignDepartment: (data) =>
         api.post('/department-roles/assign', data),
+    getUserByDepartment: ({params}) => 
+        api.get('/users', {params}),
     
 }
 
