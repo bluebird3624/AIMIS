@@ -140,15 +140,7 @@ function Homebutton() {
             <div className="number">0</div>
           </div>
         </div>
-        <div className="stats-container">
-          <div className="icon-container">
-            <icons.IoBookOutline style={{ fontSize: "40px" }} />
-          </div>
-          <div className="content-wrapper">
-            <div className="label">Reviews</div>
-            <div className="number">0</div>
-          </div>
-        </div>
+        
       </div>
       <div className='adminlarge-container'>
         <div className='adminsmall-container'>
