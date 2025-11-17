@@ -24,7 +24,7 @@ export default function StudentReviews() {
 
     return (
         <>
-        <h1 style={{ fontFamily:"arial", fontSize: "35px", marginLeft: "20px"}}> Reviews s</h1>
+        <h1 style={{ fontFamily:"arial", fontSize: "35px", marginLeft: "20px"}}> Reviews </h1>
         <div className="rev-category-row">
                 <button>Upcoming</button>
                 <button>Completed</button>

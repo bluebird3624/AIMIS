@@ -190,7 +190,7 @@ function Userspage() {
               <tr key={user.id}>
                 <td>{user.userName}</td>
                 <td>{user.departmentName || ''}</td>
-                <td>{user.role || ''}</td>
+                <td>{user.roleName || ''}</td>
                 <td>{user.email}</td>
                 <td className="actions">
                   <button
