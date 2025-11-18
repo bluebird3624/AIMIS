@@ -7,6 +7,8 @@ export default defineConfig({
   server: {
     watch: {
       ignored: ['**/AppData/**'],
+      
     },
+    allowedHosts: ['.ngrok-free.dev', "https://unweighty-rosella-knowable.ngrok-free.dev"]
   },
 })
