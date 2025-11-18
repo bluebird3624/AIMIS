@@ -14,13 +14,11 @@ function AnimatedRoute({ children }) {
   const location = useLocation();
   return (
     <motion.div
-      key={location.pathname}
-      initial={{ x: '100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '-100%' }}
-      transition={{ type: 'keyframes', duration: 1.2, ease: 'linear' }}
-      className="absolute inset-0"
-    >
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 2, ease: "easeInOut" }}
+        >
       {children}
     </motion.div>
   );

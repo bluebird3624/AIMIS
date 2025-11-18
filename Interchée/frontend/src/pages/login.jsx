@@ -3,20 +3,18 @@ import '../Styles/login.css';
 import { useNavigate, Navigate } from "react-router-dom";
 import { motion } from 'framer-motion';
 import LoginGroup from '../assets/LoginGroup.svg';
+import loginpage from '../assets/loginpage.png'
 import * as authService from "../services/authContext";
-import logindemo from '../assets/logindemo.mp4';
 import { IoEye, IoEyeOff, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 function Login() {
     const [loading, setLoading] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [errors, setErrors] = useState({});
-    const [showPassword, setShowPassword] = useState(false); // New state for password visibility
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const {login} = authService.useAuth();
 
-    
-   
     const handleClick = async(event) => {
       event.preventDefault();
     
@@ -90,24 +88,15 @@ function Login() {
 
     return (
         <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
-            transition={{ type: 'keyframes', duration: 2.1 }}
-            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 2.1, ease: "easeInOut" }}
         >
-            {/* Video Background */}
-            <video 
-                className="video-background"
-                autoPlay 
-                muted 
-                loop 
-                playsInline
+            <div 
+                className="body-login"
+                style={{ backgroundImage: `url(${loginpage})` }}
             >
-                <source src={logindemo} type="video/mp4" />
-            </video>
-            
-            <div className="body-login">
                 <div className="login-gradient">
                     <div className="agile-logo">
                         <img src={LoginGroup} />
@@ -238,6 +227,6 @@ function Login() {
             </div>
         </motion.div>
     );
-    }
+}
 
 export default Login;
