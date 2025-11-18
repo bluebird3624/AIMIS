@@ -6,6 +6,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TextField } from '@mui/material';
 import { IoAlertCircleOutline, IoCheckmarkCircleOutline, IoClipboardOutline, IoAdd, IoClose, IoTrash, IoPersonAdd, IoChevronDown, IoChevronUp, IoDownloadOutline, IoOpenOutline } from "react-icons/io5";
 import { rubricAPI, submissionAPI, assignmentAPI, usersAPI } from "../services/api";
+import {motion} from 'framer-motion'
 
 
 const UngradedSubmissionCard = ({ submission, onMarksUpdate, onCommentUpdate, onSubmitGrade }) => {
@@ -714,10 +715,18 @@ function SupervisorReports(){
     };
 
     return(
+         <motion.div
+  initial={{ x: -100, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ 
+    duration: 1.7,
+    ease: [0.25, 0.46, 0.45, 0.94] 
+  }}
+>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <div>
                 <h1 style={{ fontFamily:"arial", fontSize: " 35px", marginLeft: "20px"}}> Assignments & Reports</h1>
-                <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}> Create assignments and assign them to students in your department</p>
+                <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}> Create assignments and assign them to Attachés or interns in your department</p>
                 <button 
                 className="create-assn-button"
                 onClick={ () => setIsCreateAssignmentOpen (true)}
@@ -1313,6 +1322,7 @@ function SupervisorReports(){
                 )}
             </div>
         </LocalizationProvider>
+        </motion.div>
     );
 }
 

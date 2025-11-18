@@ -3,6 +3,7 @@ import * as icons from 'react-icons/io5';
 import '../styles/reviews.css'; 
 import { ReviewAPI, usersAPI } from "../services/api";
 import { getCurrentUser } from "../services/auth";
+import {motion} from 'framer-motion'
 
 export default function StudentReviews() {
     
@@ -38,7 +39,14 @@ export default function StudentReviews() {
 
 
     return (
-        <>
+         <motion.div
+  initial={{ x: -100, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ 
+    duration: 1.7,
+    ease: [0.25, 0.46, 0.45, 0.94] 
+  }}
+>
         <h1 style={{ fontFamily:"arial", fontSize: "35px", marginLeft: "20px"}}> Reviews </h1>
         <div className="rev-category-row">
                 <button>Upcoming</button>
@@ -109,7 +117,7 @@ export default function StudentReviews() {
                         
         </div>
 
-        </>
+        </motion.div>
 
     )
     

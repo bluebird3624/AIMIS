@@ -6,6 +6,9 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
+import {motion} from 'framer-motion'
+
+
 
 function Calendar() {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -24,7 +27,14 @@ function Calendar() {
     };
 
     return(
-        <>
+         <motion.div
+  initial={{ x: -100, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ 
+    duration: 1.7,
+    ease: [0.25, 0.46, 0.45, 0.94] 
+  }}
+>
         <h1 className='heading'> Calendar</h1>
          <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Paper elevation={3} className="calendar-container">
@@ -168,7 +178,7 @@ function Calendar() {
         </div>
       )}
     </LocalizationProvider>
-    </>
+    </motion.div>
     );
 }
 

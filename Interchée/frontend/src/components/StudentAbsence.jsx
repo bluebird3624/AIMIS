@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {absenceAPI} from '../services/api'; 
 import '../Styles/Absence.css';
 import  * as icons from 'react-icons/io5';
+import {motion} from 'framer-motion'
 
 const StudentAbsence = () => {
   const [requests, setRequests] = useState([]);
@@ -170,7 +171,14 @@ const renderRequestCard = (r) => (
 );
 
   return (
-    <>
+     <motion.div
+  initial={{ x: -100, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ 
+    duration: 1.7,
+    ease: [0.25, 0.46, 0.45, 0.94] 
+  }}
+>
     <div className='title'>
             <h1 style={{ fontFamily:"arial", fontSize: " 35px"}}> Absence</h1>
      </div>   
@@ -270,7 +278,7 @@ const renderRequestCard = (r) => (
       )}
 
           
-    </>
+    </motion.div>
   );
 };
 
