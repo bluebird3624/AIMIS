@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import '../Styles/dashboards.css'
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser } from '../services/auth';
+import {motion} from 'framer-motion'
 
 function Homebutton() {
   const [greeting, setGreeting] = useState('');
@@ -102,7 +103,14 @@ function Homebutton() {
   };
 
   return (
-    <>
+     <motion.div
+  initial={{ x: -100, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ 
+    duration: 1.7,
+    ease: [0.25, 0.46, 0.45, 0.94] 
+  }}
+>
       <div className="greeting-message">
         <h1>
           {greeting}
@@ -154,7 +162,7 @@ function Homebutton() {
 
 
       </div>
-    </>
+    </motion.div>
   );
 }
 

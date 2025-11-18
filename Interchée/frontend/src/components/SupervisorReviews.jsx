@@ -7,6 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { TextField } from '@mui/material';
 import {getCurrentUser} from '../services/auth'
+import {motion} from 'framer-motion'
 
 
 
@@ -169,7 +170,14 @@ export default function SupervisorReviews() {
     };
 
     return (
-        <>
+         <motion.div
+  initial={{ x: -100, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ 
+    duration: 1.7,
+    ease: [0.25, 0.46, 0.45, 0.94] 
+  }}
+>
             <div className="header-row">
                 <h1 style={{ fontFamily:"arial", fontSize: "35px", marginLeft: "20px"}}> Reviews </h1>
                 <button 
@@ -402,6 +410,6 @@ export default function SupervisorReviews() {
                     </div>
                 </div>
             )}
-        </>
+        </motion.div>
     );
 }

@@ -1,5 +1,6 @@
  import React, { useState, useEffect } from 'react';
 import { departmentAPI, onboardAPI, usersAPI } from '../services/api';
+import { motion } from 'framer-motion';
 
 
 function Userspage() {
@@ -159,6 +160,14 @@ function Userspage() {
   };
 
   return (
+    <motion.div
+  initial={{ x: -100, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ 
+    duration: 1.7,
+    ease: [0.25, 0.46, 0.45, 0.94] 
+  }}
+>
     <div className="user-management">
     
       <div className="header">
@@ -428,6 +437,7 @@ function Userspage() {
         </div>
       )}
     </div>
+    </motion.div>
   );
 }
 

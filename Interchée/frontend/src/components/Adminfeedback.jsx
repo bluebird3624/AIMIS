@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as icons from 'react-icons/io5';
+import  {motion} from 'framer-motion'
 
 function Adminfeedback(){
 return(
-    <>
+     <motion.div
+  initial={{ x: -100, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ 
+    duration: 1.7,
+    ease: [0.25, 0.46, 0.45, 0.94] 
+  }}
+>
     <h1 style={{ fontFamily:"arial", fontSize: " 35px", marginLeft: "20px"}}> Feedback</h1>
     <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}> Feedback , suggestions and complaints from students</p>
     <div className="feed-card-section">
@@ -64,7 +72,7 @@ Grandpa Shark
     </div>
 
 
-    </>
+    </motion.div>
 );
 }
 
