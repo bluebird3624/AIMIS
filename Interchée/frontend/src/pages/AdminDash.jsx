@@ -21,28 +21,12 @@ import Adminreviews from '../components/AdminReviews';
 import SupervisorReviews from '../components/SupervisorReviews';
 import StudentReviews from '../components/StudentReviews';
 import StudentFeedback from '../components/StudentFeedback';
+import StudentHome from '../components/StudentHome';
+import SupervisorHome from '../components/SupervisorHome';
 
 
 
-const componentMap = {
-  
-  adminDashboard: Homebutton,
-  users: Userspage,
-  adminAbsence: Adminabsence,
-  calendar: Calendar,
-  feedback: Adminfeedback,
-  profilePage: ProfilePage,
-  studentAssignment: StudentAssignment,
-  supervisorReports: SupervisorReports,
-  studentAbsence: StudentAbsence,
-  adminReviews: Adminreviews,
-  supervisorReviews: SupervisorReviews,
-  studentReviews: StudentReviews,
-  studentFeedback: StudentFeedback,
 
-
-  default: Homebutton
-};
 
 const sidebarConfig = {
   adminDashboard: {
@@ -202,10 +186,46 @@ const SidebarItem = ({ item, isActive, onClick }) => {
 };
 
 const MainContentRenderer = ({ activeItemId }) => {
-  console.log('active item id: ', activeItemId);
-  const ComponentToRender = componentMap[activeItemId] ;
-  
-  console.log('compojnent to render: ', componentMap[activeItemId] );
+  const [componentMap, setComponentMap] = useState(null);
+
+  useEffect(() => {
+    const initializeComponentMap = async () => {
+      const user = await getCurrentUser();
+      const role = user.role;
+
+     
+      const dashboardComponent = role === "Admin" || role === "HR" 
+        ? Homebutton 
+        : role === "Supervisor"
+        ?SupervisorHome
+        : StudentHome;
+
+    
+      setComponentMap({
+        adminDashboard: dashboardComponent,
+        users: Userspage,
+        adminAbsence: Adminabsence,
+        calendar: Calendar,
+        feedback: Adminfeedback,
+        profilePage: ProfilePage,
+        studentAssignment: StudentAssignment,
+        supervisorReports: SupervisorReports,
+        studentAbsence: StudentAbsence,
+        adminReviews: Adminreviews,
+        supervisorReviews: SupervisorReviews,
+        studentReviews: StudentReviews,
+        studentFeedback: StudentFeedback,
+      });
+    };
+
+    initializeComponentMap();
+  }, []);
+
+  if (!componentMap || !componentMap[activeItemId]) {
+    return <div className="main-content">Loading...</div>;
+  }
+
+  const ComponentToRender = componentMap[activeItemId];
   return (
     <div className="main-content">
       <ComponentToRender />
@@ -220,7 +240,6 @@ function AdminDash() {
   const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-
  
   useEffect(() => {
     const userRole = getUserRole();
@@ -229,8 +248,7 @@ function AdminDash() {
     setSidebarItems(filteredItems);
   }, []);
 
- 
-  
+
 
   const handleItemClick = (item) => {
     console.log('item clicked: ', item);

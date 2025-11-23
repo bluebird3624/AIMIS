@@ -79,8 +79,8 @@ const UserProfile = ({setActiveItem}) => {
 
   if (!userData) return null;
 
-  const userInitials = `${userData.username?.[0] || 'U'}`;
-  const fullName = `${userData.username}`.trim();
+  const userInitials = `${userData.userName?.[0] || 'U'}`;
+  const fullName = `${userData.userName}`.trim();
 
   return (
     <div className="user-profile-section" ref={dropdownRef}>

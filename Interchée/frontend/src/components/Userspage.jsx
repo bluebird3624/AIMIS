@@ -52,6 +52,7 @@ function Userspage() {
   const fetchUsers = async () => {
     const verifiedUsers = await usersAPI.getUsers();
     setUsers(verifiedUsers.data);
+    console.log(verifiedUsers.data)
     const response = await onboardAPI.getOnboardingRequests();
     const unverifiedUsers =  (response.data).filter(item => item.status != 'Approved');
 
@@ -327,7 +328,12 @@ function Userspage() {
               <label>Department:</label>
               <select
                 value={selectedDept}
-                onChange={(e) => setSelectedDept(e.target.value)}
+                onChange={(e) => {
+                  console.log("department selected", e.target.value)
+
+                   setSelectedDept(e.target.value)}
+
+                }
               >
                 {departments.map(dept => (
                   <option key={dept.id} value={dept.id}>
