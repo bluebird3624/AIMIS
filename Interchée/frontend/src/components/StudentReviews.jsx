@@ -48,6 +48,7 @@ export default function StudentReviews() {
   }}
 >
         <h1 style={{ fontFamily:"arial", fontSize: "35px", marginLeft: "20px"}}> Reviews </h1>
+        <p style={{ fontFamily: 'arial', fontSize:'20px', marginLeft:'20px', color: '#3d3d3d'}}> Reviews as scheduled by your supervisor </p>
         <div className="rev-category-row">
                 <button>Upcoming</button>
                 <button>Completed</button>
