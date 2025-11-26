@@ -7,10 +7,13 @@
         Guid Id,
         string UserName,
         string? Email,
-        bool IsActive
-,
+        bool IsActive,
+        string? departmentName,
+        string? roleName,
         string firstName,
         string lastName,
         string? middleName,
         string display);
+        
+
 }

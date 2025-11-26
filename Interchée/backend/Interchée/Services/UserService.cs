@@ -18,7 +18,7 @@ namespace Interchée.Services
         // --- helpers ---
         private static string ComposeDisplayName(string first, string last, string? userNameFallback)
         {
-            var full = $"{(first ?? string.Empty).Trim()} {(last ?? string.Empty).Trim()}".Trim();
+            var full = $"{(first ?? string.Empty).Trim()}  {(last ?? string.Empty).Trim()}".Trim();
             return string.IsNullOrWhiteSpace(full)
                 ? userNameFallback ?? string.Empty
                 : full;
@@ -38,6 +38,8 @@ namespace Interchée.Services
                 u.UserName ?? string.Empty,
                 u.Email,
                 u.IsActive,
+                u.roleName,
+                u.departmentName,
                 u.FirstName,
                 u.LastName,
                 u.MiddleName,
@@ -65,49 +67,57 @@ namespace Interchée.Services
                         u.IsActive,
                         u.FirstName,
                         u.LastName,
-                        u.MiddleName
+                        u.MiddleName,
+                        u.roleName,
+                        u.departmentName
                     };
 
                 var rows = await q.Distinct().ToListAsync();
 
-                return rows
-                    .Select(r => new UserSummaryDto(
-                        r.Id,
-                        r.UserName ?? string.Empty,
-                        r.Email,
-                        r.IsActive,
-                        r.FirstName,
-                        r.LastName,
-                        r.MiddleName,
-                        ComposeDisplayName(r.FirstName, r.LastName, r.UserName)
-                    ))
-                    .ToList();
+                
             }
 
             // Otherwise, return a simple projection of all users.
-            var all = await _users.Users.AsNoTracking()
-                .Select(u => new
-                {
-                    u.Id,
-                    u.UserName,
-                    u.Email,
-                    u.IsActive,
-                    u.FirstName,
-                    u.LastName,
-                    u.MiddleName
-                })
-                .ToListAsync();
+            var userWithAssignmentQuery =
+                 from u in _users.Users.AsNoTracking()
+                 join a in _db.DepartmentRoleAssignments.AsNoTracking() on u.Id equals a.UserId into gj
+                 from a in gj.DefaultIfEmpty()
+                 select new
+                 {
+                     u.Id,
+                     u.UserName,
+                     u.Email,
+                     u.IsActive,
+                     u.FirstName,
+                     u.LastName,
+                     u.MiddleName,
+                     DepartmentName = a == null ? null : a.Department != null ? a.Department.Name : null,
+                     RoleName = a == null ? null : a.RoleName
+                 };
 
-            return all
-                .Select(u => new UserSummaryDto(
-                    u.Id,
-                    u.UserName ?? string.Empty,
-                    u.Email,
-                    u.IsActive,
-                    u.FirstName,
-                    u.LastName,
-                    u.MiddleName,
-                    ComposeDisplayName(u.FirstName, u.LastName, u.UserName)
+            var rows1 = await userWithAssignmentQuery.ToListAsync();
+            var userIds = rows1.Select(r => r.Id).Distinct().ToList();
+            var roleLookup = await _db.Set<IdentityUserRole<Guid>>()
+            .AsNoTracking()
+            .Where(ur => userIds.Contains(ur.UserId))
+            .Join(_db.Roles.AsNoTracking(), ur => ur.RoleId, r => r.Id, (ur, r) => new { ur.UserId, RoleName = r.Name })
+            .GroupBy(x => x.UserId)
+            .ToDictionaryAsync(g => g.Key, g => g.Select(x => x.RoleName!).Distinct().ToList());
+
+
+            return rows1
+                .Select(r => new UserSummaryDto(
+                    r.Id,
+                    r.UserName ?? string.Empty,
+                    r.Email,
+                    r.IsActive,
+                    r.DepartmentName,
+                    r.RoleName,
+                    r.FirstName,
+                    r.LastName,
+                    r.MiddleName,
+                    ComposeDisplayName(r.FirstName, r.LastName, r.UserName)
+                    
                 ))
                 .ToList();
         }
@@ -146,6 +156,8 @@ namespace Interchée.Services
                 user.Email,
                 user.IsActive,
                 user.FirstName,
+                user.roleName ?? string.Empty,
+                user.departmentName ?? string.Empty,
                 user.LastName,
                 user.MiddleName,
                 display

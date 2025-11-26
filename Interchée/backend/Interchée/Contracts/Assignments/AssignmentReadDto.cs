@@ -15,7 +15,7 @@ namespace Interchée.Contracts.Assignments
         int AssigneeCount,
         int SubmissionCount,
         SubmissionType AllowedSubmissionType, 
-        int RubricId, 
+        int? RubricId, 
         string? RubricName
     );
 }

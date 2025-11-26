@@ -131,7 +131,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi().AllowAnonymous();        // serves /openapi/v1.json
 
-    // Scalar v2 style: pass the route as the first arg, then configure pattern
+    
     app.MapScalarApiReference("/scalar", options =>
     {
         options

@@ -10,5 +10,9 @@ namespace Interchée.Entities
         public string FirstName { get; set; } = string.Empty;   // <= 64
         public string LastName { get; set; } = string.Empty;   // <= 64
         public string? MiddleName { get; set; }
+
+        public string? departmentName { get; set; }
+
+        public string? roleName { get; set; }
     }
 }

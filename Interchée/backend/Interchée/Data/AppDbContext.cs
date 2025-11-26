@@ -67,6 +67,8 @@ namespace Interchée.Data
 
                 e.Property(x => x.MiddleName).HasMaxLength(64);
 
+
+
             });
 
             // Department
@@ -273,6 +275,12 @@ namespace Interchée.Data
                     .WithMany()
                     .HasForeignKey(x => x.CreatedByUserId)
                     .OnDelete(DeleteBehavior.Restrict); // Keep assignments if user is deleted
+
+                 e.HasOne(a => a.Rubric)
+                    .WithMany(r => r.Assignments)
+                    .HasForeignKey(a => a.RubricId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
                 /*
                                 e.HasOne(a => a.Rubric)
                                 .WithMany()

@@ -42,7 +42,7 @@ namespace Interchée.Controllers
                     a.Id, a.Title, a.Description, a.DepartmentId, a.CreatedByUserId,
                     a.DueAt, a.Status, a.CreatedAt, a.Assignees.Count,
                    a.Submissions.Count(s => s.Status == SubmissionStatus.Submitted || s.Status == SubmissionStatus.Reviewed),
-                   a.AllowedSubmissionType,  a.RubricId, a.Rubric.Name 
+                   a.AllowedSubmissionType,  a.RubricId, a.Rubric!.Name
                 ))
                 .ToListAsync();
 

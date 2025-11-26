@@ -1,10 +1,11 @@
-﻿using Interchée.Data;
-using Interchée.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Interchée.Data;
+using Interchée.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Interchée.Auth
 {
@@ -41,6 +42,16 @@ namespace Interchée.Auth
             // Also include Identity roles as role claims, so [Authorize(Roles="...")] can work
             var roles = await _userMgr.GetRolesAsync(user);
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+
+            var deptId = await _db.DepartmentRoleAssignments
+                .Where(a => a.UserId == user.Id)
+                .Select(a => a.DepartmentId)
+                .FirstOrDefaultAsync();
+
+            if (deptId != 0) // assuming department IDs are positive; 0 => not assigned
+            {
+                claims.Add(new Claim("department", deptId.ToString()));
+            }
 
             // Build token
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_opt.Key));
